@@ -314,6 +314,25 @@ export const transactions = pgTable("transactions", {
 ]);
 
 // ==========================================
+// User Direct Messaging Schema
+// ==========================================
+export const messages = pgTable("messages", {
+  id: serial("id").primaryKey(),
+  fromId: integer("from_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  toId: integer("to_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  seen: boolean("seen").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("msg_from_idx").on(table.fromId),
+  index("msg_to_idx").on(table.toId),
+]);
+
+// ==========================================
 // Config / Site Settings
 // ==========================================
 export const siteConfig = pgTable("config", {
@@ -321,5 +340,6 @@ export const siteConfig = pgTable("config", {
   name: varchar("name", { length: 150 }).notNull().unique(),
   value: text("value").notNull(),
 });
+
 
 

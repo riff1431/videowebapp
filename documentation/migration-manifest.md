@@ -35,7 +35,7 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 | 22 | `sources/popular_channels/content.php`| `/popular-channels` | **Verified** | Channel leaderboard ranked by subscriber count and aggregate video views. |
 | 23 | `sources/go_pro/content.php` | `/go-pro` | **Verified** | Pro membership packages (Star, Hot, Ultimate), perks comparison, wallet checkout. |
 | 24 | `sources/wallet/content.php` | `/wallet` | **Verified** | Personal wallet top-up, creator earnings payout form, transaction ledger table. |
-| 25 | `sources/messages/content.php` | `/messages` | **Not started** | Direct private user messaging view. |
+| 25 | `sources/messages/content.php` | `/messages` | **Verified** | Direct private user messaging view with search, conversation pane, active timestamps. |
 | 26 | `sources/manage-videos/content.php` | `/manage-videos` | **Verified** | Creator studio video table with views, duration, privacy status, edit and delete triggers. |
 | 27 | `sources/edit-video/content.php` | `/edit-video/[id]` | **Verified** | Video metadata editor, thumbnail re-uploader, category and privacy update form. |
 
