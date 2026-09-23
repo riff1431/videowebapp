@@ -31,16 +31,16 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xs space-y-6">
+    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs space-y-6">
       {success && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center gap-2">
+        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-800 text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>Settings successfully updated in PostgreSQL database!</span>
         </div>
       )}
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs flex items-center gap-2">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-xs flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -53,7 +53,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
             type="text"
             name="title"
             defaultValue={initialConfig.title || "PlayTube"}
-            className="w-full text-sm bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-hidden focus:border-red-500"
+            className="w-full text-xs bg-gray-50 border border-gray-200 rounded-md px-3.5 py-2.5 focus:outline-hidden focus:border-[var(--primary)]"
           />
         </div>
 
@@ -63,7 +63,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
             type="text"
             name="name"
             defaultValue={initialConfig.name || "PlayTube"}
-            className="w-full text-sm bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-hidden focus:border-red-500"
+            className="w-full text-xs bg-gray-50 border border-gray-200 rounded-md px-3.5 py-2.5 focus:outline-hidden focus:border-[var(--primary)]"
           />
         </div>
 
@@ -73,7 +73,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
             type="email"
             name="email"
             defaultValue={initialConfig.email || "admin@playtube.local"}
-            className="w-full text-sm bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-hidden focus:border-red-500"
+            className="w-full text-xs bg-gray-50 border border-gray-200 rounded-md px-3.5 py-2.5 focus:outline-hidden focus:border-[var(--primary)]"
           />
         </div>
 
@@ -83,7 +83,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
             type="text"
             disabled
             defaultValue={initialConfig.theme || "youplay"}
-            className="w-full text-sm bg-gray-100 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-500 cursor-not-allowed"
+            className="w-full text-xs bg-gray-100 border border-gray-200 rounded-md px-3.5 py-2.5 text-gray-500 cursor-not-allowed"
           />
         </div>
       </div>
@@ -94,7 +94,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
           type="text"
           name="keyword"
           defaultValue={initialConfig.keyword || "playtube, video sharing"}
-          className="w-full text-sm bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-hidden focus:border-red-500"
+          className="w-full text-xs bg-gray-50 border border-gray-200 rounded-md px-3.5 py-2.5 focus:outline-hidden focus:border-[var(--primary)]"
         />
       </div>
 
@@ -104,7 +104,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
           rows={3}
           name="description"
           defaultValue={initialConfig.description || "PlayTube Video Sharing Platform"}
-          className="w-full text-sm bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-hidden focus:border-red-500"
+          className="w-full text-xs bg-gray-50 border border-gray-200 rounded-md p-3 focus:outline-hidden focus:border-[var(--primary)]"
         />
       </div>
 
@@ -112,7 +112,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps) {
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium text-xs px-5 py-2.5 rounded-xl transition-colors shadow-xs disabled:opacity-50"
+          className="inline-flex items-center gap-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-medium text-xs px-5 py-2.5 rounded-md transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
         >
           <Save className="w-4 h-4" />
           <span>{saving ? "Saving Changes..." : "Save Changes"}</span>

@@ -57,8 +57,8 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
   return (
     <div className="bg-[var(--card-bg)] rounded-xl p-5 border border-[var(--card-border)] shadow-xs space-y-5">
       <div className="flex items-center gap-2">
-        <MessageSquare className="w-5 h-5 text-red-600" />
-        <h3 className="text-base font-bold text-gray-900 dark:text-white">
+        <MessageSquare className="w-5 h-5 text-[var(--primary)]" />
+        <h3 className="text-base font-bold text-neutral-900 dark:text-white">
           Comments ({commentList.length})
         </h3>
       </div>
@@ -70,12 +70,12 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
           placeholder="Add a public comment..."
-          className="flex-1 text-xs bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl px-4 py-2.5 focus:outline-hidden focus:border-red-500"
+          className="flex-1 text-xs bg-neutral-50 dark:bg-neutral-800 border border-[var(--border)] rounded-md px-4 py-2.5 focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
         />
         <button
           type="submit"
           disabled={isSubmitting || !inputVal.trim()}
-          className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-medium text-xs px-4 py-2.5 rounded-xl transition-colors shrink-0 flex items-center gap-1.5"
+          className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-50 text-white font-medium text-xs px-4 py-2.5 rounded-md transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer shadow-xs"
         >
           <Send className="w-3.5 h-3.5" />
           <span>Post</span>
@@ -85,13 +85,14 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
       {/* Comment List */}
       <div className="space-y-4 pt-2">
         {commentList.length === 0 ? (
-          <p className="text-xs text-gray-400 py-4 text-center">
+          <p className="text-xs text-neutral-400 py-4 text-center">
             No comments yet. Be the first to start the conversation!
           </p>
         ) : (
           commentList.map((c) => (
             <div key={c.id} className="flex gap-3 text-xs">
-              <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden shrink-0">
+              <div className="w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 {c.user.avatar ? (
                   <img
                     src={c.user.avatar}
@@ -99,20 +100,20 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center font-bold text-gray-500">
+                  <div className="w-full h-full flex items-center justify-center font-bold text-neutral-500">
                     {c.user.username[0]?.toUpperCase()}
                   </div>
                 )}
               </div>
               <div className="space-y-1">
-                <div className="flex items-center gap-1.5 font-semibold text-gray-900 dark:text-zinc-200">
+                <div className="flex items-center gap-1.5 font-semibold text-neutral-900 dark:text-neutral-200">
                   <span>@{c.user.username}</span>
                   {c.user.verified && (
-                    <CheckCircle2 className="w-3 h-3 text-blue-500" />
+                    <CheckCircle2 className="w-3 h-3 text-[var(--primary)]" />
                   )}
-                  <span className="text-[10px] text-gray-400 font-normal">Just now</span>
+                  <span className="text-[10px] text-neutral-400 font-normal">Just now</span>
                 </div>
-                <p className="text-gray-700 dark:text-zinc-300 leading-relaxed">
+                <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
                   {c.text}
                 </p>
               </div>

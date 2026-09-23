@@ -5,12 +5,13 @@ import {
   Users, 
   Video, 
   Settings, 
-  BarChart3, 
   ShieldCheck, 
   ArrowLeft,
   DollarSign,
   Layers,
-  HelpCircle
+  FolderTree,
+  AlertTriangle,
+  BadgeCheck
 } from "lucide-react";
 
 export default function AdminLayout({
@@ -23,24 +24,24 @@ export default function AdminLayout({
       {/* Top Header Navbar */}
       <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 sticky top-0 z-50">
         <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 transition-colors">
+          <Link href="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-[var(--primary)] transition-colors">
             <ArrowLeft className="w-4 h-4" />
             <span>Back to PlayTube</span>
           </Link>
           <div className="h-4 w-px bg-gray-300" />
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-bold text-lg">
+            <div className="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white font-bold text-lg shadow-xs">
               P
             </div>
             <span className="font-bold text-gray-800 tracking-tight text-lg">
-              PlayTube <span className="text-xs bg-red-100 text-red-600 font-semibold px-2 py-0.5 rounded-full ml-1">Admin Panel</span>
+              PlayTube <span className="text-xs bg-sky-100 text-[var(--primary)] font-semibold px-2 py-0.5 rounded-full ml-1">Admin Panel</span>
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-sm">
-            <div className="w-8 h-8 rounded-full bg-red-50 text-red-600 font-semibold flex items-center justify-center border border-red-200">
+            <div className="w-8 h-8 rounded-full bg-sky-50 text-[var(--primary)] font-semibold flex items-center justify-center border border-sky-200">
               A
             </div>
             <div className="flex flex-col">
@@ -63,9 +64,9 @@ export default function AdminLayout({
               <nav className="space-y-1">
                 <Link
                   href="/admin"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[var(--primary)] bg-sky-50 hover:bg-sky-100 transition-colors"
                 >
-                  <LayoutDashboard className="w-4 h-4 text-red-600" />
+                  <LayoutDashboard className="w-4 h-4 text-[var(--primary)]" />
                   <span>Dashboard</span>
                 </Link>
                 <Link
@@ -83,6 +84,13 @@ export default function AdminLayout({
                   <span>Manage Users</span>
                 </Link>
                 <Link
+                  href="/admin/categories"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <FolderTree className="w-4 h-4 text-gray-400" />
+                  <span>Manage Categories</span>
+                </Link>
+                <Link
                   href="/admin/settings"
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                 >
@@ -94,17 +102,23 @@ export default function AdminLayout({
 
             <div>
               <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
-                System & Security
+                Moderation & Growth
               </p>
               <nav className="space-y-1">
-                <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
-                  <ShieldCheck className="w-4 h-4 text-gray-300" />
-                  <span>Roles & Permissions</span>
-                </div>
-                <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed">
-                  <DollarSign className="w-4 h-4 text-gray-300" />
-                  <span>Monetization & Ads</span>
-                </div>
+                <Link
+                  href="/admin/verification-requests"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <BadgeCheck className="w-4 h-4 text-gray-400" />
+                  <span>Verification Requests</span>
+                </Link>
+                <Link
+                  href="/admin/reports"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <AlertTriangle className="w-4 h-4 text-gray-400" />
+                  <span>Video Reports</span>
+                </Link>
               </nav>
             </div>
           </div>
