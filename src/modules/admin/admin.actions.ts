@@ -7,8 +7,21 @@ import { revalidatePath } from "next/cache";
 
 export async function updateAdminSettingsAction(formData: FormData) {
   try {
-    const keys = ["title", "name", "email", "keyword", "description"];
-    
+    const keys = [
+      "title",
+      "name",
+      "email",
+      "keyword",
+      "description",
+      "user_registration",
+      "validation",
+      "delete_account",
+      "history_system",
+      "article_system",
+      "popular_channels",
+      "max_upload",
+    ];
+
     for (const key of keys) {
       const val = formData.get(key);
       if (typeof val === "string") {
@@ -23,6 +36,7 @@ export async function updateAdminSettingsAction(formData: FormData) {
     }
 
     revalidatePath("/admin/settings");
+    revalidatePath("/");
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };

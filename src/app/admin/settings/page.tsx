@@ -14,7 +14,12 @@ export default async function AdminSettingsPage() {
     "theme",
     "description",
     "keyword",
+    "user_registration",
     "validation",
+    "delete_account",
+    "history_system",
+    "article_system",
+    "popular_channels",
     "max_upload",
   ];
 
@@ -35,7 +40,7 @@ export default async function AdminSettingsPage() {
           General Site Settings
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Configure site name, metadata, email delivery, and upload parameters imported from PlayTube.
+          Configure site name, metadata, registration policies, and feature toggles matching PlayTube admin panel.
         </p>
       </div>
 
