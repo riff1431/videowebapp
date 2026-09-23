@@ -197,15 +197,15 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#16191c] text-[#e2e8f0] flex flex-col font-sans">
+    <div className="min-h-screen bg-[var(--admin-bg)] text-[var(--admin-text-main)] flex flex-col font-sans transition-colors duration-200">
       {/* Top Header Navbar */}
-      <header className="bg-[#1b1e22] border-b border-[#2c3136] h-14 flex items-center justify-between px-4 sticky top-0 z-50">
+      <header className="bg-[var(--admin-header-bg)] border-b border-[var(--admin-card-border)] h-14 flex items-center justify-between px-4 sticky top-0 z-50 shadow-xs">
         {/* Left: Brand Logo */}
         <div className="flex items-center gap-6">
           <Link href="/admin" className="flex items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo-light.png"
+              src={theme === "dark" ? "/logo-light.png" : "/logo.png"}
               alt="playtube"
               className="h-7 w-auto"
               onError={(e) => {
@@ -219,15 +219,15 @@ export default function AdminLayout({
             <input
               type="text"
               placeholder="Search"
-              className="w-56 h-8 pl-8 pr-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-full focus:outline-none focus:border-[#04abf2] text-neutral-200 placeholder-neutral-500"
+              className="w-56 h-8 pl-8 pr-3 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-full focus:outline-none focus:border-[#04abf2] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)]"
             />
-            <Search className="w-3.5 h-3.5 text-neutral-500 absolute left-2.5" />
+            <Search className="w-3.5 h-3.5 text-[var(--admin-text-muted)] absolute left-2.5" />
           </div>
         </div>
 
         {/* Right: Notifications & Profile Dropdown */}
         <div className="flex items-center gap-3">
-          <button className="p-1.5 text-neutral-400 hover:text-white rounded-md transition-colors relative">
+          <button className="p-1.5 text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)] rounded-md transition-colors relative cursor-pointer">
             <Bell className="w-4 h-4" />
           </button>
 
@@ -235,45 +235,50 @@ export default function AdminLayout({
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 text-xs font-medium text-neutral-200 hover:text-white transition-colors cursor-pointer"
+              className="flex items-center gap-2 text-xs font-medium text-[var(--admin-text-main)] hover:opacity-80 transition-colors cursor-pointer"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={user?.image || "/upload/photos/d-avatar.jpg"}
                 alt="admin"
-                className="w-7 h-7 rounded-full object-cover bg-neutral-700"
+                className="w-7 h-7 rounded-full object-cover bg-neutral-300 dark:bg-neutral-700"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
                     "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
                 }}
               />
               <span>{user?.name || user?.username || "admin"}</span>
-              <ChevronDown className="w-3 h-3 text-neutral-400" />
+              <ChevronDown className="w-3 h-3 text-[var(--admin-text-muted)]" />
             </button>
 
             {profileOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-[#212529] border border-[#2d3238] rounded-lg shadow-2xl py-3 z-50 text-xs">
-                <div className="flex flex-col items-center px-4 pb-3 border-b border-[#2d3238]">
+              <div className="absolute right-0 mt-2 w-64 bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-lg shadow-2xl py-3 z-50 text-xs">
+                <div className="flex flex-col items-center px-4 pb-3 border-b border-[var(--admin-card-border)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={user?.image || "/upload/photos/d-avatar.jpg"}
                     alt="admin"
-                    className="w-14 h-14 rounded-full object-cover bg-neutral-700 mb-2"
+                    className="w-14 h-14 rounded-full object-cover bg-neutral-300 dark:bg-neutral-700 mb-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
                         "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
                     }}
                   />
-                  <p className="font-semibold text-white text-sm">
+                  <p className="font-semibold text-[var(--admin-text-main)] text-sm">
                     {user?.name || user?.username || "admin"}
                   </p>
-                  <p className="text-[11px] text-neutral-400">
+                  <p className="text-[11px] text-[var(--admin-text-muted)]">
                     {user?.email || "admin@playtube.local"}
                   </p>
                   
                   <Link
                     href="/"
-                    className="mt-2.5 px-4 py-1 bg-[#2c3136] hover:bg-[#383f46] text-white rounded-full text-xs font-medium transition-colors"
+                    className="mt-2.5 px-4 py-1 rounded-full text-xs font-medium transition-colors border"
+                    style={{
+                      backgroundColor: "var(--admin-bg)",
+                      borderColor: "var(--admin-card-border)",
+                      color: "var(--admin-text-main)"
+                    }}
                   >
                     View Profile
                   </Link>
@@ -290,7 +295,7 @@ export default function AdminLayout({
                         },
                       });
                     }}
-                    className="mt-3 text-red-400 hover:text-red-300 font-semibold text-xs cursor-pointer"
+                    className="mt-3 text-red-500 hover:text-red-400 font-semibold text-xs cursor-pointer"
                   >
                     Sign Out!
                   </button>
@@ -299,12 +304,12 @@ export default function AdminLayout({
                 {/* Day / Night Mode Toggle */}
                 <button
                   onClick={toggleTheme}
-                  className="w-full flex items-center justify-between px-4 pt-3 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between px-4 pt-3 text-[var(--admin-text-main)] hover:bg-[var(--admin-card-hover)] transition-colors cursor-pointer"
                 >
-                  <span className="text-xs">
+                  <span className="text-xs font-medium">
                     {theme === "dark" ? "Day mode ☀️" : "Night mode 🌙"}
                   </span>
-                  {theme === "dark" ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-sky-400" />}
+                  {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-sky-500" />}
                 </button>
               </div>
             )}
@@ -315,7 +320,7 @@ export default function AdminLayout({
       {/* Main Body */}
       <div className="flex flex-1">
         {/* Left Navigation Sidebar */}
-        <aside className="w-60 bg-[#1b1e22] border-r border-[#2c3136] shrink-0 overflow-y-auto hidden md:block">
+        <aside className="w-60 bg-[var(--admin-sidebar-bg)] border-r border-[var(--admin-card-border)] shrink-0 overflow-y-auto hidden md:block">
           <nav className="p-2 space-y-0.5 text-xs">
             {MENU_ITEMS.map((item) => {
               const Icon = item.icon;
@@ -330,11 +335,11 @@ export default function AdminLayout({
                     href={item.href || "/admin"}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${
                       isActive
-                        ? "text-[#04abf2] bg-[#16191c]"
-                        : "text-neutral-300 hover:bg-[#16191c] hover:text-white"
+                        ? "text-[#04abf2] bg-[var(--admin-bg)] font-semibold"
+                        : "text-[var(--admin-text-main)] hover:bg-[var(--admin-card-hover)]"
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${isActive ? "text-[#04abf2]" : "text-neutral-400"}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? "text-[#04abf2]" : "text-[var(--admin-text-muted)]"}`} />
                     <span>{item.title}</span>
                   </Link>
                 );
@@ -344,13 +349,13 @@ export default function AdminLayout({
                 <div key={item.title}>
                   <button
                     onClick={() => toggleSection(item.title)}
-                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-neutral-300 hover:bg-[#16191c] hover:text-white font-medium transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-[var(--admin-text-main)] hover:bg-[var(--admin-card-hover)] font-medium transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className="w-4 h-4 text-neutral-400" />
+                      <Icon className="w-4 h-4 text-[var(--admin-text-muted)]" />
                       <span>{item.title}</span>
                     </div>
-                    <span className="text-neutral-500 font-bold text-sm">
+                    <span className="text-[var(--admin-text-muted)] font-bold text-sm">
                       {isOpen ? "-" : "+"}
                     </span>
                   </button>
@@ -364,7 +369,7 @@ export default function AdminLayout({
                           className={`block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${
                             pathname === sub.href
                               ? "text-[#04abf2] font-semibold"
-                              : "text-neutral-400 hover:text-white"
+                              : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
                           }`}
                         >
                           {sub.title}
@@ -379,7 +384,7 @@ export default function AdminLayout({
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-[#16191c]">
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-[var(--admin-bg)] transition-colors duration-200">
           {children}
         </main>
       </div>

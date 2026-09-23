@@ -15,25 +15,25 @@ export default async function ManageVideosPage() {
     .limit(50);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-[var(--admin-text-main)]">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">
             Manage Videos
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-[var(--admin-text-muted)] mt-1">
             Review, moderate, and manage uploaded content on the PlayTube platform.
           </p>
         </div>
-        <div className="text-xs bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-gray-600 font-medium">
+        <div className="text-xs bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] px-3 py-1.5 rounded-lg text-[var(--admin-text-muted)] font-medium shadow-xs">
           Showing {allVideos.length} videos
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-2xl shadow-xs overflow-hidden transition-colors duration-200">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <thead className="bg-[var(--admin-card-hover)] border-b border-[var(--admin-card-border)] text-xs font-semibold text-[var(--admin-text-muted)] uppercase tracking-wider">
               <tr>
                 <th className="py-3.5 px-4">Video Details</th>
                 <th className="py-3.5 px-4">Category</th>
@@ -43,19 +43,19 @@ export default async function ManageVideosPage() {
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[var(--admin-card-border)]">
               {allVideos.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-gray-400 text-sm">
+                  <td colSpan={6} className="py-8 text-center text-[var(--admin-text-muted)] text-sm">
                     No videos available in database.
                   </td>
                 </tr>
               ) : (
                 allVideos.map((v) => (
-                  <tr key={v.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={v.id} className="hover:bg-[var(--admin-card-hover)] transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-16 h-10 bg-gray-100 rounded-lg overflow-hidden shrink-0 border border-gray-200">
+                        <div className="w-16 h-10 bg-neutral-200 dark:bg-neutral-800 rounded-lg overflow-hidden shrink-0 border border-[var(--admin-card-border)]">
                           {v.thumbnail ? (
                             <img
                               src={v.thumbnail}
@@ -63,35 +63,35 @@ export default async function ManageVideosPage() {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <div className="w-full h-full flex items-center justify-center text-[var(--admin-text-muted)]">
                               <Video className="w-4 h-4" />
                             </div>
                           )}
                         </div>
                         <div className="max-w-xs">
-                          <p className="font-semibold text-gray-900 text-xs line-clamp-1">
+                          <p className="font-semibold text-[var(--admin-text-main)] text-xs line-clamp-1">
                             {v.title}
                           </p>
-                          <p className="text-[11px] text-gray-400 font-mono mt-0.5">
+                          <p className="text-[11px] text-[var(--admin-text-muted)] font-mono mt-0.5">
                             ID: {v.videoId}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-medium">
+                      <span className="text-xs bg-neutral-500/10 text-[var(--admin-text-muted)] border border-neutral-500/20 px-2 py-0.5 rounded font-medium">
                         {v.categoryId || "General"}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-xs text-gray-600 font-medium">
+                    <td className="py-3.5 px-4 text-xs text-[var(--admin-text-main)] font-medium">
                       {(v.views ?? 0).toLocaleString()}
                     </td>
-                    <td className="py-3.5 px-4 text-xs text-gray-500 font-mono">
+                    <td className="py-3.5 px-4 text-xs text-[var(--admin-text-muted)] font-mono">
                       {v.duration || "00:00"}
                     </td>
                     <td className="py-3.5 px-4 text-xs">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                        v.privacy === 0 ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-600"
+                        v.privacy === 0 ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" : "bg-neutral-500/10 text-[var(--admin-text-muted)] border border-neutral-500/20"
                       }`}>
                         {v.privacy === 0 ? "Public" : "Private"}
                       </span>
@@ -101,7 +101,7 @@ export default async function ManageVideosPage() {
                         <Link
                           href={`/watch/${v.videoId}`}
                           target="_blank"
-                          className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 text-[var(--admin-text-muted)] hover:text-[#04abf2] hover:bg-neutral-500/10 rounded-lg transition-colors"
                           title="Watch Video"
                         >
                           <ExternalLink className="w-4 h-4" />

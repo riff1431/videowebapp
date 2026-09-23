@@ -57,8 +57,8 @@ export default function ManageArticlesPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Breadcrumb Header */}
       <div>
-        <h3 className="text-xl font-bold text-white">Manage Articles</h3>
-        <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+        <h3 className="text-xl font-bold" style={{ color: "var(--admin-text-main)" }}>Manage Articles</h3>
+        <div className="flex items-center gap-2 text-xs mt-1" style={{ color: "var(--admin-text-muted)" }}>
           <Link href="/admin" className="hover:underline">Admin Panel</Link>
           <span>/</span>
           <span>Articles</span>
@@ -74,18 +74,32 @@ export default function ManageArticlesPage() {
       )}
 
       {/* Main Container */}
-      <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl overflow-hidden shadow-lg">
+      <div
+        className="rounded-xl overflow-hidden shadow-sm border"
+        style={{
+          backgroundColor: "var(--admin-card-bg)",
+          borderColor: "var(--admin-card-border)"
+        }}
+      >
         {/* Search Bar & Create Button */}
-        <div className="p-4 border-b border-[#2c3136] flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div
+          className="p-4 border-b flex flex-col sm:flex-row items-center justify-between gap-4"
+          style={{ borderColor: "var(--admin-card-border)" }}
+        >
           <div className="relative w-full sm:w-72">
             <input
               type="text"
               placeholder="Search articles..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-9 pl-9 pr-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2] placeholder-neutral-500"
+              className="w-full h-9 pl-9 pr-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2] transition-colors"
+              style={{
+                backgroundColor: "var(--admin-input-bg)",
+                borderColor: "var(--admin-input-border)",
+                color: "var(--admin-text-main)"
+              }}
             />
-            <Search className="w-3.5 h-3.5 text-neutral-500 absolute left-3 top-3" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-3" style={{ color: "var(--admin-text-muted)" }} />
           </div>
 
           <Link
@@ -99,8 +113,15 @@ export default function ManageArticlesPage() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left text-neutral-300">
-            <thead className="bg-[#16191c] text-neutral-400 uppercase text-[10px] tracking-wider border-b border-[#2c3136]">
+          <table className="w-full text-xs text-left" style={{ color: "var(--admin-text-main)" }}>
+            <thead
+              className="uppercase text-[10px] tracking-wider border-b font-medium"
+              style={{
+                backgroundColor: "var(--admin-bg)",
+                borderColor: "var(--admin-card-border)",
+                color: "var(--admin-text-muted)"
+              }}
+            >
               <tr>
                 <th className="px-4 py-3 w-16 text-center">ID</th>
                 <th className="px-4 py-3">Title</th>
@@ -111,39 +132,43 @@ export default function ManageArticlesPage() {
                 <th className="px-4 py-3 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2c3136]">
+            <tbody className="divide-y" style={{ borderColor: "var(--admin-card-border)" }}>
               {filteredArticles.map((article) => (
-                <tr key={article.id} className="hover:bg-[#212529] transition-colors">
-                  <td className="px-4 py-3 text-center font-mono text-neutral-400">{article.id}</td>
-                  <td className="px-4 py-3 font-semibold text-white flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-amber-400" />
+                <tr
+                  key={article.id}
+                  className="transition-colors hover:bg-neutral-500/5"
+                  style={{ borderBottomColor: "var(--admin-card-border)" }}
+                >
+                  <td className="px-4 py-3 text-center font-mono" style={{ color: "var(--admin-text-muted)" }}>{article.id}</td>
+                  <td className="px-4 py-3 font-semibold flex items-center gap-2" style={{ color: "var(--admin-text-main)" }}>
+                    <FileText className="w-4 h-4 text-amber-500" />
                     <span>{article.title}</span>
                   </td>
-                  <td className="px-4 py-3 text-neutral-400">{article.category}</td>
-                  <td className="px-4 py-3 text-neutral-400 flex items-center gap-1">
-                    <User className="w-3 h-3 text-neutral-500" />
+                  <td className="px-4 py-3" style={{ color: "var(--admin-text-muted)" }}>{article.category}</td>
+                  <td className="px-4 py-3 flex items-center gap-1" style={{ color: "var(--admin-text-muted)" }}>
+                    <User className="w-3 h-3 opacity-70" />
                     <span>{article.author}</span>
                   </td>
-                  <td className="px-4 py-3 text-neutral-400 flex items-center gap-1">
-                    <Eye className="w-3 h-3 text-neutral-500" />
+                  <td className="px-4 py-3 flex items-center gap-1" style={{ color: "var(--admin-text-muted)" }}>
+                    <Eye className="w-3 h-3 opacity-70" />
                     <span>{article.views}</span>
                   </td>
-                  <td className="px-4 py-3 text-neutral-400 flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-neutral-500" />
+                  <td className="px-4 py-3 flex items-center gap-1" style={{ color: "var(--admin-text-muted)" }}>
+                    <Calendar className="w-3 h-3 opacity-70" />
                     <span>{article.createdAt}</span>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <button
                         title="Edit Article"
-                        className="p-1 hover:bg-[#2c3136] rounded text-sky-400 transition-colors cursor-pointer"
+                        className="p-1 rounded text-sky-500 hover:bg-neutral-500/10 transition-colors cursor-pointer"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         title="Delete Article"
                         onClick={() => handleDelete(article.id)}
-                        className="p-1 hover:bg-[#2c3136] rounded text-red-400 transition-colors cursor-pointer"
+                        className="p-1 rounded text-red-500 hover:bg-neutral-500/10 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>

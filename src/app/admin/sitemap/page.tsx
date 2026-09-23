@@ -35,8 +35,8 @@ export default function SitemapPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Breadcrumb Header */}
       <div>
-        <h3 className="text-xl font-bold text-white">Create Sitemap</h3>
-        <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+        <h3 className="text-xl font-bold" style={{ color: "var(--admin-text-main)" }}>Create Sitemap</h3>
+        <div className="flex items-center gap-2 text-xs mt-1" style={{ color: "var(--admin-text-muted)" }}>
           <Link href="/admin" className="hover:underline">Admin Panel</Link>
           <span>/</span>
           <span>Sitemap</span>
@@ -46,30 +46,43 @@ export default function SitemapPage() {
       </div>
 
       {msg && (
-        <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs rounded-lg flex items-center gap-2">
+        <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-500 text-xs rounded-lg flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{msg}</span>
         </div>
       )}
 
       {/* Main Card */}
-      <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl p-6 shadow-lg space-y-6 max-w-3xl">
-        <div className="flex items-center gap-3 pb-4 border-b border-[#2c3136]">
+      <div
+        className="rounded-xl p-6 shadow-sm border space-y-6 max-w-3xl"
+        style={{
+          backgroundColor: "var(--admin-card-bg)",
+          borderColor: "var(--admin-card-border)"
+        }}
+      >
+        <div className="flex items-center gap-3 pb-4 border-b" style={{ borderColor: "var(--admin-card-border)" }}>
           <div className="p-3 bg-[#04abf2]/10 rounded-xl text-[#04abf2]">
             <Network className="w-7 h-7" />
           </div>
           <div>
-            <h4 className="text-base font-bold text-white">Generate New Sitemap</h4>
-            <p className="text-xs text-neutral-400">
+            <h4 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>Generate New Sitemap</h4>
+            <p className="text-xs" style={{ color: "var(--admin-text-muted)" }}>
               Generates indexable XML sitemaps for Google, Bing, and search engines.
             </p>
           </div>
         </div>
 
-        <div className="space-y-3 text-xs bg-[#16191c] p-4 rounded-lg border border-[#2c3136]">
+        <div
+          className="space-y-3 text-xs p-4 rounded-lg border"
+          style={{
+            backgroundColor: "var(--admin-bg)",
+            borderColor: "var(--admin-card-border)",
+            color: "var(--admin-text-main)"
+          }}
+        >
           <div className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-neutral-400" />
-            <span className="font-semibold text-white">Sitemap URL:</span>
+            <Globe className="w-4 h-4" style={{ color: "var(--admin-text-muted)" }} />
+            <span className="font-semibold" style={{ color: "var(--admin-text-main)" }}>Sitemap URL:</span>
             <a
               href="/sitemap.xml"
               target="_blank"
@@ -81,18 +94,24 @@ export default function SitemapPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-white">Last created sitemap:</span>
-            <span className="font-mono text-neutral-400">{lastCreated}</span>
+            <span className="font-semibold" style={{ color: "var(--admin-text-main)" }}>Last created sitemap:</span>
+            <span className="font-mono" style={{ color: "var(--admin-text-muted)" }}>{lastCreated}</span>
           </div>
         </div>
 
         {generating && (
           <div className="space-y-1.5">
-            <div className="flex justify-between text-xs text-neutral-300">
+            <div className="flex justify-between text-xs" style={{ color: "var(--admin-text-muted)" }}>
               <span>Generating entries (videos, categories, articles)...</span>
               <span>{progress}%</span>
             </div>
-            <div className="w-full bg-[#16191c] h-2.5 rounded-full overflow-hidden border border-[#2c3136]">
+            <div
+              className="w-full h-2.5 rounded-full overflow-hidden border"
+              style={{
+                backgroundColor: "var(--admin-bg)",
+                borderColor: "var(--admin-card-border)"
+              }}
+            >
               <div
                 className="bg-[#04abf2] h-full transition-all duration-300"
                 style={{ width: `${progress}%` }}

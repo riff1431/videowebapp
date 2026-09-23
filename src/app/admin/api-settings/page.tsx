@@ -38,8 +38,8 @@ export default function ApiSettingsPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Breadcrumb Header */}
       <div>
-        <h3 className="text-xl font-bold text-white">Manage API Access Keys</h3>
-        <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+        <h3 className="text-xl font-bold" style={{ color: "var(--admin-text-main)" }}>Manage API Access Keys</h3>
+        <div className="flex items-center gap-2 text-xs mt-1" style={{ color: "var(--admin-text-muted)" }}>
           <Link href="/admin" className="hover:underline">Admin Panel</Link>
           <span>/</span>
           <span>Mobile & API Settings</span>
@@ -49,32 +49,38 @@ export default function ApiSettingsPage() {
       </div>
 
       {msg && (
-        <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs rounded-lg">
+        <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-500 text-xs rounded-lg">
           {msg}
         </div>
       )}
 
       {/* Main Card */}
-      <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl p-6 shadow-lg space-y-6 max-w-3xl">
-        <div className="flex items-center gap-3 pb-4 border-b border-[#2c3136]">
+      <div
+        className="rounded-xl p-6 shadow-sm border space-y-6 max-w-3xl"
+        style={{
+          backgroundColor: "var(--admin-card-bg)",
+          borderColor: "var(--admin-card-border)"
+        }}
+      >
+        <div className="flex items-center gap-3 pb-4 border-b" style={{ borderColor: "var(--admin-card-border)" }}>
           <div className="p-3 bg-[#04abf2]/10 rounded-xl text-[#04abf2]">
             <Smartphone className="w-7 h-7" />
           </div>
           <div>
-            <h4 className="text-base font-bold text-white">Manage API Access Keys</h4>
-            <p className="text-xs text-neutral-400">
+            <h4 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>Manage API Access Keys</h4>
+            <p className="text-xs" style={{ color: "var(--admin-text-muted)" }}>
               Use these credentials to connect PlayTube iOS, Android, and Windows desktop apps.
             </p>
           </div>
         </div>
 
-        <div className="p-3.5 bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs rounded-lg">
+        <div className="p-3.5 bg-blue-500/10 border border-blue-500/30 text-blue-500 text-xs rounded-lg">
           Use this key to authenticate external clients with REST endpoints under <code>/api/v1/</code>.
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-300 mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5" style={{ color: "var(--admin-text-main)" }}>
               <Key className="w-3.5 h-3.5 text-[#04abf2]" />
               <span>Site Server Key</span>
             </label>
@@ -83,18 +89,27 @@ export default function ApiSettingsPage() {
                 type="text"
                 readOnly
                 value={serverKey}
-                className="flex-1 h-10 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md font-mono text-emerald-400 focus:outline-none select-all"
+                className="flex-1 h-10 px-3 text-xs border rounded-md font-mono text-emerald-500 focus:outline-none select-all"
+                style={{
+                  backgroundColor: "var(--admin-input-bg)",
+                  borderColor: "var(--admin-input-border)"
+                }}
               />
               <button
                 type="button"
                 onClick={handleCopy}
-                className="h-10 px-3.5 bg-[#2c3136] hover:bg-[#383f46] text-white rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-10 px-3.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border"
+                style={{
+                  backgroundColor: "var(--admin-bg)",
+                  borderColor: "var(--admin-card-border)",
+                  color: "var(--admin-text-main)"
+                }}
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? "Copied" : "Copy"}</span>
               </button>
             </div>
-            <p className="text-[11px] text-neutral-500 mt-1">
+            <p className="text-[11px] mt-1" style={{ color: "var(--admin-text-muted)" }}>
               Keep this key confidential. Do not expose it in public client repositories.
             </p>
           </div>

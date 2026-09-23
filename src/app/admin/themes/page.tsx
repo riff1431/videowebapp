@@ -54,11 +54,11 @@ export default function ManageThemesPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-6 max-w-7xl mx-auto space-y-6 text-[var(--admin-text-main)]">
       {/* Breadcrumb Header */}
       <div>
-        <h3 className="text-xl font-bold text-white">Themes</h3>
-        <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+        <h3 className="text-xl font-bold text-[var(--admin-text-main)]">Themes</h3>
+        <div className="flex items-center gap-2 text-xs text-[var(--admin-text-muted)] mt-1">
           <Link href="/admin" className="hover:underline">Admin Panel</Link>
           <span>/</span>
           <span>Design</span>
@@ -68,14 +68,14 @@ export default function ManageThemesPage() {
       </div>
 
       {msg && (
-        <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs rounded-lg">
+        <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs rounded-lg">
           {msg}
         </div>
       )}
 
       {/* Installed Themes Grid */}
       <div>
-        <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+        <h4 className="text-sm font-bold text-[var(--admin-text-main)] mb-4 flex items-center gap-2">
           <Palette className="w-4 h-4 text-[#04abf2]" />
           <span>Installed Themes</span>
         </h4>
@@ -84,45 +84,45 @@ export default function ManageThemesPage() {
           {themes.map((theme) => (
             <div
               key={theme.id}
-              className={`bg-[#1b1e22] border rounded-xl overflow-hidden shadow-lg transition-all ${
-                theme.isActive ? "border-[#04abf2]" : "border-[#2c3136]"
+              className={`bg-[var(--admin-card-bg)] border rounded-xl overflow-hidden shadow-xs transition-colors duration-200 ${
+                theme.isActive ? "border-[#04abf2]" : "border-[var(--admin-card-border)]"
               }`}
             >
-              <div className="h-44 bg-gradient-to-br from-neutral-800 to-neutral-900 flex items-center justify-center border-b border-[#2c3136] p-4 text-center">
+              <div className="h-44 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center border-b border-[var(--admin-card-border)] p-4 text-center">
                 <div>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/logo-light.png" alt="logo" className="h-8 mx-auto mb-2 opacity-80" />
-                  <span className="text-base font-bold text-white tracking-wide">{theme.name} Theme</span>
+                  <span className="text-base font-bold text-[var(--admin-text-main)] tracking-wide">{theme.name} Theme</span>
                 </div>
               </div>
 
               <div className="p-5 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <h5 className="font-bold text-white text-base">{theme.name}</h5>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-neutral-800 text-neutral-300 border border-neutral-700">
+                    <h5 className="font-bold text-[var(--admin-text-main)] text-base">{theme.name}</h5>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-neutral-200 dark:bg-neutral-800 text-[var(--admin-text-muted)] border border-[var(--admin-card-border)]">
                       v{theme.version}
                     </span>
                   </div>
                   {theme.isActive && (
-                    <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                    <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Activated
                     </span>
                   )}
                 </div>
 
-                <p className="text-xs text-neutral-400">{theme.description}</p>
+                <p className="text-xs text-[var(--admin-text-muted)]">{theme.description}</p>
 
-                <p className="text-xs text-neutral-500">
-                  Author: <span className="text-neutral-300 font-medium">{theme.author}</span>
+                <p className="text-xs text-[var(--admin-text-muted)]">
+                  Author: <span className="text-[var(--admin-text-main)] font-medium">{theme.author}</span>
                 </p>
 
                 <div className="pt-2">
                   {theme.isActive ? (
                     <button
                       disabled
-                      className="w-full py-2 bg-[#04abf2]/30 text-sky-200 border border-[#04abf2]/50 rounded-md text-xs font-semibold cursor-not-allowed"
+                      className="w-full py-2 bg-[#04abf2]/10 text-[#04abf2] border border-[#04abf2]/30 rounded-md text-xs font-semibold cursor-not-allowed"
                     >
                       Currently Active
                     </button>
@@ -142,35 +142,35 @@ export default function ManageThemesPage() {
       </div>
 
       {/* 3rd Party Themes Section */}
-      <div className="pt-6 border-t border-[#2c3136]">
-        <h4 className="text-sm font-bold text-white mb-4">3rd Party Themes & Extensions</h4>
+      <div className="pt-6 border-t border-[var(--admin-card-border)]">
+        <h4 className="text-sm font-bold text-[var(--admin-text-main)] mb-4">3rd Party Themes & Extensions</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 bg-[#1b1e22] border border-[#2c3136] rounded-xl flex items-center justify-between">
+          <div className="p-4 bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-xl flex items-center justify-between transition-colors duration-200">
             <div>
-              <h5 className="font-semibold text-white text-xs">Playtag - The Ultimate Theme</h5>
-              <p className="text-[11px] text-neutral-400 mt-0.5">Premium dark YouTube style layout for PlayTube</p>
+              <h5 className="font-semibold text-[var(--admin-text-main)] text-xs">Playtag - The Ultimate Theme</h5>
+              <p className="text-[11px] text-[var(--admin-text-muted)] mt-0.5">Premium dark YouTube style layout for PlayTube</p>
             </div>
             <a
               href="https://codecanyon.net"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2c3136] hover:bg-[#383f46] text-white text-xs font-medium rounded-md transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--admin-card-hover)] hover:opacity-80 text-[var(--admin-text-main)] text-xs font-medium rounded-md transition-colors border border-[var(--admin-card-border)]"
             >
               <span>Get Theme</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>
 
-          <div className="p-4 bg-[#1b1e22] border border-[#2c3136] rounded-xl flex items-center justify-between">
+          <div className="p-4 bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-xl flex items-center justify-between transition-colors duration-200">
             <div>
-              <h5 className="font-semibold text-white text-xs">Vidplay - The Elegant Theme</h5>
-              <p className="text-[11px] text-neutral-400 mt-0.5">Cinematic theme designed for high-resolution streaming</p>
+              <h5 className="font-semibold text-[var(--admin-text-main)] text-xs">Vidplay - The Elegant Theme</h5>
+              <p className="text-[11px] text-[var(--admin-text-muted)] mt-0.5">Cinematic theme designed for high-resolution streaming</p>
             </div>
             <a
               href="https://codecanyon.net"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2c3136] hover:bg-[#383f46] text-white text-xs font-medium rounded-md transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--admin-card-hover)] hover:opacity-80 text-[var(--admin-text-main)] text-xs font-medium rounded-md transition-colors border border-[var(--admin-card-border)]"
             >
               <span>Get Theme</span>
               <ExternalLink className="w-3 h-3" />

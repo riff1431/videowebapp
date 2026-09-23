@@ -97,8 +97,8 @@ export default function ManageMoviesPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Breadcrumb Header */}
       <div>
-        <h3 className="text-xl font-bold text-white">Manage Movies</h3>
-        <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+        <h3 className="text-xl font-bold" style={{ color: "var(--admin-text-main)" }}>Manage Movies</h3>
+        <div className="flex items-center gap-2 text-xs mt-1" style={{ color: "var(--admin-text-muted)" }}>
           <Link href="/admin" className="hover:underline">Admin Panel</Link>
           <span>/</span>
           <span>Movies</span>
@@ -114,18 +114,32 @@ export default function ManageMoviesPage() {
       )}
 
       {/* Main Container */}
-      <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl overflow-hidden shadow-lg">
+      <div
+        className="rounded-xl overflow-hidden shadow-sm border"
+        style={{
+          backgroundColor: "var(--admin-card-bg)",
+          borderColor: "var(--admin-card-border)"
+        }}
+      >
         {/* Card Header & Controls */}
-        <div className="p-4 border-b border-[#2c3136] flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div
+          className="p-4 border-b flex flex-col sm:flex-row items-center justify-between gap-4"
+          style={{ borderColor: "var(--admin-card-border)" }}
+        >
           <div className="relative w-full sm:w-72">
             <input
               type="text"
               placeholder="Search for keyword..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-9 pl-9 pr-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2] placeholder-neutral-500"
+              className="w-full h-9 pl-9 pr-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2] transition-colors"
+              style={{
+                backgroundColor: "var(--admin-input-bg)",
+                borderColor: "var(--admin-input-border)",
+                color: "var(--admin-text-main)"
+              }}
             />
-            <Search className="w-3.5 h-3.5 text-neutral-500 absolute left-3 top-3" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-3" style={{ color: "var(--admin-text-muted)" }} />
           </div>
 
           <button
@@ -139,8 +153,15 @@ export default function ManageMoviesPage() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left text-neutral-300">
-            <thead className="bg-[#16191c] text-neutral-400 uppercase text-[10px] tracking-wider border-b border-[#2c3136]">
+          <table className="w-full text-xs text-left" style={{ color: "var(--admin-text-main)" }}>
+            <thead
+              className="uppercase text-[10px] tracking-wider border-b font-medium"
+              style={{
+                backgroundColor: "var(--admin-bg)",
+                borderColor: "var(--admin-card-border)",
+                color: "var(--admin-text-muted)"
+              }}
+            >
               <tr>
                 <th className="px-4 py-3 w-16 text-center">ID</th>
                 <th className="px-4 py-3">Movie Name</th>
@@ -151,25 +172,36 @@ export default function ManageMoviesPage() {
                 <th className="px-4 py-3 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2c3136]">
+            <tbody className="divide-y" style={{ borderColor: "var(--admin-card-border)" }}>
               {filteredMovies.map((movie) => (
-                <tr key={movie.id} className="hover:bg-[#212529] transition-colors">
-                  <td className="px-4 py-3 text-center font-mono text-neutral-400">{movie.id}</td>
-                  <td className="px-4 py-3 font-semibold text-white flex items-center gap-2">
+                <tr
+                  key={movie.id}
+                  className="transition-colors hover:bg-neutral-500/5"
+                  style={{ borderBottomColor: "var(--admin-card-border)" }}
+                >
+                  <td className="px-4 py-3 text-center font-mono" style={{ color: "var(--admin-text-muted)" }}>{movie.id}</td>
+                  <td className="px-4 py-3 font-semibold flex items-center gap-2" style={{ color: "var(--admin-text-main)" }}>
                     <Film className="w-4 h-4 text-[#04abf2]" />
                     <span>{movie.title}</span>
                   </td>
-                  <td className="px-4 py-3 text-neutral-400 flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-neutral-500" />
+                  <td className="px-4 py-3 flex items-center gap-1" style={{ color: "var(--admin-text-muted)" }}>
+                    <Calendar className="w-3 h-3 opacity-70" />
                     <span>{movie.releaseYear}</span>
                   </td>
-                  <td className="px-4 py-3 text-neutral-400 truncate max-w-xs">{movie.stars}</td>
-                  <td className="px-4 py-3 text-amber-400 font-semibold flex items-center gap-1">
-                    <Star className="w-3 h-3 fill-amber-400" />
+                  <td className="px-4 py-3 truncate max-w-xs" style={{ color: "var(--admin-text-muted)" }}>{movie.stars}</td>
+                  <td className="px-4 py-3 text-amber-500 font-semibold flex items-center gap-1">
+                    <Star className="w-3 h-3 fill-amber-500" />
                     <span>{movie.rating}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="px-2 py-0.5 rounded text-[10px] bg-neutral-800 border border-neutral-700 text-neutral-300 font-mono">
+                    <span
+                      className="px-2 py-0.5 rounded text-[10px] border font-mono"
+                      style={{
+                        backgroundColor: "var(--admin-bg)",
+                        borderColor: "var(--admin-card-border)",
+                        color: "var(--admin-text-muted)"
+                      }}
+                    >
                       {movie.quality}
                     </span>
                   </td>
@@ -177,14 +209,14 @@ export default function ManageMoviesPage() {
                     <div className="flex items-center justify-center gap-2">
                       <button
                         title="Edit Movie"
-                        className="p-1 hover:bg-[#2c3136] rounded text-sky-400 transition-colors cursor-pointer"
+                        className="p-1 rounded text-sky-500 hover:bg-neutral-500/10 transition-colors cursor-pointer"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         title="Delete Movie"
                         onClick={() => handleDelete(movie.id)}
-                        className="p-1 hover:bg-[#2c3136] rounded text-red-400 transition-colors cursor-pointer"
+                        className="p-1 rounded text-red-500 hover:bg-neutral-500/10 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -200,11 +232,17 @@ export default function ManageMoviesPage() {
       {/* Modal Add Movie */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-white">Create New Movie</h3>
+          <div
+            className="border rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4"
+            style={{
+              backgroundColor: "var(--admin-card-bg)",
+              borderColor: "var(--admin-card-border)"
+            }}
+          >
+            <h3 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>Create New Movie</h3>
             <form onSubmit={handleAddMovie} className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                   Movie Title
                 </label>
                 <input
@@ -213,37 +251,52 @@ export default function ManageMoviesPage() {
                   placeholder="Movie title"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                  className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                  style={{
+                    backgroundColor: "var(--admin-input-bg)",
+                    borderColor: "var(--admin-input-border)",
+                    color: "var(--admin-text-main)"
+                  }}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">
+                  <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                     Release Year
                   </label>
                   <input
                     type="text"
                     value={newYear}
                     onChange={(e) => setNewYear(e.target.value)}
-                    className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                    className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                    style={{
+                      backgroundColor: "var(--admin-input-bg)",
+                      borderColor: "var(--admin-input-border)",
+                      color: "var(--admin-text-main)"
+                    }}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">
+                  <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                     Rating (e.g. 8.5)
                   </label>
                   <input
                     type="text"
                     value={newRating}
                     onChange={(e) => setNewRating(e.target.value)}
-                    className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                    className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                    style={{
+                      backgroundColor: "var(--admin-input-bg)",
+                      borderColor: "var(--admin-input-border)",
+                      color: "var(--admin-text-main)"
+                    }}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                   Stars & Actors
                 </label>
                 <input
@@ -251,13 +304,18 @@ export default function ManageMoviesPage() {
                   placeholder="Actor 1, Actor 2..."
                   value={newStars}
                   onChange={(e) => setNewStars(e.target.value)}
-                  className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                  className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                  style={{
+                    backgroundColor: "var(--admin-input-bg)",
+                    borderColor: "var(--admin-input-border)",
+                    color: "var(--admin-text-main)"
+                  }}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">
+                  <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                     Producer
                   </label>
                   <input
@@ -265,17 +323,27 @@ export default function ManageMoviesPage() {
                     placeholder="Producer name"
                     value={newProducer}
                     onChange={(e) => setNewProducer(e.target.value)}
-                    className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                    className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                    style={{
+                      backgroundColor: "var(--admin-input-bg)",
+                      borderColor: "var(--admin-input-border)",
+                      color: "var(--admin-text-main)"
+                    }}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-neutral-300 mb-1">
+                  <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                     Quality
                   </label>
                   <select
                     value={newQuality}
                     onChange={(e) => setNewQuality(e.target.value)}
-                    className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                    className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                    style={{
+                      backgroundColor: "var(--admin-input-bg)",
+                      borderColor: "var(--admin-input-border)",
+                      color: "var(--admin-text-main)"
+                    }}
                   >
                     <option value="4K">4K</option>
                     <option value="1080p">1080p</option>
@@ -289,7 +357,12 @@ export default function ManageMoviesPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-1.5 text-xs bg-[#2c3136] hover:bg-[#383f46] text-white rounded-md transition-colors cursor-pointer"
+                  className="px-4 py-1.5 text-xs rounded-md transition-colors cursor-pointer border"
+                  style={{
+                    backgroundColor: "var(--admin-bg)",
+                    borderColor: "var(--admin-card-border)",
+                    color: "var(--admin-text-main)"
+                  }}
                 >
                   Cancel
                 </button>

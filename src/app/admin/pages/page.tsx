@@ -91,8 +91,8 @@ export default function ManageCustomPages() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Breadcrumb Header */}
       <div>
-        <h3 className="text-xl font-bold text-white">Manage Custom Pages</h3>
-        <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+        <h3 className="text-xl font-bold" style={{ color: "var(--admin-text-main)" }}>Manage Custom Pages</h3>
+        <div className="flex items-center gap-2 text-xs mt-1" style={{ color: "var(--admin-text-muted)" }}>
           <Link href="/admin" className="hover:underline">Admin Panel</Link>
           <span>/</span>
           <span>Pages</span>
@@ -108,18 +108,32 @@ export default function ManageCustomPages() {
       )}
 
       {/* Main Container */}
-      <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl overflow-hidden shadow-lg">
+      <div
+        className="rounded-xl overflow-hidden shadow-sm border"
+        style={{
+          backgroundColor: "var(--admin-card-bg)",
+          borderColor: "var(--admin-card-border)"
+        }}
+      >
         {/* Search Bar & Create Button */}
-        <div className="p-4 border-b border-[#2c3136] flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div
+          className="p-4 border-b flex flex-col sm:flex-row items-center justify-between gap-4"
+          style={{ borderColor: "var(--admin-card-border)" }}
+        >
           <div className="relative w-full sm:w-72">
             <input
               type="text"
               placeholder="Search custom pages..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-9 pl-9 pr-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2] placeholder-neutral-500"
+              className="w-full h-9 pl-9 pr-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2] transition-colors"
+              style={{
+                backgroundColor: "var(--admin-input-bg)",
+                borderColor: "var(--admin-input-border)",
+                color: "var(--admin-text-main)"
+              }}
             />
-            <Search className="w-3.5 h-3.5 text-neutral-500 absolute left-3 top-3" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-3" style={{ color: "var(--admin-text-muted)" }} />
           </div>
 
           <button
@@ -133,8 +147,15 @@ export default function ManageCustomPages() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left text-neutral-300">
-            <thead className="bg-[#16191c] text-neutral-400 uppercase text-[10px] tracking-wider border-b border-[#2c3136]">
+          <table className="w-full text-xs text-left" style={{ color: "var(--admin-text-main)" }}>
+            <thead
+              className="uppercase text-[10px] tracking-wider border-b font-medium"
+              style={{
+                backgroundColor: "var(--admin-bg)",
+                borderColor: "var(--admin-card-border)",
+                color: "var(--admin-text-muted)"
+              }}
+            >
               <tr>
                 <th className="px-4 py-3 w-16 text-center">ID</th>
                 <th className="px-4 py-3">Page Name</th>
@@ -144,37 +165,41 @@ export default function ManageCustomPages() {
                 <th className="px-4 py-3 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2c3136]">
+            <tbody className="divide-y" style={{ borderColor: "var(--admin-card-border)" }}>
               {filteredPages.map((page) => (
-                <tr key={page.id} className="hover:bg-[#212529] transition-colors">
-                  <td className="px-4 py-3 text-center font-mono text-neutral-400">{page.id}</td>
-                  <td className="px-4 py-3 font-semibold text-white flex items-center gap-2">
+                <tr
+                  key={page.id}
+                  className="transition-colors hover:bg-neutral-500/5"
+                  style={{ borderBottomColor: "var(--admin-card-border)" }}
+                >
+                  <td className="px-4 py-3 text-center font-mono" style={{ color: "var(--admin-text-muted)" }}>{page.id}</td>
+                  <td className="px-4 py-3 font-semibold flex items-center gap-2" style={{ color: "var(--admin-text-main)" }}>
                     <FileCode className="w-4 h-4 text-[#04abf2]" />
                     <span>{page.name}</span>
                   </td>
-                  <td className="px-4 py-3 font-medium text-white">{page.title}</td>
-                  <td className="px-4 py-3 font-mono text-neutral-400">/terms/{page.slug}</td>
-                  <td className="px-4 py-3 text-neutral-400">{page.updatedAt}</td>
+                  <td className="px-4 py-3 font-medium" style={{ color: "var(--admin-text-main)" }}>{page.title}</td>
+                  <td className="px-4 py-3 font-mono" style={{ color: "var(--admin-text-muted)" }}>/terms/{page.slug}</td>
+                  <td className="px-4 py-3" style={{ color: "var(--admin-text-muted)" }}>{page.updatedAt}</td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <Link
                         href={`/terms/${page.slug}`}
                         target="_blank"
                         title="View Page"
-                        className="p-1 hover:bg-[#2c3136] rounded text-emerald-400 transition-colors"
+                        className="p-1 rounded text-emerald-500 hover:bg-neutral-500/10 transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </Link>
                       <button
                         title="Edit Page"
-                        className="p-1 hover:bg-[#2c3136] rounded text-sky-400 transition-colors cursor-pointer"
+                        className="p-1 rounded text-sky-500 hover:bg-neutral-500/10 transition-colors cursor-pointer"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         title="Delete Page"
                         onClick={() => handleDelete(page.id)}
-                        className="p-1 hover:bg-[#2c3136] rounded text-red-400 transition-colors cursor-pointer"
+                        className="p-1 rounded text-red-500 hover:bg-neutral-500/10 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -190,11 +215,17 @@ export default function ManageCustomPages() {
       {/* Modal Add Page */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-white">Create New Custom Page</h3>
+          <div
+            className="border rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4"
+            style={{
+              backgroundColor: "var(--admin-card-bg)",
+              borderColor: "var(--admin-card-border)"
+            }}
+          >
+            <h3 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>Create New Custom Page</h3>
             <form onSubmit={handleAddPage} className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                   Page Name (Internal Identifier)
                 </label>
                 <input
@@ -203,12 +234,17 @@ export default function ManageCustomPages() {
                   placeholder="e.g. cookie-policy"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                  className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                  style={{
+                    backgroundColor: "var(--admin-input-bg)",
+                    borderColor: "var(--admin-input-border)",
+                    color: "var(--admin-text-main)"
+                  }}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                   Page Title (Heading)
                 </label>
                 <input
@@ -217,12 +253,17 @@ export default function ManageCustomPages() {
                   placeholder="e.g. Cookie & Tracking Policy"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full h-9 px-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                  className="w-full h-9 px-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                  style={{
+                    backgroundColor: "var(--admin-input-bg)",
+                    borderColor: "var(--admin-input-border)",
+                    color: "var(--admin-text-main)"
+                  }}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs font-medium mb-1" style={{ color: "var(--admin-text-muted)" }}>
                   Page Content (HTML / Markdown)
                 </label>
                 <textarea
@@ -230,7 +271,12 @@ export default function ManageCustomPages() {
                   placeholder="Write page content here..."
                   value={newContent}
                   onChange={(e) => setNewContent(e.target.value)}
-                  className="w-full p-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-md text-white focus:outline-none focus:border-[#04abf2]"
+                  className="w-full p-3 text-xs border rounded-md focus:outline-none focus:border-[#04abf2]"
+                  style={{
+                    backgroundColor: "var(--admin-input-bg)",
+                    borderColor: "var(--admin-input-border)",
+                    color: "var(--admin-text-main)"
+                  }}
                 />
               </div>
 
@@ -238,7 +284,12 @@ export default function ManageCustomPages() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-1.5 text-xs bg-[#2c3136] hover:bg-[#383f46] text-white rounded-md transition-colors cursor-pointer"
+                  className="px-4 py-1.5 text-xs rounded-md transition-colors cursor-pointer border"
+                  style={{
+                    backgroundColor: "var(--admin-bg)",
+                    borderColor: "var(--admin-card-border)",
+                    color: "var(--admin-text-main)"
+                  }}
                 >
                   Cancel
                 </button>

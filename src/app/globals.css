@@ -23,17 +23,20 @@
   --search-border: #dcdfe4;
   --radius: 6px;
 
-  /* Admin Theme Tokens */
-  --admin-bg: #16191c;
-  --admin-header-bg: #1b1e22;
-  --admin-sidebar-bg: #1b1e22;
-  --admin-card-bg: #212529;
-  --admin-card-border: #2c3136;
-  --admin-text-main: #e2e8f0;
-  --admin-text-muted: #8e9cae;
-  --admin-alert-bg: #4c1d24;
-  --admin-alert-border: #6d242e;
-  --admin-alert-text: #fca5a5;
+  /* Admin Theme Tokens - Light Mode (PlayTube Gogi admin theme) */
+  --admin-bg: #f4f5fd;
+  --admin-header-bg: #ffffff;
+  --admin-sidebar-bg: #ffffff;
+  --admin-card-bg: #ffffff;
+  --admin-card-border: #e8ebf3;
+  --admin-card-hover: #f8f9fd;
+  --admin-text-main: #212529;
+  --admin-text-muted: #6c757d;
+  --admin-input-bg: #f8f9fd;
+  --admin-input-border: #dcdfe8;
+  --admin-alert-bg: #fee2e2;
+  --admin-alert-border: #fca5a5;
+  --admin-alert-text: #991b1b;
 }
 
 .dark {
@@ -54,6 +57,21 @@
   --border: #262626;
   --search-bg: #202020;
   --search-border: #333333;
+
+  /* Admin Theme Tokens - Dark Mode (PlayTube Night Mode) */
+  --admin-bg: #16191c;
+  --admin-header-bg: #1b1e22;
+  --admin-sidebar-bg: #1b1e22;
+  --admin-card-bg: #212529;
+  --admin-card-border: #2c3136;
+  --admin-card-hover: #262b30;
+  --admin-text-main: #e2e8f0;
+  --admin-text-muted: #8e9cae;
+  --admin-input-bg: #16191c;
+  --admin-input-border: #2c3136;
+  --admin-alert-bg: #4c1d24;
+  --admin-alert-border: #6d242e;
+  --admin-alert-text: #fca5a5;
 }
 
 body {

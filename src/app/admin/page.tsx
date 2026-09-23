@@ -90,18 +90,18 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <div className="space-y-6 text-[#e2e8f0]">
+    <div className="space-y-6 text-[var(--admin-text-main)]">
       {/* Welcome Title */}
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-white">
+        <h1 className="text-xl font-bold tracking-tight text-[var(--admin-text-main)]">
           Welcome back, admin
         </h1>
       </div>
 
       {/* Red/Burgundy Alert Banner matching PlayTube */}
-      <div className="bg-[#4c1d24] border border-[#6d242e] text-[#fca5a5] px-4 py-3 rounded-md text-xs flex items-center justify-between shadow-xs">
+      <div className="bg-[var(--admin-alert-bg)] border border-[var(--admin-alert-border)] text-[var(--admin-alert-text)] px-4 py-3 rounded-md text-xs flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-red-300">Important!</span>
+          <span className="font-bold">Important!</span>
           <span>There are some errors found on your system, please review System Status.</span>
         </div>
       </div>
@@ -120,16 +120,16 @@ export default async function AdminDashboardPage() {
             return (
               <div
                 key={kpi.title}
-                className="bg-[#212529] border border-[#2c3136] rounded-lg p-4 flex items-center gap-4 shadow-sm"
+                className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-lg p-4 flex items-center gap-4 shadow-xs"
               >
                 <div className={`w-11 h-11 rounded-lg ${kpi.bgColor} text-white flex items-center justify-center shrink-0`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <p className="text-[10px] font-bold text-[var(--admin-text-muted)] uppercase tracking-wider">
                     {kpi.title}
                   </p>
-                  <h3 className="text-xl font-bold text-white mt-0.5">
+                  <h3 className="text-xl font-bold text-[var(--admin-text-main)] mt-0.5">
                     {kpi.value.toLocaleString()}
                   </h3>
                 </div>

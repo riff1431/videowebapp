@@ -25,24 +25,24 @@ export default async function AdminAdsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl text-[var(--admin-text-main)]">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-sky-50 text-[var(--primary)] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-[var(--primary)] flex items-center justify-center">
           <Megaphone className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">
             Manage Website Advertisements
           </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-sm text-[var(--admin-text-muted)] mt-0.5">
             Inject Google AdSense, HTML banners, or custom ad tags across site layouts
           </p>
         </div>
       </div>
 
-      <form action={handleSave} className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs space-y-6">
+      <form action={handleSave} className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-xl p-6 shadow-xs space-y-6 transition-colors duration-200">
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
             Header Banner Ad (Under navigation bar)
           </label>
           <textarea
@@ -50,12 +50,12 @@ export default async function AdminAdsPage() {
             defaultValue={configObj.header_ad || ""}
             rows={3}
             placeholder='<script async src="..."></script>'
-            className="w-full p-3 text-xs font-mono bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)]"
+            className="w-full p-3 text-xs font-mono bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)] rounded-lg focus:outline-none focus:border-[var(--primary)]"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
             Footer Banner Ad (Above footer)
           </label>
           <textarea
@@ -63,12 +63,12 @@ export default async function AdminAdsPage() {
             defaultValue={configObj.footer_ad || ""}
             rows={3}
             placeholder='<a href="..."><img src="..." /></a>'
-            className="w-full p-3 text-xs font-mono bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)]"
+            className="w-full p-3 text-xs font-mono bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)] rounded-lg focus:outline-none focus:border-[var(--primary)]"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
             Watch Page Sidebar Ad (Above related videos)
           </label>
           <textarea
@@ -76,12 +76,12 @@ export default async function AdminAdsPage() {
             defaultValue={configObj.watch_side_bar_ad || ""}
             rows={3}
             placeholder='<ins class="adsbygoogle" ...></ins>'
-            className="w-full p-3 text-xs font-mono bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)]"
+            className="w-full p-3 text-xs font-mono bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)] rounded-lg focus:outline-none focus:border-[var(--primary)]"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
             Watch Page Comments Ad (Above discussion)
           </label>
           <textarea
@@ -89,11 +89,11 @@ export default async function AdminAdsPage() {
             defaultValue={configObj.watch_comments_ad || ""}
             rows={3}
             placeholder='<div>Custom Responsive Banner</div>'
-            className="w-full p-3 text-xs font-mono bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)]"
+            className="w-full p-3 text-xs font-mono bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)] rounded-lg focus:outline-none focus:border-[var(--primary)]"
           />
         </div>
 
-        <div className="pt-4 border-t border-gray-100 flex justify-end">
+        <div className="pt-4 border-t border-[var(--admin-card-border)] flex justify-end">
           <button
             type="submit"
             className="flex items-center gap-2 px-5 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-xs"

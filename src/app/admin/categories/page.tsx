@@ -40,11 +40,11 @@ export default async function AdminCategoriesPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 max-w-5xl text-[var(--admin-text-main)]">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Manage Categories</h1>
-          <p className="text-xs text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">Manage Categories</h1>
+          <p className="text-xs text-[var(--admin-text-muted)] mt-1">
             Organize video categorization, discovery pills, and search filters
           </p>
         </div>
@@ -52,15 +52,15 @@ export default async function AdminCategoriesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Add Category Form */}
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-xs h-fit space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
+        <div className="bg-[var(--admin-card-bg)] p-6 rounded-xl border border-[var(--admin-card-border)] shadow-xs h-fit space-y-4 transition-colors duration-200">
+          <div className="flex items-center gap-2 pb-2 border-b border-[var(--admin-card-border)]">
             <Plus className="w-4 h-4 text-[var(--primary)]" />
-            <h3 className="text-sm font-bold text-gray-800">Add New Category</h3>
+            <h3 className="text-sm font-bold text-[var(--admin-text-main)]">Add New Category</h3>
           </div>
 
           <form action={createCategoryAction} className="space-y-3">
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
+              <label className="block text-xs font-semibold text-[var(--admin-text-main)] mb-1">
                 Category Name *
               </label>
               <input
@@ -68,19 +68,19 @@ export default async function AdminCategoriesPage() {
                 name="name"
                 required
                 placeholder="e.g. Comedy"
-                className="w-full h-9 px-3 text-xs bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:border-[var(--primary)]"
+                className="w-full h-9 px-3 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)] rounded-md focus:outline-none focus:border-[var(--primary)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
+              <label className="block text-xs font-semibold text-[var(--admin-text-main)] mb-1">
                 Category Key (Slug)
               </label>
               <input
                 type="text"
                 name="key"
                 placeholder="e.g. comedy"
-                className="w-full h-9 px-3 text-xs bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:border-[var(--primary)] font-mono"
+                className="w-full h-9 px-3 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)] rounded-md focus:outline-none focus:border-[var(--primary)] font-mono"
               />
             </div>
 
@@ -94,9 +94,9 @@ export default async function AdminCategoriesPage() {
         </div>
 
         {/* Existing Categories Table */}
-        <div className="md:col-span-2 bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden">
-          <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-gray-800">
+        <div className="md:col-span-2 bg-[var(--admin-card-bg)] rounded-xl border border-[var(--admin-card-border)] shadow-xs overflow-hidden transition-colors duration-200">
+          <div className="p-4 border-b border-[var(--admin-card-border)] flex items-center justify-between">
+            <h3 className="text-sm font-bold text-[var(--admin-text-main)]">
               Categories List ({categoriesList.length})
             </h3>
           </div>
@@ -104,32 +104,32 @@ export default async function AdminCategoriesPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-gray-50/75 border-b border-gray-100 text-gray-500 font-semibold">
+                <tr className="bg-[var(--admin-card-hover)] border-b border-[var(--admin-card-border)] text-[var(--admin-text-muted)] font-semibold">
                   <th className="py-3 px-4">ID</th>
                   <th className="py-3 px-4">Name</th>
                   <th className="py-3 px-4">Slug / Key</th>
                   <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-[var(--admin-card-border)]">
                 {categoriesList.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="py-8 text-center text-gray-400">
+                    <td colSpan={4} className="py-8 text-center text-[var(--admin-text-muted)]">
                       No categories defined yet.
                     </td>
                   </tr>
                 ) : (
                   categoriesList.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-gray-50/50">
-                      <td className="py-3 px-4 text-gray-400 font-mono">{cat.id}</td>
-                      <td className="py-3 px-4 font-semibold text-gray-800">{cat.name}</td>
-                      <td className="py-3 px-4 text-gray-500 font-mono">{cat.key}</td>
+                    <tr key={cat.id} className="hover:bg-[var(--admin-card-hover)] transition-colors">
+                      <td className="py-3 px-4 text-[var(--admin-text-muted)] font-mono">{cat.id}</td>
+                      <td className="py-3 px-4 font-semibold text-[var(--admin-text-main)]">{cat.name}</td>
+                      <td className="py-3 px-4 text-[var(--admin-text-muted)] font-mono">{cat.key}</td>
                       <td className="py-3 px-4 text-right">
                         <form action={deleteCategoryAction} className="inline">
                           <input type="hidden" name="id" value={cat.id} />
                           <button
                             type="submit"
-                            className="p-1 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+                            className="p-1 text-[var(--admin-text-muted)] hover:text-red-500 transition-colors cursor-pointer"
                             title="Delete Category"
                           >
                             <Trash2 className="w-4 h-4" />

@@ -95,8 +95,8 @@ export default function SystemStatusPage() {
       {/* Breadcrumb Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold text-white">System Requirements & Status</h3>
-          <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+          <h3 className="text-xl font-bold" style={{ color: "var(--admin-text-main)" }}>System Requirements & Status</h3>
+          <div className="flex items-center gap-2 text-xs mt-1" style={{ color: "var(--admin-text-muted)" }}>
             <Link href="/admin" className="hover:underline">Admin Panel</Link>
             <span>/</span>
             <span>Tools</span>
@@ -107,7 +107,12 @@ export default function SystemStatusPage() {
 
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2c3136] hover:bg-[#383f46] text-white text-xs font-semibold rounded-md transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer border"
+          style={{
+            backgroundColor: "var(--admin-card-bg)",
+            borderColor: "var(--admin-card-border)",
+            color: "var(--admin-text-main)"
+          }}
         >
           <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
           <span>Refresh Checks</span>
@@ -116,59 +121,96 @@ export default function SystemStatusPage() {
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 bg-[#1b1e22] border border-[#2c3136] rounded-xl flex items-center gap-3">
-          <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-400">
+        <div
+          className="p-4 rounded-xl flex items-center gap-3 border shadow-sm"
+          style={{
+            backgroundColor: "var(--admin-card-bg)",
+            borderColor: "var(--admin-card-border)"
+          }}
+        >
+          <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-500">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral-400">System Health</p>
-            <h4 className="text-base font-bold text-white">100% Operational</h4>
+            <p className="text-xs" style={{ color: "var(--admin-text-muted)" }}>System Health</p>
+            <h4 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>100% Operational</h4>
           </div>
         </div>
 
-        <div className="p-4 bg-[#1b1e22] border border-[#2c3136] rounded-xl flex items-center gap-3">
-          <div className="p-3 bg-blue-500/10 rounded-lg text-blue-400">
+        <div
+          className="p-4 rounded-xl flex items-center gap-3 border shadow-sm"
+          style={{
+            backgroundColor: "var(--admin-card-bg)",
+            borderColor: "var(--admin-card-border)"
+          }}
+        >
+          <div className="p-3 bg-blue-500/10 rounded-lg text-blue-500">
             <Database className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral-400">Database</p>
-            <h4 className="text-base font-bold text-white">PostgreSQL 16</h4>
+            <p className="text-xs" style={{ color: "var(--admin-text-muted)" }}>Database</p>
+            <h4 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>PostgreSQL 16</h4>
           </div>
         </div>
 
-        <div className="p-4 bg-[#1b1e22] border border-[#2c3136] rounded-xl flex items-center gap-3">
-          <div className="p-3 bg-purple-500/10 rounded-lg text-purple-400">
+        <div
+          className="p-4 rounded-xl flex items-center gap-3 border shadow-sm"
+          style={{
+            backgroundColor: "var(--admin-card-bg)",
+            borderColor: "var(--admin-card-border)"
+          }}
+        >
+          <div className="p-3 bg-purple-500/10 rounded-lg text-purple-500">
             <HardDrive className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral-400">Storage Abstraction</p>
-            <h4 className="text-base font-bold text-white">Local / S3 Ready</h4>
+            <p className="text-xs" style={{ color: "var(--admin-text-muted)" }}>Storage Abstraction</p>
+            <h4 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>Local / S3 Ready</h4>
           </div>
         </div>
 
-        <div className="p-4 bg-[#1b1e22] border border-[#2c3136] rounded-xl flex items-center gap-3">
-          <div className="p-3 bg-amber-500/10 rounded-lg text-amber-400">
+        <div
+          className="p-4 rounded-xl flex items-center gap-3 border shadow-sm"
+          style={{
+            backgroundColor: "var(--admin-card-bg)",
+            borderColor: "var(--admin-card-border)"
+          }}
+        >
+          <div className="p-3 bg-amber-500/10 rounded-lg text-amber-500">
             <Server className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-neutral-400">Runtime</p>
-            <h4 className="text-base font-bold text-white">Node.js 24 LTS</h4>
+            <p className="text-xs" style={{ color: "var(--admin-text-muted)" }}>Runtime</p>
+            <h4 className="text-base font-bold" style={{ color: "var(--admin-text-main)" }}>Node.js 24 LTS</h4>
           </div>
         </div>
       </div>
 
       {/* Main Table */}
-      <div className="bg-[#1b1e22] border border-[#2c3136] rounded-xl overflow-hidden shadow-lg">
-        <div className="p-4 border-b border-[#2c3136]">
-          <h4 className="text-sm font-semibold text-white">Detailed System Check Results</h4>
-          <p className="text-xs text-neutral-400 mt-0.5">
+      <div
+        className="rounded-xl overflow-hidden shadow-sm border"
+        style={{
+          backgroundColor: "var(--admin-card-bg)",
+          borderColor: "var(--admin-card-border)"
+        }}
+      >
+        <div className="p-4 border-b" style={{ borderColor: "var(--admin-card-border)" }}>
+          <h4 className="text-sm font-semibold" style={{ color: "var(--admin-text-main)" }}>Detailed System Check Results</h4>
+          <p className="text-xs mt-0.5" style={{ color: "var(--admin-text-muted)" }}>
             Validation against Huipper CodeCanyon Next.js standard requirements.
           </p>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left text-neutral-300">
-            <thead className="bg-[#16191c] text-neutral-400 uppercase text-[10px] tracking-wider border-b border-[#2c3136]">
+          <table className="w-full text-xs text-left" style={{ color: "var(--admin-text-main)" }}>
+            <thead
+              className="uppercase text-[10px] tracking-wider border-b font-medium"
+              style={{
+                backgroundColor: "var(--admin-bg)",
+                borderColor: "var(--admin-card-border)",
+                color: "var(--admin-text-muted)"
+              }}
+            >
               <tr>
                 <th className="px-4 py-3">Component</th>
                 <th className="px-4 py-3">Detected Value</th>
@@ -177,15 +219,19 @@ export default function SystemStatusPage() {
                 <th className="px-4 py-3 text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2c3136]">
+            <tbody className="divide-y" style={{ borderColor: "var(--admin-card-border)" }}>
               {items.map((check, index) => (
-                <tr key={index} className="hover:bg-[#212529] transition-colors">
-                  <td className="px-4 py-3 font-semibold text-white">{check.name}</td>
+                <tr
+                  key={index}
+                  className="transition-colors hover:bg-neutral-500/5"
+                  style={{ borderBottomColor: "var(--admin-card-border)" }}
+                >
+                  <td className="px-4 py-3 font-semibold" style={{ color: "var(--admin-text-main)" }}>{check.name}</td>
                   <td className="px-4 py-3 font-mono text-[#04abf2]">{check.value}</td>
-                  <td className="px-4 py-3 text-neutral-400">{check.required || "N/A"}</td>
-                  <td className="px-4 py-3 text-neutral-400">{check.notes || "-"}</td>
+                  <td className="px-4 py-3" style={{ color: "var(--admin-text-muted)" }}>{check.required || "N/A"}</td>
+                  <td className="px-4 py-3" style={{ color: "var(--admin-text-muted)" }}>{check.notes || "-"}</td>
                   <td className="px-4 py-3 text-center">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-500 border border-emerald-500/30">
                       <CheckCircle2 className="w-3 h-3" />
                       Healthy
                     </span>

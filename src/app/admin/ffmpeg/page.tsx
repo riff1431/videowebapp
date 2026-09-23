@@ -36,38 +36,38 @@ export default async function AdminFfmpegPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl text-[var(--admin-text-main)]">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center">
           <Clapperboard className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">
             FFmpeg & Video Transcoding Setup
           </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-sm text-[var(--admin-text-muted)] mt-0.5">
             Configure server FFmpeg binaries and automated multi-resolution encoding profiles
           </p>
         </div>
       </div>
 
-      <form action={handleSave} className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs space-y-6">
+      <form action={handleSave} className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-xl p-6 shadow-xs space-y-6 transition-colors duration-200">
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
             FFmpeg Transcoding Engine
           </label>
           <select
             name="ffmpeg_system"
             defaultValue={configObj.ffmpeg_system || "on"}
-            className="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+            className="w-full px-3.5 py-2 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] rounded-lg focus:outline-none focus:border-[var(--primary)]"
           >
-            <option value="on">Enabled (Server encodes uploaded videos)</option>
-            <option value="off">Disabled (Direct storage without encoding)</option>
+            <option value="on" className="bg-[var(--admin-card-bg)] text-[var(--admin-text-main)]">Enabled (Server encodes uploaded videos)</option>
+            <option value="off" className="bg-[var(--admin-card-bg)] text-[var(--admin-text-main)]">Disabled (Direct storage without encoding)</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
             FFmpeg Binary Path
           </label>
           <input
@@ -75,12 +75,12 @@ export default async function AdminFfmpegPage() {
             name="ffmpeg_binary_path"
             defaultValue={configObj.ffmpeg_binary_path || "/usr/bin/ffmpeg"}
             placeholder="/usr/bin/ffmpeg or C:\ffmpeg\bin\ffmpeg.exe"
-            className="w-full px-3.5 py-2 text-xs font-mono bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+            className="w-full px-3.5 py-2 text-xs font-mono bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)] rounded-lg focus:outline-none focus:border-[var(--primary)]"
           />
         </div>
 
         <div>
-          <h3 className="text-sm font-bold text-gray-800 mb-3 pb-2 border-b border-gray-100">
+          <h3 className="text-sm font-bold text-[var(--admin-text-main)] mb-3 pb-2 border-b border-[var(--admin-card-border)]">
             Resolution Encoding Profiles
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-semibold">
@@ -92,7 +92,7 @@ export default async function AdminFfmpegPage() {
               { id: "transcode_2k", label: "2K (QHD)" },
               { id: "transcode_4k", label: "4K (UHD)" },
             ].map((res) => (
-              <label key={res.id} className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 bg-gray-50/50">
+              <label key={res.id} className="flex items-center gap-2 p-3 rounded-lg border border-[var(--admin-card-border)] bg-[var(--admin-card-hover)] text-[var(--admin-text-main)] cursor-pointer">
                 <input
                   type="checkbox"
                   name={res.id}
@@ -106,7 +106,7 @@ export default async function AdminFfmpegPage() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-gray-100 flex justify-end">
+        <div className="pt-4 border-t border-[var(--admin-card-border)] flex justify-end">
           <button
             type="submit"
             className="flex items-center gap-2 px-5 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-xs"

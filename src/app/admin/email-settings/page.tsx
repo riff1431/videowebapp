@@ -33,51 +33,51 @@ export default async function AdminEmailSettingsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl text-[var(--admin-text-main)]">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
           <Mail className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">
             E-mail & SMTP Setup
           </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-sm text-[var(--admin-text-muted)] mt-0.5">
             Configure outgoing mail server for user notifications, password resets, and digests
           </p>
         </div>
       </div>
 
-      <form action={handleSave} className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs space-y-6">
+      <form action={handleSave} className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-xl p-6 shadow-xs space-y-6 transition-colors duration-200">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
               Mailer Driver
             </label>
             <select
               name="smtp_or_mail"
               defaultValue={configObj.smtp_or_mail || "smtp"}
-              className="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+              className="w-full px-3.5 py-2 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-lg focus:outline-none focus:border-[var(--primary)] text-[var(--admin-text-main)]"
             >
-              <option value="smtp">SMTP (Recommended)</option>
-              <option value="mail">Server Mail</option>
+              <option value="smtp" className="bg-[var(--admin-card-bg)] text-[var(--admin-text-main)]">SMTP (Recommended)</option>
+              <option value="mail" className="bg-[var(--admin-card-bg)] text-[var(--admin-text-main)]">Server Mail</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
               SMTP Port
             </label>
             <input
               type="text"
               name="smtp_port"
               defaultValue={configObj.smtp_port || "587"}
-              className="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+              className="w-full px-3.5 py-2 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-lg focus:outline-none focus:border-[var(--primary)] text-[var(--admin-text-main)]"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
               SMTP Host
             </label>
             <input
@@ -85,12 +85,12 @@ export default async function AdminEmailSettingsPage() {
               name="smtp_host"
               defaultValue={configObj.smtp_host || "smtp.mailgun.org"}
               placeholder="smtp.example.com"
-              className="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+              className="w-full px-3.5 py-2 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-lg focus:outline-none focus:border-[var(--primary)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)]"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
               SMTP Username
             </label>
             <input
@@ -98,12 +98,12 @@ export default async function AdminEmailSettingsPage() {
               name="smtp_username"
               defaultValue={configObj.smtp_username || ""}
               placeholder="user@example.com"
-              className="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+              className="w-full px-3.5 py-2 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-lg focus:outline-none focus:border-[var(--primary)] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)]"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
               SMTP Password
             </label>
             <input
@@ -111,26 +111,26 @@ export default async function AdminEmailSettingsPage() {
               name="smtp_password"
               defaultValue={configObj.smtp_password || ""}
               placeholder="••••••••••••"
-              className="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+              className="w-full px-3.5 py-2 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-lg focus:outline-none focus:border-[var(--primary)] text-[var(--admin-text-main)]"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-bold text-[var(--admin-text-main)] uppercase tracking-wider mb-1">
               Encryption
             </label>
             <select
               name="smtp_encryption"
               defaultValue={configObj.smtp_encryption || "tls"}
-              className="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[var(--primary)] text-gray-900"
+              className="w-full px-3.5 py-2 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-lg focus:outline-none focus:border-[var(--primary)] text-[var(--admin-text-main)]"
             >
-              <option value="tls">TLS</option>
-              <option value="ssl">SSL</option>
+              <option value="tls" className="bg-[var(--admin-card-bg)] text-[var(--admin-text-main)]">TLS</option>
+              <option value="ssl" className="bg-[var(--admin-card-bg)] text-[var(--admin-text-main)]">SSL</option>
             </select>
           </div>
         </div>
 
-        <div className="pt-4 border-t border-gray-100 flex justify-end">
+        <div className="pt-4 border-t border-[var(--admin-card-border)] flex justify-end">
           <button
             type="submit"
             className="flex items-center gap-2 px-5 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-xs"

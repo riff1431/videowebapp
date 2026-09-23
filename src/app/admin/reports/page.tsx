@@ -37,19 +37,19 @@ export default async function AdminReportsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 max-w-5xl text-[var(--admin-text-main)]">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Content Moderation & Reports</h1>
-        <p className="text-xs text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">Content Moderation & Reports</h1>
+        <p className="text-xs text-[var(--admin-text-muted)] mt-1">
           Review community-flagged videos for copyright infringement, adult content, or policy violations
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden">
-        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+      <div className="bg-[var(--admin-card-bg)] rounded-xl border border-[var(--admin-card-border)] shadow-xs overflow-hidden transition-colors duration-200">
+        <div className="p-4 border-b border-[var(--admin-card-border)] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-500" />
-            <h3 className="text-sm font-bold text-gray-800">
+            <h3 className="text-sm font-bold text-[var(--admin-text-main)]">
               Flagged Videos Queue
             </h3>
           </div>
@@ -58,39 +58,39 @@ export default async function AdminReportsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-gray-50/75 border-b border-gray-100 text-gray-500 font-semibold">
+              <tr className="bg-[var(--admin-card-hover)] border-b border-[var(--admin-card-border)] text-[var(--admin-text-muted)] font-semibold">
                 <th className="py-3 px-4">Video</th>
                 <th className="py-3 px-4">Uploader</th>
                 <th className="py-3 px-4">Report Reason</th>
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[var(--admin-card-border)]">
               {reportedVideos.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-8 text-center text-gray-400">
+                  <td colSpan={4} className="py-8 text-center text-[var(--admin-text-muted)]">
                     No flagged reports pending review.
                   </td>
                 </tr>
               ) : (
                 reportedVideos.map((v) => (
-                  <tr key={v.id} className="hover:bg-gray-50/50">
+                  <tr key={v.id} className="hover:bg-[var(--admin-card-hover)] transition-colors">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={v.thumbnail}
                           alt={v.title}
-                          className="w-14 h-9 object-cover rounded bg-neutral-100"
+                          className="w-14 h-9 object-cover rounded bg-neutral-200 dark:bg-neutral-800"
                         />
-                        <span className="font-semibold text-gray-800 line-clamp-1 max-w-xs">
+                        <span className="font-semibold text-[var(--admin-text-main)] line-clamp-1 max-w-xs">
                           {v.title}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-gray-500 font-medium">@{v.user.username}</td>
+                    <td className="py-3 px-4 text-[var(--admin-text-muted)] font-medium">@{v.user.username}</td>
                     <td className="py-3 px-4">
-                      <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                      <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20">
                         Inappropriate / Flagged
                       </span>
                     </td>
@@ -99,7 +99,7 @@ export default async function AdminReportsPage() {
                         <Link
                           href={`/watch/${v.videoId}`}
                           target="_blank"
-                          className="p-1.5 text-gray-400 hover:text-[var(--primary)] transition-colors"
+                          className="p-1.5 text-[var(--admin-text-muted)] hover:text-[#04abf2] transition-colors"
                           title="View Video"
                         >
                           <Eye className="w-4 h-4" />
@@ -108,7 +108,7 @@ export default async function AdminReportsPage() {
                           <input type="hidden" name="id" value={v.id} />
                           <button
                             type="submit"
-                            className="p-1.5 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+                            className="p-1.5 text-[var(--admin-text-muted)] hover:text-red-500 transition-colors cursor-pointer"
                             title="Delete Video"
                           >
                             <Trash2 className="w-4 h-4" />
