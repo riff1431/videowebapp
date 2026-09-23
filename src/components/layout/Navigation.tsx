@@ -25,6 +25,7 @@ import {
   MessageSquare,
   Film,
   Bell,
+  Newspaper,
 } from "lucide-react";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
@@ -143,6 +144,14 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 <Sparkles className="w-4 h-4 text-purple-500" />
                 <span>PlayTube Shorts</span>
               </Link>
+              <Link
+                href="/create-article"
+                onClick={() => setCreateMenuOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <Newspaper className="w-4 h-4 text-amber-500" />
+                <span>Create Article</span>
+              </Link>
             </div>
           )}
         </div>
@@ -236,6 +245,7 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
     { label: "Top Videos", href: "/videos/top", icon: Sparkles },
     { label: "Shorts", href: "/shorts", icon: Sparkles },
     { label: "Movies", href: "/movies", icon: Film },
+    { label: "Articles", href: "/articles", icon: Newspaper },
   ];
 
   const libraryItems = [

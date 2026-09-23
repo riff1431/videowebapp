@@ -260,6 +260,42 @@ export const watchLater = pgTable("watch_later", {
 });
 
 // ==========================================
+// Articles / Blog Schema (PlayTube Parity)
+// ==========================================
+export const articles = pgTable("articles", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  text: text("text").notNull(),
+  category: varchar("category", { length: 100 }).default("general"),
+  image: varchar("image", { length: 500 }).default("/upload/photos/d-cover.jpg"),
+  tags: varchar("tags", { length: 500 }).default(""),
+  views: integer("views").default(0),
+  shared: integer("shared").default(0),
+  active: boolean("active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  index("article_user_idx").on(table.userId),
+  index("article_cat_idx").on(table.category),
+]);
+
+export const articleComments = pgTable("article_comments", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  articleId: integer("article_id")
+    .notNull()
+    .references(() => articles.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ==========================================
 // Config / Site Settings
 // ==========================================
 export const siteConfig = pgTable("config", {
@@ -267,3 +303,4 @@ export const siteConfig = pgTable("config", {
   name: varchar("name", { length: 150 }).notNull().unique(),
   value: text("value").notNull(),
 });
+
