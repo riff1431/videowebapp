@@ -7,23 +7,7 @@ import { revalidatePath } from "next/cache";
 
 export async function updateAdminSettingsAction(formData: FormData) {
   try {
-    const keys = [
-      "title",
-      "name",
-      "email",
-      "keyword",
-      "description",
-      "user_registration",
-      "validation",
-      "delete_account",
-      "history_system",
-      "article_system",
-      "popular_channels",
-      "max_upload",
-    ];
-
-    for (const key of keys) {
-      const val = formData.get(key);
+    for (const [key, val] of formData.entries()) {
       if (typeof val === "string") {
         await db
           .insert(siteConfig)
@@ -36,6 +20,11 @@ export async function updateAdminSettingsAction(formData: FormData) {
     }
 
     revalidatePath("/admin/settings");
+    revalidatePath("/admin/ads");
+    revalidatePath("/admin/pro-settings");
+    revalidatePath("/admin/payment-settings");
+    revalidatePath("/admin/email-settings");
+    revalidatePath("/admin/ffmpeg");
     revalidatePath("/");
     return { success: true };
   } catch (err: any) {

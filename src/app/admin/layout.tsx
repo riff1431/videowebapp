@@ -11,7 +11,12 @@ import {
   Layers,
   FolderTree,
   AlertTriangle,
-  BadgeCheck
+  BadgeCheck,
+  Megaphone,
+  Crown,
+  CreditCard,
+  Mail,
+  Clapperboard,
 } from "lucide-react";
 
 export default function AdminLayout({
@@ -118,6 +123,57 @@ export default function AdminLayout({
                 >
                   <AlertTriangle className="w-4 h-4 text-gray-400" />
                   <span>Video Reports</span>
+                </Link>
+              </nav>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
+                Monetization & Ads
+              </p>
+              <nav className="space-y-1">
+                <Link
+                  href="/admin/ads"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <Megaphone className="w-4 h-4 text-gray-400" />
+                  <span>Website Ads</span>
+                </Link>
+                <Link
+                  href="/admin/pro-settings"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <Crown className="w-4 h-4 text-gray-400" />
+                  <span>PRO System</span>
+                </Link>
+                <Link
+                  href="/admin/payment-settings"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <CreditCard className="w-4 h-4 text-gray-400" />
+                  <span>Payment Settings</span>
+                </Link>
+              </nav>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
+                Server & System
+              </p>
+              <nav className="space-y-1">
+                <Link
+                  href="/admin/email-settings"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <Mail className="w-4 h-4 text-gray-400" />
+                  <span>E-mail Setup</span>
+                </Link>
+                <Link
+                  href="/admin/ffmpeg"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <Clapperboard className="w-4 h-4 text-gray-400" />
+                  <span>FFmpeg Setup</span>
                 </Link>
               </nav>
             </div>

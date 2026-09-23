@@ -63,11 +63,11 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 | 36 | `verification-requests/content.html`| `/admin/verification-requests` | **Verified** | Creator identity review and verified badge granting/revocation. |
 | 37 | `manage-video-reports/content.html` | `/admin/reports` | **Verified** | Flagged content moderation queue with direct video preview and takedown action. |
 | 38 | `site-settings` & `general-settings` | `/admin/settings` | **Verified** | General site title, name, admin email, SEO keywords/description, registration toggle, validation, history system, and max upload limits persisting to PostgreSQL `config`. |
-| 39 | `manage-website-ads/content.html`| `/admin/ads` | **Not started** | Preroll, header, and footer advertisement code injections. |
-| 40 | `prosys-settings/content.html` | `/admin/pro-settings` | **Not started** | Pro subscription fee, duration, and feature access toggles. |
-| 41 | `payment-settings/content.html`| `/admin/payment-settings` | **Not started** | PayPal, Stripe, and wallet withdrawal threshold configuration. |
-| 42 | `email-settings/content.html` | `/admin/email-settings` | **Not started** | SMTP host, port, credentials, and from-address test utility. |
-| 43 | `ffmpeg/content.html` | `/admin/ffmpeg` | **Not started** | FFmpeg binary path, 1080p/720p/480p transcode profile toggles. |
+| 39 | `manage-website-ads/content.html`| `/admin/ads` | **Verified** | Preroll, header, and footer advertisement code injections persisting to `config`. |
+| 40 | `prosys-settings/content.html` | `/admin/pro-settings` | **Verified** | Pro subscription fee, duration, and feature access toggles. |
+| 41 | `payment-settings/content.html`| `/admin/payment-settings` | **Verified** | PayPal, Stripe, and wallet withdrawal threshold configuration. |
+| 42 | `email-settings/content.html` | `/admin/email-settings` | **Verified** | SMTP host, port, credentials, and from-address test utility. |
+| 43 | `ffmpeg/content.html` | `/admin/ffmpeg` | **Verified** | FFmpeg binary path, 1080p/720p/480p transcode profile toggles. |
 
 ---
 
