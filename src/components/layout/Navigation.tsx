@@ -23,6 +23,7 @@ import {
   DollarSign,
   ChevronDown,
   MessageSquare,
+  Film,
   Bell,
 } from "lucide-react";
 
@@ -234,6 +235,7 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
     { label: "Latest Videos", href: "/videos/latest", icon: Video },
     { label: "Top Videos", href: "/videos/top", icon: Sparkles },
     { label: "Shorts", href: "/shorts", icon: Sparkles },
+    { label: "Movies", href: "/movies", icon: Film },
   ];
 
   const libraryItems = [

@@ -117,6 +117,13 @@ export const videos = pgTable("videos", {
   ageRestriction: integer("age_restriction").default(1), // 1: all, 2: 18+
   commentsEnabled: boolean("comments_enabled").default(true),
   isShort: boolean("is_short").default(false),
+  isMovie: boolean("is_movie").default(false),
+  movieRelease: varchar("movie_release", { length: 50 }),
+  rating: doublePrecision("rating").default(0),
+  stars: text("stars"),
+  producer: varchar("producer", { length: 255 }),
+  country: varchar("country", { length: 100 }),
+  quality: varchar("quality", { length: 50 }).default("HD"),
   isApproved: boolean("is_approved").default(true),
   featured: boolean("featured").default(false),
   monetization: boolean("monetization").default(false),
@@ -128,6 +135,7 @@ export const videos = pgTable("videos", {
   index("video_id_idx").on(table.videoId),
   index("video_views_idx").on(table.views),
   index("video_cat_idx").on(table.categoryId),
+  index("video_movie_idx").on(table.isMovie),
 ]);
 
 // ==========================================
