@@ -47,8 +47,8 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 |---|---|---|:---:|---|
 | 28 | `sources/login/content.php` | `/login` | **Verified** | Better Auth email/username sign-in, redirect callback, `#04abf2` branding. |
 | 29 | `sources/register/content.php` | `/register` | **Verified** | Better Auth sign-up with username, email, password, gender, and ToS acceptance. |
-| 30 | `sources/forgot_password/content.php` | `/forgot-password` | **Not started** | Password reset request form via Nodemailer SMTP. |
-| 31 | `sources/reset-password/content.php` | `/reset-password` | **Not started** | Password reset confirmation with emailed token validation. |
+| 30 | `sources/forgot_password/content.php` | `/forgot-password` | **Verified** | Password reset request form with emailed token dispatch via Nodemailer SMTP. |
+| 31 | `sources/reset-password/content.php` | `/reset-password` | **Verified** | Password reset confirmation with emailed token verification and password complexity checks. |
 
 ---
 
