@@ -9,6 +9,7 @@
     "lint": "eslint",
     "seed": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/db/seed/seed.ts",
     "setup": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/setup.ts",
+    "cron": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/cron.ts",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push"
   },

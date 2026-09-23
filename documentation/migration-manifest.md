@@ -113,6 +113,6 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 
 | PlayTube Cron/Job | Purpose | Target Architecture | Status |
 |---|---|---|:---:|
-| Video Transcoding | Convert uploaded MP4 to multi-res (360p, 720p, 1080p) via FFmpeg | Node.js child_process / BullMQ worker | **Not started** |
-| View Counts Flush | Aggregate temporary view logs into video view count totals | Next.js API / Scheduled cron | **Not started** |
-| Auto-delete Cleanups | Purge unapproved or expired temporary media | Standalone maintenance script in `scripts/` | **Not started** |
+| Video Transcoding | Convert uploaded MP4 to multi-res via FFmpeg profile flags | `scripts/cron.ts` / Background worker | **Verified** |
+| View Counts Flush | Aggregate temporary view logs into video view count totals | `scripts/cron.ts` (Job 2) | **Verified** |
+| Auto-delete Cleanups | Purge unapproved or expired temporary media & auth tokens | `scripts/cron.ts` (Job 1) | **Verified** |
