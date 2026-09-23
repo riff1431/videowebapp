@@ -68,6 +68,15 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 | 41 | `payment-settings/content.html`| `/admin/payment-settings` | **Verified** | PayPal, Stripe, and wallet withdrawal threshold configuration. |
 | 42 | `email-settings/content.html` | `/admin/email-settings` | **Verified** | SMTP host, port, credentials, and from-address test utility. |
 | 43 | `ffmpeg/content.html` | `/admin/ffmpeg` | **Verified** | FFmpeg binary path, 1080p/720p/480p transcode profile toggles. |
+| 44 | `manage-languages/content.html` | `/admin/languages` | **Verified** | Manage, toggle active/inactive, add custom translations and languages. |
+| 45 | `manage-movies/content.html` | `/admin/movies` | **Verified** | Manage movies, releases, cast, star ratings, and qualities. |
+| 46 | `manage-articles/content.html` | `/admin/articles` | **Verified** | Moderate articles, view counts, categories, and author attribution. |
+| 47 | `manage-themes/content.html` | `/admin/themes` | **Verified** | Youplay vs Default theme switcher and 3rd party theme catalog. |
+| 48 | `system_status/content.html` | `/admin/system-status` | **Verified** | Real-time environment diagnostic, DB connection, storage & runtime check. |
+| 49 | `backup/content.html` | `/admin/backup` | **Verified** | Full SQL database and user upload snapshot generator. |
+| 50 | `manage-custom-pages/content.html` | `/admin/pages` | **Verified** | Manage custom CMS pages (Terms, Privacy, FAQs, About). |
+| 51 | `create-new-sitemap/content.html` | `/admin/sitemap` | **Verified** | Generate XML sitemaps for search engines. |
+| 52 | `api-settings/content.html` | `/admin/api-settings` | **Verified** | Server key management and reset token generator for mobile apps. |
 
 ---
 
