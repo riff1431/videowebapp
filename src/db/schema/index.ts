@@ -296,6 +296,24 @@ export const articleComments = pgTable("article_comments", {
 });
 
 // ==========================================
+// Wallet Transactions & Pro Memberships
+// ==========================================
+export const transactions = pgTable("transactions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  type: varchar("type", { length: 50 }).notNull(), // deposit, withdraw, pro_pkg, video_purchase
+  amount: doublePrecision("amount").notNull(),
+  currency: varchar("currency", { length: 10 }).default("USD"),
+  status: varchar("status", { length: 50 }).default("completed"), // completed, pending, cancelled
+  description: text("description"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("trans_user_idx").on(table.userId),
+]);
+
+// ==========================================
 // Config / Site Settings
 // ==========================================
 export const siteConfig = pgTable("config", {
@@ -303,4 +321,5 @@ export const siteConfig = pgTable("config", {
   name: varchar("name", { length: 150 }).notNull().unique(),
   value: text("value").notNull(),
 });
+
 

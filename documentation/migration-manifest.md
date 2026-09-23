@@ -33,8 +33,8 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 | 20 | `sources/read/content.php` | `/articles/read/[id]` | **Verified** | Long-form article reader view with views count, author profile, comments, social sharing. |
 | 21 | `sources/create_article/content.php` | `/create-article` | **Verified** | Rich-text publishing studio for blog posts with tags and thumbnail upload. |
 | 22 | `sources/popular_channels/content.php`| `/popular-channels` | **Verified** | Channel leaderboard ranked by subscriber count and aggregate video views. |
-| 23 | `sources/go_pro/content.php` | `/go-pro` | **Not started** | Pro membership package comparison and checkout modal. |
-| 24 | `sources/wallet/content.php` | `/wallet` | **Not started** | Wallet balance ledger, deposit modal, and withdrawal request. |
+| 23 | `sources/go_pro/content.php` | `/go-pro` | **Verified** | Pro membership packages (Star, Hot, Ultimate), perks comparison, wallet checkout. |
+| 24 | `sources/wallet/content.php` | `/wallet` | **Verified** | Personal wallet top-up, creator earnings payout form, transaction ledger table. |
 | 25 | `sources/messages/content.php` | `/messages` | **Not started** | Direct private user messaging view. |
 | 26 | `sources/manage-videos/content.php` | `/manage-videos` | **Verified** | Creator studio video table with views, duration, privacy status, edit and delete triggers. |
 | 27 | `sources/edit-video/content.php` | `/edit-video/[id]` | **Verified** | Video metadata editor, thumbnail re-uploader, category and privacy update form. |

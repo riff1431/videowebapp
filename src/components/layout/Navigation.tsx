@@ -27,6 +27,8 @@ import {
   Bell,
   Newspaper,
   Users,
+  Crown,
+  Wallet,
 } from "lucide-react";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
@@ -213,6 +215,22 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
               >
                 <Film className="w-4 h-4 text-neutral-500" />
                 <span>Manage Videos</span>
+              </Link>
+              <Link
+                href="/go-pro"
+                onClick={() => setUserMenuOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-2 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors font-medium"
+              >
+                <Crown className="w-4 h-4 text-amber-500" />
+                <span>Go Pro (VIP)</span>
+              </Link>
+              <Link
+                href="/wallet"
+                onClick={() => setUserMenuOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <Wallet className="w-4 h-4 text-neutral-500" />
+                <span>Wallet & Earnings</span>
               </Link>
               <Link
                 href="/settings"
