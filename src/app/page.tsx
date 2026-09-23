@@ -27,7 +27,7 @@ export default async function HomePage() {
             <Link
               key={cat.id}
               href={`/category/${cat.key}`}
-              className="px-3.5 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-[var(--border)] shrink-0 transition-colors"
+              className="px-3.5 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 border border-[var(--border)] shrink-0 transition-colors shadow-2xs"
             >
               {cat.name}
             </Link>
@@ -59,7 +59,7 @@ export default async function HomePage() {
         <section>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Flame className="w-5 h-5 text-red-500" />
+              <Flame className="w-5 h-5 text-[var(--primary)]" />
               <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Featured & Latest</h2>
             </div>
             <Link href="/videos/latest" className="text-xs font-semibold text-[var(--primary)] hover:underline">

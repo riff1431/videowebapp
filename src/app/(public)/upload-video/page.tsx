@@ -11,6 +11,7 @@ export default function UploadVideoPage() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("tech");
   const [privacy, setPrivacy] = useState(0);
+  const [isShort, setIsShort] = useState(false);
   const [videoUrl, setVideoUrl] = useState("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4");
   const [thumbnailUrl, setThumbnailUrl] = useState("https://images.unsplash.com/photo-1536240478700-b869070f9279?w=1280&auto=format&fit=crop&q=80");
   const [uploading, setUploading] = useState(false);
@@ -43,6 +44,7 @@ export default function UploadVideoPage() {
       formData.set("description", description);
       formData.set("categoryId", category);
       formData.set("privacy", String(privacy));
+      formData.set("isShort", String(isShort));
       formData.set("videoLocation", videoUrl);
       formData.set("thumbnail", thumbnailUrl);
 
@@ -63,7 +65,7 @@ export default function UploadVideoPage() {
     <div className="max-w-4xl mx-auto py-6">
       <div className="mb-6">
         <h1 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-          <Upload className="w-5 h-5 text-red-600" />
+          <Upload className="w-5 h-5 text-[var(--primary)]" />
           <span>Upload New Video</span>
         </h1>
         <p className="text-xs text-neutral-500 mt-0.5">
@@ -84,7 +86,7 @@ export default function UploadVideoPage() {
             <div className="flex items-center justify-center gap-3 pt-2">
               <Link
                 href={`/watch/${createdVideoId}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-md transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs font-semibold rounded-md transition-colors shadow-xs"
               >
                 <span>Watch Video</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -96,7 +98,7 @@ export default function UploadVideoPage() {
                   setDescription("");
                   setCreatedVideoId(null);
                 }}
-                className="px-4 py-2 border border-gray-300 dark:border-zinc-700 text-xs font-semibold rounded-md hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+                className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
               >
                 Upload Another
               </button>
@@ -112,7 +114,7 @@ export default function UploadVideoPage() {
             )}
 
             {/* Drop Zone */}
-            <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-700 rounded-xl p-8 text-center hover:border-red-600 transition-colors bg-neutral-50 dark:bg-neutral-800/40">
+            <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-700 rounded-xl p-8 text-center hover:border-[var(--primary)] transition-colors bg-neutral-50 dark:bg-neutral-800/40">
               <input
                 type="file"
                 accept="video/*"
@@ -141,7 +143,7 @@ export default function UploadVideoPage() {
                     <p className="text-xs text-neutral-500 mt-1">
                       MP4, WebM, or online direct video URLs supported
                     </p>
-                    <span className="inline-block mt-3 px-4 py-1.5 text-xs font-semibold text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors">
+                    <span className="inline-block mt-3 px-4 py-1.5 text-xs font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-hover)] rounded-md transition-colors shadow-xs">
                       Select Files
                     </span>
                   </div>
@@ -161,7 +163,7 @@ export default function UploadVideoPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter video title"
-                  className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-red-600 text-neutral-900 dark:text-white"
+                  className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
                 />
               </div>
 
@@ -174,7 +176,7 @@ export default function UploadVideoPage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe your video..."
-                  className="w-full p-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-red-600 text-neutral-900 dark:text-white"
+                  className="w-full p-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
                 />
               </div>
 
@@ -187,7 +189,7 @@ export default function UploadVideoPage() {
                     type="url"
                     value={videoUrl}
                     onChange={(e) => setVideoUrl(e.target.value)}
-                    className="w-full h-10 px-3 text-xs bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-red-600 font-mono"
+                    className="w-full h-10 px-3 text-xs bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] font-mono"
                   />
                 </div>
 
@@ -199,12 +201,12 @@ export default function UploadVideoPage() {
                     type="url"
                     value={thumbnailUrl}
                     onChange={(e) => setThumbnailUrl(e.target.value)}
-                    className="w-full h-10 px-3 text-xs bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-red-600 font-mono"
+                    className="w-full h-10 px-3 text-xs bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] font-mono"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
                     Category
@@ -212,7 +214,7 @@ export default function UploadVideoPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-red-600 text-neutral-900 dark:text-white"
+                    className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
                   >
                     <option value="film">Film & Animation</option>
                     <option value="music">Music</option>
@@ -232,12 +234,26 @@ export default function UploadVideoPage() {
                   <select
                     value={privacy}
                     onChange={(e) => setPrivacy(Number(e.target.value))}
-                    className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-red-600 text-neutral-900 dark:text-white"
+                    className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
                   >
                     <option value={0}>Public</option>
                     <option value={1}>Private</option>
                     <option value={2}>Unlisted</option>
                   </select>
+                </div>
+
+                <div className="flex flex-col justify-end">
+                  <label className="flex items-center gap-2 p-2.5 rounded-md border border-[var(--border)] cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800">
+                    <input
+                      type="checkbox"
+                      checked={isShort}
+                      onChange={(e) => setIsShort(e.target.checked)}
+                      className="rounded text-[var(--primary)] focus:ring-[var(--primary)]"
+                    />
+                    <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                      PlayTube Short (Vertical 9:16)
+                    </span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -245,7 +261,7 @@ export default function UploadVideoPage() {
             <button
               type="submit"
               disabled={uploading || !title}
-              className="w-full h-10 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-md transition-colors disabled:opacity-50 cursor-pointer"
+              className="w-full h-10 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-semibold text-sm rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
             >
               {uploading ? "Publishing Video to PlayTube..." : "Publish Video"}
             </button>

@@ -17,6 +17,7 @@ const uploadVideoSchema = z.object({
   thumbnail: z.string().optional(),
   duration: z.string().default("00:00"),
   privacy: z.coerce.number().default(0),
+  isShort: z.boolean().default(false),
 });
 
 export async function uploadVideoAction(formData: FormData) {
@@ -28,6 +29,7 @@ export async function uploadVideoAction(formData: FormData) {
       videoLocation: formData.get("videoLocation") as string,
       thumbnail: formData.get("thumbnail") as string,
       privacy: formData.get("privacy") ? Number(formData.get("privacy")) : 0,
+      isShort: formData.get("isShort") === "true",
     };
 
     const parsed = uploadVideoSchema.parse(rawData);
@@ -54,11 +56,13 @@ export async function uploadVideoAction(formData: FormData) {
           "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1280&auto=format&fit=crop&q=80",
         duration: "03:45",
         privacy: parsed.privacy,
+        isShort: parsed.isShort,
         videoType: "video/mp4",
       })
       .returning();
 
     revalidatePath("/");
+    revalidatePath("/videos/latest");
     revalidatePath("/admin/videos");
 
     return { success: true, videoId: newVideo.videoId };
@@ -68,7 +72,82 @@ export async function uploadVideoAction(formData: FormData) {
 }
 
 // ==========================================
-// 2. Video Like / Dislike Toggle Action
+// 2. Video Import Server Action (YouTube / Vimeo)
+// ==========================================
+const importVideoSchema = z.object({
+  url: z.string().url("Please provide a valid video URL"),
+  title: z.string().min(3).max(250),
+  description: z.string().optional(),
+  categoryId: z.string().default("other"),
+  thumbnail: z.string().optional(),
+  duration: z.string().default("00:00"),
+});
+
+export async function importVideoAction(formData: FormData) {
+  try {
+    const rawData = {
+      url: formData.get("url") as string,
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      categoryId: (formData.get("categoryId") as string) || "other",
+      thumbnail: formData.get("thumbnail") as string,
+      duration: (formData.get("duration") as string) || "04:20",
+    };
+
+    const parsed = importVideoSchema.parse(rawData);
+
+    const [user] = await db.select().from(users).limit(1);
+    if (!user) {
+      return { success: false, error: "No user found to associate with video" };
+    }
+
+    // Determine embed type
+    let videoType = "youtube";
+    let embedUrl = parsed.url;
+
+    if (parsed.url.includes("youtube.com/watch?v=")) {
+      const vid = parsed.url.split("v=")[1]?.split("&")[0];
+      embedUrl = `https://www.youtube.com/embed/${vid}`;
+    } else if (parsed.url.includes("youtu.be/")) {
+      const vid = parsed.url.split("youtu.be/")[1]?.split("?")[0];
+      embedUrl = `https://www.youtube.com/embed/${vid}`;
+    } else if (parsed.url.includes("vimeo.com/")) {
+      const vid = parsed.url.split("vimeo.com/")[1]?.split("?")[0];
+      embedUrl = `https://player.vimeo.com/video/${vid}`;
+      videoType = "vimeo";
+    }
+
+    const videoId = "pt_imp_" + Math.random().toString(36).substring(2, 10);
+
+    const [newVideo] = await db
+      .insert(videos)
+      .values({
+        videoId,
+        userId: user.id,
+        title: parsed.title,
+        description: parsed.description || "",
+        categoryId: parsed.categoryId,
+        videoLocation: embedUrl,
+        youtubeUrl: embedUrl,
+        thumbnail:
+          parsed.thumbnail ||
+          "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1280&auto=format&fit=crop&q=80",
+        duration: parsed.duration,
+        privacy: 0,
+        videoType,
+      })
+      .returning();
+
+    revalidatePath("/");
+    revalidatePath("/videos/latest");
+    return { success: true, videoId: newVideo.videoId };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to import video" };
+  }
+}
+
+// ==========================================
+// 3. Video Like / Dislike Toggle Action
 // ==========================================
 export async function toggleLikeVideoAction({
   videoDbId,
@@ -121,7 +200,7 @@ export async function toggleLikeVideoAction({
 }
 
 // ==========================================
-// 3. Add Comment Server Action
+// 4. Add Comment Server Action
 // ==========================================
 export async function addCommentAction({
   videoDbId,
@@ -155,7 +234,7 @@ export async function addCommentAction({
 }
 
 // ==========================================
-// 4. Toggle Subscription Action
+// 5. Toggle Subscription Action
 // ==========================================
 export async function toggleSubscribeAction({
   channelUserId,

@@ -23,6 +23,41 @@ goal of this migration is to re-implement it fully on the Huipper standard stack
 | File uploads | PHP filesystem handling | Storage abstraction (local / S3-compatible) |
 | Frontend | Server-rendered PHP templates | React Server/Client Components + Tailwind + shadcn/ui |
 
+### Completeness requirement — no silent partial migrations
+Incomplete migrations (missing pages, missing routes, mismatched theming) are a
+process failure, not an acceptable outcome. To prevent this:
+
+1. **Build a full inventory before writing any code**, not as you go. Walk the
+   entire PlayTube source and produce a manifest file (e.g.
+   `documentation/migration-manifest.md`) listing, exhaustively:
+   - Every route/page (public site, auth, user dashboard, admin panel — check PHP
+     router/`.htaccess`/front controller and every file under the views/pages
+     folders, not just the obvious ones).
+   - Every distinct UI component/template partial and its states.
+   - Every DB table and every PHP feature/module that reads or writes it.
+   - Every background job, cron task, and scheduled/queued process.
+   This manifest is the single source of truth for scope — the agent must not
+   infer scope from memory or from "the main pages" alone.
+2. **Track status per item, in that same file**, e.g. `Not started / In progress /
+   Built / Verified`. Update it as work proceeds. Never mark an item "Verified"
+   without checking it against Section 0's UI/UX parity requirement and Section 10's
+   checklist.
+3. **Never report the migration as complete while any manifest item is not
+   `Verified`.** If a session or context runs out before everything is done, the
+   agent must end by stating explicitly what remains outstanding (referencing the
+   manifest), not imply completion.
+4. **Route parity check is mandatory before sign-off.** Enumerate every route in
+   the old PHP app and confirm a corresponding route exists and works in the new
+   Next.js app (same URL structure where reasonable, or an explicit, documented
+   redirect/rename). A route that silently doesn't exist in the new app is a
+   migration bug, not an omission to raise later.
+5. **Theming must be derived from the manifest's screenshots, not assumed.** If a
+   page's colors/typography/spacing don't match the Section 0 UI/UX parity
+   requirement, that page is not "Built" — it goes back to `In progress`.
+6. **Prefer finishing fewer pages completely over starting many pages partially.**
+   Work the manifest top to bottom (or by module) and fully complete + verify each
+   item before moving to the next, rather than scaffolding everything shallowly.
+
 ### UI/UX parity requirement — non-negotiable
 The migrated product's UI/UX must be **visually and behaviorally identical** to
 the current PlayTube frontend. This is a backend/stack migration, not a redesign.
