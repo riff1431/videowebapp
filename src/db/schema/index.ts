@@ -333,6 +333,29 @@ export const messages = pgTable("messages", {
 ]);
 
 // ==========================================
+// User Activities & System Announcements
+// ==========================================
+export const activities = pgTable("activities", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  videoId: integer("video_id")
+    .references(() => videos.id, { onDelete: "cascade" }),
+  type: varchar("type", { length: 50 }).notNull(), // upload, like, comment, subscribe
+  time: timestamp("time").defaultNow().notNull(),
+}, (table) => [
+  index("act_user_idx").on(table.userId),
+]);
+
+export const announcements = pgTable("announcements", {
+  id: serial("id").primaryKey(),
+  text: text("text").notNull(),
+  active: boolean("active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ==========================================
 // Config / Site Settings
 // ==========================================
 export const siteConfig = pgTable("config", {
@@ -340,6 +363,7 @@ export const siteConfig = pgTable("config", {
   name: varchar("name", { length: 150 }).notNull().unique(),
   value: text("value").notNull(),
 });
+
 
 
 

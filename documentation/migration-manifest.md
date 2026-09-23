@@ -103,9 +103,9 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 | `watch_history` | `watchHistory` | `watch_history` | **Verified** |
 | `watch_later` | `watchLater` | `watch_later` | **Verified** |
 | `config` | `siteConfig` | `config` | **Verified** |
-| `activities` | (Pending) | `activities` | **Not started** |
-| `announcements` | (Pending) | `announcements` | **Not started** |
-| `ads` | (Pending) | `ads` | **Not started** |
+| `activities` | `activities` | `activities` | **Verified** |
+| `announcements` | `announcements` | `announcements` | **Verified** |
+| `ads` | `siteConfig` (ad keys) | `config` | **Verified** |
 
 ---
 
