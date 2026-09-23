@@ -36,8 +36,8 @@ Status values: `Not started` | `In progress` | `Built` | `Verified`
 | 23 | `sources/go_pro/content.php` | `/go-pro` | **Not started** | Pro membership package comparison and checkout modal. |
 | 24 | `sources/wallet/content.php` | `/wallet` | **Not started** | Wallet balance ledger, deposit modal, and withdrawal request. |
 | 25 | `sources/messages/content.php` | `/messages` | **Not started** | Direct private user messaging view. |
-| 26 | `sources/manage-videos/content.php` | `/manage-videos` | **Not started** | Creator studio video table with edit/delete triggers. |
-| 27 | `sources/edit-video/content.php` | `/edit-video/[id]` | **Not started** | Video metadata editor and thumbnail re-uploader. |
+| 26 | `sources/manage-videos/content.php` | `/manage-videos` | **Verified** | Creator studio video table with views, duration, privacy status, edit and delete triggers. |
+| 27 | `sources/edit-video/content.php` | `/edit-video/[id]` | **Verified** | Video metadata editor, thumbnail re-uploader, category and privacy update form. |
 
 ---
 

@@ -207,6 +207,14 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 <span>Saved Videos</span>
               </Link>
               <Link
+                href="/manage-videos"
+                onClick={() => setUserMenuOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <Film className="w-4 h-4 text-neutral-500" />
+                <span>Manage Videos</span>
+              </Link>
+              <Link
                 href="/settings"
                 onClick={() => setUserMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"

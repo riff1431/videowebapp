@@ -275,3 +275,62 @@ export async function toggleSubscribeAction({
     return { success: false, error: err.message };
   }
 }
+
+// ==========================================
+// 6. Update Video Metadata Action
+// ==========================================
+const updateVideoSchema = z.object({
+  id: z.coerce.number(),
+  title: z.string().min(3).max(250),
+  description: z.string().optional(),
+  categoryId: z.string().default("other"),
+  privacy: z.coerce.number().default(0),
+  thumbnail: z.string().optional(),
+});
+
+export async function updateVideoAction(formData: FormData) {
+  try {
+    const rawData = {
+      id: formData.get("id"),
+      title: formData.get("title"),
+      description: formData.get("description"),
+      categoryId: formData.get("categoryId") || "other",
+      privacy: formData.get("privacy") ? Number(formData.get("privacy")) : 0,
+      thumbnail: formData.get("thumbnail") || undefined,
+    };
+
+    const parsed = updateVideoSchema.parse(rawData);
+
+    await db
+      .update(videos)
+      .set({
+        title: parsed.title,
+        description: parsed.description || "",
+        categoryId: parsed.categoryId,
+        privacy: parsed.privacy,
+        ...(parsed.thumbnail ? { thumbnail: parsed.thumbnail } : {}),
+      })
+      .where(eq(videos.id, parsed.id));
+
+    revalidatePath("/manage-videos");
+    revalidatePath(`/watch/${parsed.id}`);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to update video" };
+  }
+}
+
+// ==========================================
+// 7. Delete Video Action
+// ==========================================
+export async function deleteVideoAction(videoId: number) {
+  try {
+    await db.delete(videos).where(eq(videos.id, videoId));
+    revalidatePath("/manage-videos");
+    revalidatePath("/");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to delete video" };
+  }
+}
+
