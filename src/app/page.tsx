@@ -1,69 +1,93 @@
-import Image from "next/image";
+import React from "react";
+import Link from "next/link";
+import { getFeaturedVideos, getCategories } from "@/services/video.service";
+import { VideoCard } from "@/components/common/VideoCard";
+import { Flame, Sparkles } from "lucide-react";
 
-export default function Home() {
+export const revalidate = 60; // ISR cache
+
+export default async function HomePage() {
+  const [featuredVideos, categoriesList] = await Promise.all([
+    getFeaturedVideos(12),
+    getCategories(),
+  ]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="space-y-6">
+      {/* Category Pills */}
+      {categoriesList.length > 0 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <Link
+            href="/"
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-full bg-[var(--primary)] text-white shrink-0 shadow-xs"
+          >
+            All
+          </Link>
+          {categoriesList.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/category/${cat.key}`}
+              className="px-3.5 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-[var(--border)] shrink-0 transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              {cat.name}
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* Hero / Banner for Empty or Initial state */}
+      {featuredVideos.length === 0 && (
+        <div className="p-8 text-center bg-white dark:bg-neutral-800 rounded-xl border border-[var(--border)] shadow-xs">
+          <div className="w-12 h-12 rounded-full bg-sky-100 text-[var(--primary)] flex items-center justify-center mx-auto mb-3">
+            <Sparkles className="w-6 h-6" />
+          </div>
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Welcome to PlayTube</h2>
+          <p className="text-sm text-neutral-500 max-w-md mx-auto mt-1 mb-4">
+            The platform is connected to PostgreSQL on Supabase. Upload your first video or migrate your MySQL database!
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/upload-video"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-hover)] rounded-md transition-colors"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Upload Video
+          </Link>
         </div>
-      </main>
+      )}
+
+      {/* Video Grid */}
+      {featuredVideos.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Flame className="w-5 h-5 text-red-500" />
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Featured & Latest</h2>
+            </div>
+            <Link href="/videos/latest" className="text-xs font-semibold text-[var(--primary)] hover:underline">
+              View all
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {featuredVideos.map((video) => (
+              <VideoCard
+                key={video.id}
+                videoId={video.videoId}
+                title={video.title}
+                thumbnail={video.thumbnail}
+                duration={video.duration}
+                views={video.views}
+                createdAt={video.createdAt}
+                user={{
+                  username: video.user.username,
+                  name: video.user.name,
+                  avatar: video.user.avatar,
+                  verified: video.user.verified,
+                }}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
