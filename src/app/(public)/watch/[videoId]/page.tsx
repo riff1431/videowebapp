@@ -7,8 +7,8 @@ import { VideoComments } from "@/components/common/VideoComments";
 import { VideoActionButtons } from "@/components/common/VideoActionButtons";
 import { CheckCircle2 } from "lucide-react";
 import { db } from "@/db";
-import { comments, users } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { comments, users, likesDislikes } from "@/db/schema";
+import { eq, desc, count, and } from "drizzle-orm";
 
 export interface WatchPageProps {
   params: Promise<{ videoId: string }>;
@@ -22,24 +22,32 @@ export default async function WatchPage({ params }: WatchPageProps) {
     notFound();
   }
 
-  const relatedVideos = await getFeaturedVideos(8);
-
-  // Fetch comments from database
-  const initialComments = await db
-    .select({
-      id: comments.id,
-      text: comments.text,
-      user: {
-        name: users.name,
-        username: users.username,
-        avatar: users.avatar,
-        verified: users.verified,
-      },
-    })
-    .from(comments)
-    .innerJoin(users, eq(comments.userId, users.id))
-    .where(eq(comments.videoId, video.id))
-    .orderBy(desc(comments.createdAt));
+  const [relatedVideos, [likesCount], [dislikesCount], initialComments] = await Promise.all([
+    getFeaturedVideos(8),
+    db
+      .select({ value: count() })
+      .from(likesDislikes)
+      .where(and(eq(likesDislikes.videoId, video.id), eq(likesDislikes.type, 1))),
+    db
+      .select({ value: count() })
+      .from(likesDislikes)
+      .where(and(eq(likesDislikes.videoId, video.id), eq(likesDislikes.type, 2))),
+    db
+      .select({
+        id: comments.id,
+        text: comments.text,
+        user: {
+          name: users.name,
+          username: users.username,
+          avatar: users.avatar,
+          verified: users.verified,
+        },
+      })
+      .from(comments)
+      .innerJoin(users, eq(comments.userId, users.id))
+      .where(eq(comments.videoId, video.id))
+      .orderBy(desc(comments.createdAt)),
+  ]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -96,9 +104,9 @@ export default async function WatchPage({ params }: WatchPageProps) {
 
           <VideoActionButtons
             videoDbId={video.id}
-            channelUserId={video.userId}
-            initialLikes={video.likes || 0}
-            initialDislikes={video.dislikes || 0}
+            channelUserId={video.user.id}
+            initialLikes={likesCount?.value || 0}
+            initialDislikes={dislikesCount?.value || 0}
           />
 
           {/* Description & Metadata */}
@@ -132,20 +140,16 @@ export default async function WatchPage({ params }: WatchPageProps) {
             .map((v) => (
               <VideoCard
                 key={v.id}
-                video={{
-                  id: v.id,
-                  videoId: v.videoId,
-                  title: v.title,
-                  thumbnail: v.thumbnail,
-                  duration: v.duration,
-                  views: v.views,
-                  channel: {
-                    id: v.user.id,
-                    name: v.user.name,
-                    username: v.user.username,
-                    avatar: v.user.avatar,
-                    verified: v.user.verified,
-                  },
+                videoId={v.videoId}
+                title={v.title}
+                thumbnail={v.thumbnail}
+                duration={v.duration}
+                views={v.views}
+                user={{
+                  username: v.user.username,
+                  name: v.user.name,
+                  avatar: v.user.avatar,
+                  verified: v.user.verified,
                 }}
               />
             ))}

@@ -149,7 +149,7 @@ export default async function AdminDashboardPage() {
                           {v.title}
                         </span>
                       </td>
-                      <td className="py-3 text-gray-500 text-xs">{v.views}</td>
+                      <td className="py-3 text-gray-500 text-xs">{(v.views ?? 0).toLocaleString()}</td>
                       <td className="py-3 text-gray-500 text-xs">{v.duration || "00:00"}</td>
                     </tr>
                   ))
@@ -195,7 +195,7 @@ export default async function AdminDashboardPage() {
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           u.role === "admin" ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"
                         }`}>
-                          {u.role.toUpperCase()}
+                          {(u.role || "user").toUpperCase()}
                         </span>
                       </td>
                       <td className="py-3 text-gray-500 text-xs">{u.email}</td>

@@ -84,7 +84,7 @@ export default async function ManageVideosPage() {
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-xs text-gray-600 font-medium">
-                      {v.views.toLocaleString()}
+                      {(v.views ?? 0).toLocaleString()}
                     </td>
                     <td className="py-3.5 px-4 text-xs text-gray-500 font-mono">
                       {v.duration || "00:00"}

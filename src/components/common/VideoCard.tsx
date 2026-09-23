@@ -5,9 +5,9 @@ import { CheckCircle2 } from "lucide-react";
 
 export interface VideoCardProps {
   id?: number;
-  videoId: string;
-  title: string;
-  thumbnail: string;
+  videoId?: string;
+  title?: string;
+  thumbnail?: string;
   duration?: string | null;
   views?: number | null;
   createdAt?: Date | null;
@@ -30,7 +30,13 @@ export interface VideoCardProps {
 export function VideoCard(props: VideoCardProps) {
   // Support both flattened and nested props (e.g. video={v} or { ...v })
   const v = props.video || props;
-  const channelInfo = v.channel || v.user || {
+  const videoId = v.videoId || props.videoId || "";
+  const title = v.title || props.title || "Untitled Video";
+  const thumbnail = v.thumbnail || props.thumbnail || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60";
+  const duration = v.duration || props.duration || "00:00";
+  const views = v.views ?? props.views ?? 0;
+
+  const channelInfo = v.channel || v.user || props.channel || props.user || {
     username: "playtube",
     name: "PlayTube Creator",
     avatar: null,
@@ -39,20 +45,20 @@ export function VideoCard(props: VideoCardProps) {
 
   return (
     <div className="group flex flex-col bg-[var(--card-bg)] rounded-lg overflow-hidden border border-[var(--card-border)] hover:shadow-md transition-shadow">
-      <Link href={`/watch/${v.videoId}`} className="relative aspect-video w-full bg-neutral-900 block overflow-hidden">
+      <Link href={`/watch/${videoId}`} className="relative aspect-video w-full bg-neutral-900 block overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={v.thumbnail}
-          alt={v.title}
+          src={thumbnail}
+          alt={title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
           onError={(e) => {
             (e.target as HTMLImageElement).src =
               "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60";
           }}
         />
-        {v.duration && (
+        {duration && (
           <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 text-[11px] font-medium bg-black/80 text-white rounded">
-            {v.duration}
+            {duration}
           </span>
         )}
       </Link>
@@ -75,11 +81,11 @@ export function VideoCard(props: VideoCardProps) {
 
         <div className="flex flex-col flex-1 min-w-0">
           <Link
-            href={`/watch/${v.videoId}`}
+            href={`/watch/${videoId}`}
             className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-tight group-hover:text-[var(--primary)] transition-colors mb-1"
-            title={v.title}
+            title={title}
           >
-            {v.title}
+            {title}
           </Link>
 
           <Link
@@ -93,7 +99,7 @@ export function VideoCard(props: VideoCardProps) {
           </Link>
 
           <div className="flex items-center text-[11px] text-neutral-400 mt-0.5">
-            <span>{(v.views ?? 0).toLocaleString()} views</span>
+            <span>{(views ?? 0).toLocaleString()} views</span>
           </div>
         </div>
       </div>

@@ -97,42 +97,12 @@ export async function toggleLikeVideoAction({
         await db
           .delete(likesDislikes)
           .where(eq(likesDislikes.id, existing.id));
-
-        if (type === 1) {
-          await db
-            .update(videos)
-            .set({ likes: sql`${videos.likes} - 1` })
-            .where(eq(videos.id, videoDbId));
-        } else {
-          await db
-            .update(videos)
-            .set({ dislikes: sql`${videos.dislikes} - 1` })
-            .where(eq(videos.id, videoDbId));
-        }
       } else {
         // Change vote
         await db
           .update(likesDislikes)
           .set({ type })
           .where(eq(likesDislikes.id, existing.id));
-
-        if (type === 1) {
-          await db
-            .update(videos)
-            .set({
-              likes: sql`${videos.likes} + 1`,
-              dislikes: sql`GREATEST(0, ${videos.dislikes} - 1)`,
-            })
-            .where(eq(videos.id, videoDbId));
-        } else {
-          await db
-            .update(videos)
-            .set({
-              dislikes: sql`${videos.dislikes} + 1`,
-              likes: sql`GREATEST(0, ${videos.likes} - 1)`,
-            })
-            .where(eq(videos.id, videoDbId));
-        }
       }
     } else {
       // New vote
@@ -141,18 +111,6 @@ export async function toggleLikeVideoAction({
         videoId: videoDbId,
         type,
       });
-
-      if (type === 1) {
-        await db
-          .update(videos)
-          .set({ likes: sql`${videos.likes} + 1` })
-          .where(eq(videos.id, videoDbId));
-      } else {
-        await db
-          .update(videos)
-          .set({ dislikes: sql`${videos.dislikes} + 1` })
-          .where(eq(videos.id, videoDbId));
-      }
     }
 
     revalidatePath("/watch/[videoId]", "page");

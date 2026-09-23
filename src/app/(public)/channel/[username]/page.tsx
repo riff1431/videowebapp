@@ -5,7 +5,7 @@ import { db } from "@/db";
 import { users, videos, subscriptions } from "@/db/schema";
 import { eq, desc, count } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { CheckCircle2, Bell, Share2, Video as VideoIcon } from "lucide-react";
+import { CheckCircle2, Bell, Video as VideoIcon } from "lucide-react";
 
 interface ChannelPageProps {
   params: Promise<{
@@ -56,6 +56,8 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
     .where(eq(videos.userId, channelUser.id))
     .orderBy(desc(videos.createdAt));
 
+  const displayName = channelUser.name || channelUser.username;
+
   return (
     <AppShell>
       <div className="max-w-7xl mx-auto space-y-6">
@@ -69,12 +71,12 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
               {channelUser.avatar ? (
                 <img
                   src={channelUser.avatar}
-                  alt={channelUser.name}
+                  alt={displayName}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center font-bold text-2xl text-white">
-                  {channelUser.name[0]?.toUpperCase()}
+                  {displayName[0]?.toUpperCase()}
                 </div>
               )}
             </div>
@@ -82,7 +84,7 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
             <div className="mb-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-xs">
-                  {channelUser.name}
+                  {displayName}
                 </h1>
                 {channelUser.verified && (
                   <CheckCircle2 className="w-5 h-5 text-blue-400 fill-blue-400/20" />

@@ -57,7 +57,7 @@ export default async function ManageUsersPage() {
                           {u.avatar ? (
                             <img
                               src={u.avatar}
-                              alt={u.name}
+                              alt={u.name || u.username}
                               className="w-full h-full object-cover"
                             />
                           ) : (
@@ -68,7 +68,7 @@ export default async function ManageUsersPage() {
                         </div>
                         <div>
                           <p className="font-semibold text-gray-900 text-xs">
-                            {u.name}
+                            {u.name || u.username}
                           </p>
                           <p className="text-[11px] text-gray-400">
                             @{u.username}
@@ -83,7 +83,7 @@ export default async function ManageUsersPage() {
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         u.role === "admin" ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-700"
                       }`}>
-                        {u.role.toUpperCase()}
+                        {(u.role || "user").toUpperCase()}
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-xs">
