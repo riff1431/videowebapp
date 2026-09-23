@@ -13,12 +13,18 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("male");
+  const [acceptTerms, setAcceptTerms] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!acceptTerms) {
+      setError("Please accept the terms of use and privacy policy");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -29,10 +35,10 @@ export default function RegisterPage() {
 
     try {
       const res = await authClient.signUp.email({
-        email,
+        email: email.trim(),
         password,
-        name: username,
-        username,
+        name: username.trim(),
+        username: username.trim(),
         gender,
       } as any);
 
@@ -42,19 +48,40 @@ export default function RegisterPage() {
         router.push("/");
         router.refresh();
       }
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
+    } catch (err: any) {
+      setError(err?.message || "An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-140px)] py-10">
-      <div className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-xl shadow-md border border-[var(--border)] p-8">
-        <h2 className="text-2xl font-bold text-center text-neutral-900 dark:text-white mb-6">
-          Create Account
-        </h2>
+    <div className="flex items-center justify-center min-h-[calc(100vh-140px)] py-10 px-4">
+      <div className="w-full max-w-md bg-[var(--card-bg)] text-[var(--foreground)] rounded-xl shadow-lg border border-[var(--border)] p-8">
+        {/* PlayTube Logo */}
+        <div className="flex flex-col items-center mb-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="PlayTube"
+            className="h-9 mb-4 dark:hidden"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-light.png"
+            alt="PlayTube"
+            className="h-9 mb-4 hidden dark:block"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+          <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
+            Sign Up
+          </h2>
+        </div>
 
         {error && (
           <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
@@ -74,21 +101,21 @@ export default function RegisterPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username"
-              className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Email Address
+              E-mail address
             </label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
-              className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              placeholder="E-mail address"
+              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
@@ -102,7 +129,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
@@ -116,7 +143,7 @@ export default function RegisterPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm password"
-              className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
@@ -127,26 +154,46 @@ export default function RegisterPage() {
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             >
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
           </div>
 
+          <div className="flex items-center gap-2 pt-1 text-xs text-neutral-600 dark:text-neutral-400">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              className="rounded accent-[#04abf2]"
+            />
+            <label htmlFor="terms">
+              By creating your account, you agree to our{" "}
+              <Link href="/terms/terms" className="text-[#04abf2] hover:underline">
+                Terms of use
+              </Link>{" "}
+              &{" "}
+              <Link href="/terms/privacy" className="text-[#04abf2] hover:underline">
+                Privacy policy
+              </Link>
+            </label>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-10 mt-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-semibold text-sm rounded-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full h-10 mt-2 bg-[#04abf2] hover:bg-[#039be5] text-white font-semibold text-xs rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
           >
             {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-[var(--border)] text-center text-xs text-neutral-500">
+        <div className="mt-6 pt-6 border-t border-[var(--border)] text-center text-xs text-neutral-500 dark:text-neutral-400">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-[var(--primary)] hover:underline">
-            Sign in
+          <Link href="/login" className="font-semibold text-[#04abf2] hover:underline">
+            Login
           </Link>
         </div>
       </div>

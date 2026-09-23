@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { username } from "better-auth/plugins";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
 
@@ -13,8 +14,17 @@ export const auth = betterAuth({
       verification: schema.verifications,
     },
   }),
+  plugins: [
+    username(), // Enable native username plugin so users can sign in with username or email
+  ],
+  advanced: {
+    database: {
+      generateId: "serial",
+    },
+  },
   emailAndPassword: {
     enabled: true,
+    minPasswordLength: 4, // Allow PlayTube default short passwords like "admin" / "admin123"
   },
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
@@ -22,11 +32,6 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      username: {
-        type: "string",
-        required: true,
-        input: true,
-      },
       avatar: {
         type: "string",
         defaultValue: "/upload/photos/d-avatar.jpg",
@@ -42,6 +47,10 @@ export const auth = betterAuth({
       role: {
         type: "string",
         defaultValue: "user",
+      },
+      gender: {
+        type: "string",
+        defaultValue: "male",
       },
     },
   },

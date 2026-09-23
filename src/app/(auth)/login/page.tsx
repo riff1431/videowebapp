@@ -20,30 +20,59 @@ export default function LoginPage() {
 
     try {
       const isEmail = usernameOrEmail.includes("@");
-      const res = await authClient.signIn.email({
-        email: isEmail ? usernameOrEmail : `${usernameOrEmail}@playtube.local`,
-        password,
-      });
+      let res;
+      if (isEmail) {
+        res = await authClient.signIn.email({
+          email: usernameOrEmail.trim(),
+          password,
+        });
+      } else {
+        res = await authClient.signIn.username({
+          username: usernameOrEmail.trim(),
+          password,
+        });
+      }
 
-      if (res.error) {
+      if (res?.error) {
         setError(res.error.message || "Invalid username/email or password");
       } else {
         router.push("/");
         router.refresh();
       }
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
+    } catch (err: any) {
+      setError(err?.message || "An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-140px)] py-10">
-      <div className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-xl shadow-md border border-[var(--border)] p-8">
-        <h2 className="text-2xl font-bold text-center text-neutral-900 dark:text-white mb-6">
-          Sign In
-        </h2>
+    <div className="flex items-center justify-center min-h-[calc(100vh-140px)] py-10 px-4">
+      <div className="w-full max-w-md bg-[var(--card-bg)] text-[var(--foreground)] rounded-xl shadow-lg border border-[var(--border)] p-8">
+        {/* PlayTube Logo */}
+        <div className="flex flex-col items-center mb-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="PlayTube"
+            className="h-9 mb-4 dark:hidden"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-light.png"
+            alt="PlayTube"
+            className="h-9 mb-4 hidden dark:block"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+          <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
+            Login
+          </h2>
+        </div>
 
         {error && (
           <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
@@ -55,15 +84,15 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Username or Email
+              Username or E-mail
             </label>
             <input
               type="text"
               required
               value={usernameOrEmail}
               onChange={(e) => setUsernameOrEmail(e.target.value)}
-              placeholder="Username or email"
-              className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              placeholder="Username or E-mail"
+              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
@@ -76,7 +105,7 @@ export default function LoginPage() {
                 href="/forgot-password"
                 className="text-xs text-[var(--primary)] hover:underline"
               >
-                Forgot password?
+                Forgot your password?
               </Link>
             </div>
             <input
@@ -85,23 +114,23 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-10 mt-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-semibold text-sm rounded-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full h-10 mt-2 bg-[#04abf2] hover:bg-[#039be5] text-white font-semibold text-xs rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Signing in..." : "Login"}
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-[var(--border)] text-center text-xs text-neutral-500">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-semibold text-[var(--primary)] hover:underline">
-            Sign up
+        <div className="mt-6 pt-6 border-t border-[var(--border)] text-center text-xs text-neutral-500 dark:text-neutral-400">
+          New here?{" "}
+          <Link href="/register" className="font-semibold text-[#04abf2] hover:underline">
+            Register
           </Link>
         </div>
       </div>

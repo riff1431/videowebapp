@@ -2,8 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { authClient } from "@/lib/auth/auth-client";
 import { 
   LayoutDashboard, 
   Settings, 
@@ -163,10 +164,14 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user as any;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -178,6 +183,15 @@ export default function AdminLayout({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    // Auto expand the section containing current pathname
+    for (const item of MENU_ITEMS) {
+      if (item.subItems?.some((sub) => sub.href === pathname)) {
+        setOpenSections((prev) => ({ ...prev, [item.title]: true }));
+      }
+    }
+  }, [pathname]);
+
   const toggleSection = (title: string) => {
     setOpenSections((prev) => ({ ...prev, [title]: !prev[title] }));
   };
@@ -188,9 +202,16 @@ export default function AdminLayout({
       <header className="bg-[#1b1e22] border-b border-[#2c3136] h-14 flex items-center justify-between px-4 sticky top-0 z-50">
         {/* Left: Brand Logo */}
         <div className="flex items-center gap-6">
-          <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-0 h-0 border-y-[9px] border-y-transparent border-l-[16px] border-l-[#04abf2]" />
-            <span className="font-bold text-lg tracking-tight text-white">playtube</span>
+          <Link href="/admin" className="flex items-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-light.png"
+              alt="playtube"
+              className="h-7 w-auto"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = "none";
+              }}
+            />
           </Link>
 
           {/* Admin Search Bar */}
@@ -218,7 +239,7 @@ export default function AdminLayout({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/upload/photos/d-avatar.jpg"
+                src={user?.image || "/upload/photos/d-avatar.jpg"}
                 alt="admin"
                 className="w-7 h-7 rounded-full object-cover bg-neutral-700"
                 onError={(e) => {
@@ -226,7 +247,7 @@ export default function AdminLayout({
                     "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
                 }}
               />
-              <span>admin</span>
+              <span>{user?.name || user?.username || "admin"}</span>
               <ChevronDown className="w-3 h-3 text-neutral-400" />
             </button>
 
@@ -235,7 +256,7 @@ export default function AdminLayout({
                 <div className="flex flex-col items-center px-4 pb-3 border-b border-[#2d3238]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/upload/photos/d-avatar.jpg"
+                    src={user?.image || "/upload/photos/d-avatar.jpg"}
                     alt="admin"
                     className="w-14 h-14 rounded-full object-cover bg-neutral-700 mb-2"
                     onError={(e) => {
@@ -243,8 +264,12 @@ export default function AdminLayout({
                         "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
                     }}
                   />
-                  <p className="font-semibold text-white text-sm">admin</p>
-                  <p className="text-[11px] text-neutral-400">admin@playtube.local</p>
+                  <p className="font-semibold text-white text-sm">
+                    {user?.name || user?.username || "admin"}
+                  </p>
+                  <p className="text-[11px] text-neutral-400">
+                    {user?.email || "admin@playtube.local"}
+                  </p>
                   
                   <Link
                     href="/"
@@ -253,12 +278,22 @@ export default function AdminLayout({
                     View Profile
                   </Link>
 
-                  <Link
-                    href="/login"
-                    className="mt-3 text-red-400 hover:text-red-300 font-semibold text-xs"
+                  <button
+                    onClick={async () => {
+                      setProfileOpen(false);
+                      await authClient.signOut({
+                        fetchOptions: {
+                          onSuccess: () => {
+                            router.push("/login");
+                            router.refresh();
+                          },
+                        },
+                      });
+                    }}
+                    className="mt-3 text-red-400 hover:text-red-300 font-semibold text-xs cursor-pointer"
                   >
                     Sign Out!
-                  </Link>
+                  </button>
                 </div>
 
                 {/* Day / Night Mode Toggle */}

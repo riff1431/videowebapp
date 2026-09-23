@@ -20,6 +20,7 @@ export const users = pgTable("users", {
   username: varchar("username", { length: 50 }).notNull().unique(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified").default(false),
+  displayUsername: varchar("display_username", { length: 255 }),
   image: varchar("image", { length: 500 }),
   avatar: varchar("avatar", { length: 500 }).default("/upload/photos/d-avatar.jpg"),
   cover: varchar("cover", { length: 500 }).default("/upload/photos/d-cover.jpg"),

@@ -2,8 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { authClient } from "@/lib/auth/auth-client";
 import {
   Search,
   Plus,
@@ -40,6 +41,7 @@ import {
 } from "lucide-react";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
+  const router = useRouter();
   const [keyword, setKeyword] = useState("");
   const [createMenuOpen, setCreateMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -47,8 +49,10 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
 
-  // Simulated logged in state - default to true for demonstration/admin
-  const isLoggedIn = true;
+  // Better Auth live session hook
+  const { data: session } = authClient.useSession();
+  const user = session?.user as any;
+  const isLoggedIn = !!session?.user;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -93,9 +97,25 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         </button>
 
         {/* PlayTube Brand Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-0 h-0 border-y-[10px] border-y-transparent border-l-[18px] border-l-[#04abf2]" />
-          <span className="font-bold text-xl tracking-tight text-neutral-900 dark:text-white">playtube</span>
+        <Link href="/" className="flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="playtube"
+            className="h-7 w-auto dark:hidden"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-light.png"
+            alt="playtube"
+            className="h-7 w-auto hidden dark:block"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
         </Link>
       </div>
 
@@ -195,7 +215,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             <span className="hidden sm:inline text-xs">My Account</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/upload/photos/d-avatar.jpg"
+              src={user?.image || "/upload/photos/d-avatar.jpg"}
               alt="Account"
               className="w-7 h-7 rounded-full object-cover bg-neutral-200 border border-neutral-700"
               onError={(e) => {
@@ -213,7 +233,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                   <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/upload/photos/d-avatar.jpg"
+                      src={user?.image || "/upload/photos/d-avatar.jpg"}
                       alt="Avatar"
                       className="w-10 h-10 rounded-full object-cover bg-neutral-200 dark:bg-neutral-700"
                       onError={(e) => {
@@ -222,9 +242,15 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       }}
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-neutral-900 dark:text-white truncate">admin</p>
-                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">@admin</p>
-                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">0 Points</p>
+                      <p className="font-semibold text-neutral-900 dark:text-white truncate">
+                        {user?.name || user?.username || "User"}
+                      </p>
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
+                        @{user?.username || user?.name || "user"}
+                      </p>
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                        {user?.points || 0} Points
+                      </p>
                     </div>
                   </div>
 
@@ -330,22 +356,33 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       <Layers className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
                       <span>Advertising</span>
                     </Link>
-                    <Link
-                      href="/admin"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-[#04abf2] hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-t border-[var(--border)]"
-                    >
-                      <ShieldAlert className="w-4 h-4 text-[#04abf2]" />
-                      <span className="font-medium text-[#04abf2]">Admin Panel</span>
-                    </Link>
-                    <Link
-                      href="/login"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                    {(user?.role === "admin" || user?.isAdmin) && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-[#04abf2] hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-t border-[var(--border)]"
+                      >
+                        <ShieldAlert className="w-4 h-4 text-[#04abf2]" />
+                        <span className="font-medium text-[#04abf2]">Admin Panel</span>
+                      </Link>
+                    )}
+                    <button
+                      onClick={async () => {
+                        setUserMenuOpen(false);
+                        await authClient.signOut({
+                          fetchOptions: {
+                            onSuccess: () => {
+                              router.push("/login");
+                              router.refresh();
+                            },
+                          },
+                        });
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors text-left cursor-pointer"
                     >
                       <LogOut className="w-4 h-4 text-red-500" />
                       <span>Log out</span>
-                    </Link>
+                    </button>
                   </div>
                 </>
               ) : (
