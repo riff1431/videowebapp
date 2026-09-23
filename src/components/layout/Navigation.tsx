@@ -26,6 +26,7 @@ import {
   Film,
   Bell,
   Newspaper,
+  Users,
 } from "lucide-react";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
@@ -246,6 +247,7 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
     { label: "Shorts", href: "/shorts", icon: Sparkles },
     { label: "Movies", href: "/movies", icon: Film },
     { label: "Articles", href: "/articles", icon: Newspaper },
+    { label: "Popular Channels", href: "/popular-channels", icon: Users },
   ];
 
   const libraryItems = [
