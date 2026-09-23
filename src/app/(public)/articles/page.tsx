@@ -3,7 +3,7 @@ import Link from "next/link";
 import { db } from "@/db";
 import { articles, users } from "@/db/schema";
 import { eq, desc, and, ilike } from "drizzle-orm";
-import { Newspaper, Search, Plus, ChevronRight, Eye, Tag } from "lucide-react";
+import { Newspaper, Search, BookOpen } from "lucide-react";
 
 interface ArticlesPageProps {
   searchParams: Promise<{
@@ -15,13 +15,19 @@ interface ArticlesPageProps {
 export const revalidate = 30;
 
 const ARTICLE_CATEGORIES = [
-  { id: "all", name: "All Categories" },
-  { id: "general", name: "General" },
-  { id: "tech", name: "Technology" },
-  { id: "entertainment", name: "Entertainment" },
+  { id: "all", name: "Film & Animation" },
   { id: "music", name: "Music" },
+  { id: "pets", name: "Pets & Animals" },
+  { id: "sports", name: "Sports" },
+  { id: "travel", name: "Travel & Events" },
   { id: "gaming", name: "Gaming" },
+  { id: "people", name: "People & Blogs" },
+  { id: "comedy", name: "Comedy" },
+  { id: "entertainment", name: "Entertainment" },
   { id: "news", name: "News & Politics" },
+  { id: "howto", name: "How-to & Style" },
+  { id: "nonprofit", name: "Non-profits & Activism" },
+  { id: "other", name: "Other" },
 ];
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
@@ -46,12 +52,10 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
       category: articles.category,
       image: articles.image,
       views: articles.views,
-      tags: articles.tags,
       createdAt: articles.createdAt,
       author: {
         username: users.username,
         name: users.name,
-        avatar: users.avatar,
       },
     })
     .from(articles)
@@ -60,121 +64,63 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
     .orderBy(desc(articles.id))
     .limit(20);
 
-  // Popular articles for sidebar
-  const popularPosts = await db
-    .select({
-      id: articles.id,
-      title: articles.title,
-      views: articles.views,
-      image: articles.image,
-      createdAt: articles.createdAt,
-    })
-    .from(articles)
-    .where(eq(articles.active, true))
-    .orderBy(desc(articles.views))
-    .limit(5);
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Header bar matching PlayTube pt_page_headr */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-[var(--border)] gap-4 mb-6">
+    <div className="max-w-7xl mx-auto px-4 py-4 space-y-6">
+      {/* Top Header Bar */}
+      <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center">
-            <Newspaper className="w-5 h-5" />
+          <div className="w-8 h-8 rounded-lg bg-[#04abf2] text-white flex items-center justify-center">
+            <Newspaper className="w-4 h-4" />
           </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-              Articles & Blogs
-            </h1>
-            <p className="text-xs text-neutral-500">
-              Explore opinions, editorial deep-dives, and community stories
-            </p>
-          </div>
+          <h1 className="text-base font-bold text-neutral-800 dark:text-neutral-200">
+            Most recent articles
+          </h1>
         </div>
 
         <Link
           href="/create-article"
-          className="flex items-center gap-2 px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-sm font-semibold rounded-md transition-colors shadow-xs"
+          className="px-4 py-1.5 bg-[#04abf2] hover:bg-[#039be5] text-white text-xs font-semibold rounded-md transition-colors"
         >
-          <Plus className="w-4 h-4" />
-          <span>Create Article</span>
+          Create article
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Feed Column */}
-        <div className="lg:col-span-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Main Content Area (8 Cols) */}
+        <div className="lg:col-span-8 flex flex-col items-center justify-center min-h-[350px]">
           {posts.length === 0 ? (
-            <div className="bg-white dark:bg-neutral-900 border border-[var(--border)] rounded-xl p-12 text-center">
-              <Newspaper className="w-12 h-12 text-neutral-400 mx-auto mb-3 opacity-60" />
-              <h3 className="text-base font-semibold text-neutral-800 dark:text-neutral-200">
-                No articles published yet
+            <div className="flex flex-col items-center justify-center text-center">
+              {/* Circular light blue icon badge */}
+              <div className="w-24 h-24 rounded-full bg-[#e1f5fe] dark:bg-[#1e293b] flex items-center justify-center mb-4">
+                <BookOpen className="w-10 h-10 text-[#04abf2]" />
+              </div>
+              <h3 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                No posts found!
               </h3>
-              <p className="text-xs text-neutral-500 max-w-sm mx-auto mt-1 mb-5">
-                Be the first writer to publish an editorial piece or blog article for the community!
-              </p>
-              <Link
-                href="/create-article"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white text-xs font-semibold rounded-md hover:bg-[var(--primary-hover)] transition-colors"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Publish First Article
-              </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
               {posts.map((post) => (
                 <div
                   key={post.id}
-                  className="bg-white dark:bg-neutral-900 border border-[var(--border)] rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col group"
+                  className="bg-white dark:bg-[#212121] border border-[var(--border)] rounded-lg overflow-hidden shadow-xs hover:shadow-md transition-shadow"
                 >
-                  <Link href={`/articles/read/${post.id}`} className="relative block aspect-video overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                  <Link href={`/articles/read/${post.id}`} className="block aspect-video bg-neutral-100 dark:bg-neutral-800">
                     <img
                       src={post.image || "/upload/photos/d-cover.jpg"}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover"
                     />
-                    <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[11px] font-semibold uppercase tracking-wider bg-black/60 backdrop-blur-xs text-white">
-                      {post.category || "General"}
-                    </span>
                   </Link>
-
-                  <div className="p-4 flex-1 flex flex-col justify-between">
-                    <div>
-                      <Link href={`/articles/read/${post.id}`}>
-                        <h2 className="text-base font-bold text-neutral-900 dark:text-neutral-100 line-clamp-2 hover:text-[var(--primary)] transition-colors">
-                          {post.title}
-                        </h2>
-                      </Link>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-3 mt-1.5 leading-relaxed">
-                        {post.description}
-                      </p>
-                    </div>
-
-                    <div className="pt-4 mt-3 border-t border-[var(--border)] flex items-center justify-between text-xs text-neutral-500">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={post.author?.avatar || "/upload/photos/d-avatar.jpg"}
-                          alt={post.author?.name || "Author"}
-                          className="w-5 h-5 rounded-full object-cover"
-                        />
-                        <span className="font-medium text-neutral-700 dark:text-neutral-300">
-                          {post.author?.name || post.author?.username || "PlayTube Creator"}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
-                          <Eye className="w-3.5 h-3.5" />
-                          {post.views || 0}
-                        </span>
-                        <Link
-                          href={`/articles/read/${post.id}`}
-                          className="text-[var(--primary)] font-semibold inline-flex items-center hover:underline"
-                        >
-                          Read <ChevronRight className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    </div>
+                  <div className="p-4">
+                    <Link href={`/articles/read/${post.id}`}>
+                      <h2 className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-2 hover:text-[#04abf2]">
+                        {post.title}
+                      </h2>
+                    </Link>
+                    <p className="text-xs text-neutral-500 mt-1 line-clamp-2">
+                      {post.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -182,93 +128,60 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           )}
         </div>
 
-        {/* Sidebar Column */}
+        {/* Sidebar (4 Cols) */}
         <div className="lg:col-span-4 space-y-6">
           {/* Article Search Box */}
-          <div className="bg-white dark:bg-neutral-900 border border-[var(--border)] rounded-xl p-4 shadow-xs">
-            <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-3">
-              Search Articles
-            </h3>
-            <form action="/articles" method="GET" className="relative flex items-center">
+          <div className="bg-white dark:bg-[#212121] border border-[var(--border)] rounded-lg p-3 shadow-xs">
+            <form action="/articles" method="GET" className="relative flex items-center bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md overflow-hidden h-9">
               <input
                 type="text"
                 name="q"
                 defaultValue={query}
-                placeholder="Keywords or topics..."
-                className="w-full h-9 pl-3 pr-10 text-xs bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg focus:outline-none focus:border-[var(--primary)]"
+                placeholder="Search for articles"
+                className="w-full h-full pl-3 pr-2 text-xs bg-transparent focus:outline-none text-neutral-900 dark:text-neutral-100 placeholder-neutral-500"
               />
-              {activeCategory !== "all" && (
-                <input type="hidden" name="category" value={activeCategory} />
-              )}
               <button
                 type="submit"
                 aria-label="Search articles"
-                className="absolute right-1 top-1 w-7 h-7 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-md flex items-center justify-center cursor-pointer transition-colors"
+                className="h-full px-3.5 bg-[#04abf2] hover:bg-[#039be5] text-white flex items-center justify-center cursor-pointer transition-colors"
               >
                 <Search className="w-3.5 h-3.5" />
               </button>
             </form>
           </div>
 
-          {/* Categories Filter */}
-          <div className="bg-white dark:bg-neutral-900 border border-[var(--border)] rounded-xl p-4 shadow-xs">
-            <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-3">
+          {/* Categories Pill Cloud */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
               Categories
             </h3>
-            <div className="flex flex-col space-y-1">
+            <div className="flex flex-wrap gap-1.5">
               {ARTICLE_CATEGORIES.map((cat) => {
                 const isActive = activeCategory === cat.id;
                 return (
                   <Link
                     key={cat.id}
                     href={cat.id === "all" ? "/articles" : `/articles?category=${cat.id}`}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                       isActive
-                        ? "bg-[var(--primary)] text-white font-semibold shadow-xs"
-                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        ? "bg-[#04abf2] text-white shadow-xs"
+                        : "bg-neutral-100 dark:bg-[#262626] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-[#333333] border border-neutral-200 dark:border-neutral-700"
                     }`}
                   >
-                    <span>{cat.name}</span>
-                    <ChevronRight className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-neutral-400"}`} />
+                    {cat.name}
                   </Link>
                 );
               })}
             </div>
           </div>
 
-          {/* Most Popular Posts */}
-          {popularPosts.length > 0 && (
-            <div className="bg-white dark:bg-neutral-900 border border-[var(--border)] rounded-xl p-4 shadow-xs">
-              <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-3">
-                Most Popular
-              </h3>
-              <div className="space-y-3">
-                {popularPosts.map((pop) => (
-                  <Link
-                    key={pop.id}
-                    href={`/articles/read/${pop.id}`}
-                    className="flex items-center gap-3 group"
-                  >
-                    <div className="w-16 h-12 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 shrink-0">
-                      <img
-                        src={pop.image || "/upload/photos/d-cover.jpg"}
-                        alt={pop.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 group-hover:text-[var(--primary)] line-clamp-2 transition-colors">
-                        {pop.title}
-                      </h4>
-                      <p className="text-[11px] text-neutral-500 mt-0.5 flex items-center gap-1">
-                        <Eye className="w-3 h-3" /> {pop.views || 0} views
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Most Popular */}
+          <div className="pt-2 border-t border-[var(--border)]">
+            <h3 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-3">
+              Most popular
+            </h3>
+            <p className="text-xs text-neutral-400">No popular articles yet</p>
+          </div>
         </div>
       </div>
     </div>

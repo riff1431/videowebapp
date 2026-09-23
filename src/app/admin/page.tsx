@@ -1,210 +1,141 @@
 import React from "react";
 import { db } from "@/db";
-import { users, videos, comments, subscriptions, siteConfig } from "@/db/schema";
-import { count } from "drizzle-orm";
-import { 
-  Video, 
-  Users, 
-  Eye, 
-  MessageSquare, 
-  UserPlus, 
-  ThumbsUp, 
-  Settings, 
-  CheckCircle2,
-  Clock,
-  HardDrive
+import { users, videos, comments, subscriptions, articles, views, likesDislikes, watchLater } from "@/db/schema";
+import { count, eq } from "drizzle-orm";
+import {
+  Video,
+  Eye,
+  Users,
+  UserPlus,
+  MessageSquare,
+  ThumbsUp,
+  ThumbsDown,
+  Bookmark
 } from "lucide-react";
+import { AdminCharts } from "./AdminCharts";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  // Query live counts from the PostgreSQL database
-  const [[videosCount], [usersCount], [commentsCount], [subsCount]] = await Promise.all([
-    db.select({ value: count() }).from(videos),
-    db.select({ value: count() }).from(users),
-    db.select({ value: count() }).from(comments),
-    db.select({ value: count() }).from(subscriptions),
+  // Query all 8 KPI counts safely from the database
+  const [
+    [videosCount],
+    [usersCount],
+    [commentsCount],
+    [subsCount],
+    [viewsCount],
+    [likesCount],
+    [dislikesCount],
+    [savedCount],
+  ] = await Promise.all([
+    db.select({ value: count() }).from(videos).catch(() => [{ value: 0 }]),
+    db.select({ value: count() }).from(users).catch(() => [{ value: 0 }]),
+    db.select({ value: count() }).from(comments).catch(() => [{ value: 0 }]),
+    db.select({ value: count() }).from(subscriptions).catch(() => [{ value: 0 }]),
+    db.select({ value: count() }).from(views).catch(() => [{ value: 0 }]),
+    db.select({ value: count() }).from(likesDislikes).where(eq(likesDislikes.type, 1)).catch(() => [{ value: 0 }]),
+    db.select({ value: count() }).from(likesDislikes).where(eq(likesDislikes.type, 2)).catch(() => [{ value: 0 }]),
+    db.select({ value: count() }).from(watchLater).catch(() => [{ value: 0 }]),
   ]);
-
-  const recentVideos = await db.select().from(videos).limit(5);
-  const recentUsers = await db.select().from(users).limit(5);
 
   const kpis = [
     {
       title: "TOTAL VIDEOS",
-      value: videosCount.value,
+      value: videosCount?.value || 0,
       icon: Video,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-100",
+      bgColor: "bg-blue-600",
+    },
+    {
+      title: "TOTAL VIEWS",
+      value: viewsCount?.value || 0,
+      icon: Eye,
+      bgColor: "bg-cyan-600",
     },
     {
       title: "TOTAL USERS",
-      value: usersCount.value,
+      value: usersCount?.value || 1,
       icon: Users,
-      color: "text-amber-600",
-      bgColor: "bg-amber-50",
-      borderColor: "border-amber-100",
+      bgColor: "bg-amber-600",
     },
     {
-      title: "TOTAL COMMENTS",
-      value: commentsCount.value,
-      icon: MessageSquare,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-50",
-      borderColor: "border-emerald-100",
-    },
-    {
-      title: "SUBSCRIPTIONS",
-      value: subsCount.value,
+      title: "TOTAL SUBSCRIPTIONS",
+      value: subsCount?.value || 0,
       icon: UserPlus,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-100",
+      bgColor: "bg-purple-600",
+    },
+    {
+      title: "TOTAL VIDEOS COMMENTS",
+      value: commentsCount?.value || 0,
+      icon: MessageSquare,
+      bgColor: "bg-emerald-600",
+    },
+    {
+      title: "TOTAL VIDEOS LIKES",
+      value: likesCount?.value || 0,
+      icon: ThumbsUp,
+      bgColor: "bg-blue-500",
+    },
+    {
+      title: "TOTAL VIDEOS DISLIKES",
+      value: dislikesCount?.value || 0,
+      icon: ThumbsDown,
+      bgColor: "bg-indigo-600",
+    },
+    {
+      title: "TOTAL SAVED VIDEOS",
+      value: savedCount?.value || 0,
+      icon: Bookmark,
+      bgColor: "bg-cyan-700",
     },
   ];
 
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-            Dashboard Overview
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Welcome to the PlayTube Next.js management console. Real-time metrics powered by PostgreSQL.
-          </p>
-        </div>
+    <div className="space-y-6 text-[#e2e8f0]">
+      {/* Welcome Title */}
+      <div>
+        <h1 className="text-xl font-bold tracking-tight text-white">
+          Welcome back, admin
+        </h1>
+      </div>
 
+      {/* Red/Burgundy Alert Banner matching PlayTube */}
+      <div className="bg-[#4c1d24] border border-[#6d242e] text-[#fca5a5] px-4 py-3 rounded-md text-xs flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            System Healthy
-          </span>
-          <span className="text-xs text-gray-400 bg-white border border-gray-200 px-3 py-1.5 rounded-full">
-            Theme: Youplay
-          </span>
+          <span className="font-bold text-red-300">Important!</span>
+          <span>There are some errors found on your system, please review System Status.</span>
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {kpis.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <div
-              key={kpi.title}
-              className={`p-5 rounded-2xl bg-white border ${kpi.borderColor} shadow-xs flex items-center justify-between transition-all hover:shadow-md`}
-            >
-              <div>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  {kpi.title}
-                </p>
-                <h3 className="text-2xl font-extrabold text-gray-900">
-                  {kpi.value.toLocaleString()}
-                </h3>
-              </div>
-              <div className={`w-12 h-12 rounded-xl ${kpi.bgColor} ${kpi.color} flex items-center justify-center shrink-0`}>
-                <Icon className="w-6 h-6" />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Tables Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Videos */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <Video className="w-4 h-4 text-red-600" />
-              Recent Videos
-            </h3>
-            <span className="text-xs text-gray-400">Latest uploads</span>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase">
-                <tr>
-                  <th className="pb-3">Title</th>
-                  <th className="pb-3">Views</th>
-                  <th className="pb-3">Duration</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {recentVideos.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="py-4 text-center text-gray-400 text-xs">
-                      No videos uploaded yet.
-                    </td>
-                  </tr>
-                ) : (
-                  recentVideos.map((v) => (
-                    <tr key={v.id} className="hover:bg-gray-50/50">
-                      <td className="py-3 pr-2">
-                        <span className="font-medium text-gray-800 line-clamp-1">
-                          {v.title}
-                        </span>
-                      </td>
-                      <td className="py-3 text-gray-500 text-xs">{(v.views ?? 0).toLocaleString()}</td>
-                      <td className="py-3 text-gray-500 text-xs">{v.duration || "00:00"}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+      {/* Main Grid: Charts on Left (7 cols), 8 KPI Widgets on Right (5 cols) */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        {/* Left Column: Analytics Charts */}
+        <div className="xl:col-span-7 space-y-6">
+          <AdminCharts />
         </div>
 
-        {/* Recent Users */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <Users className="w-4 h-4 text-blue-600" />
-              Registered Users
-            </h3>
-            <span className="text-xs text-gray-400">Latest members</span>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase">
-                <tr>
-                  <th className="pb-3">Username</th>
-                  <th className="pb-3">Role</th>
-                  <th className="pb-3">Email</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {recentUsers.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="py-4 text-center text-gray-400 text-xs">
-                      No registered users.
-                    </td>
-                  </tr>
-                ) : (
-                  recentUsers.map((u) => (
-                    <tr key={u.id} className="hover:bg-gray-50/50">
-                      <td className="py-3 font-medium text-gray-800 text-xs">
-                        @{u.username}
-                      </td>
-                      <td className="py-3 text-xs">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          u.role === "admin" ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"
-                        }`}>
-                          {(u.role || "user").toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="py-3 text-gray-500 text-xs">{u.email}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+        {/* Right Column: 8 KPI Metric Cards (2x4 grid) */}
+        <div className="xl:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
+          {kpis.map((kpi) => {
+            const Icon = kpi.icon;
+            return (
+              <div
+                key={kpi.title}
+                className="bg-[#212529] border border-[#2c3136] rounded-lg p-4 flex items-center gap-4 shadow-sm"
+              >
+                <div className={`w-11 h-11 rounded-lg ${kpi.bgColor} text-white flex items-center justify-center shrink-0`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                    {kpi.title}
+                  </p>
+                  <h3 className="text-xl font-bold text-white mt-0.5">
+                    {kpi.value.toLocaleString()}
+                  </h3>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

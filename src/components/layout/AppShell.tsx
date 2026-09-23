@@ -1,10 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Header, Sidebar } from "./Navigation";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+
+  // If inside the admin area, do not wrap with public Header/Sidebar
+  const isAdmin = pathname?.startsWith("/admin");
+
+  if (isAdmin) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--background)]">

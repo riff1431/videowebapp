@@ -1,58 +1,278 @@
-import React from "react";
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import { 
   LayoutDashboard, 
+  Settings, 
+  CreditCard, 
+  Globe, 
   Users, 
   Video, 
-  Settings, 
-  ShieldCheck, 
-  ArrowLeft,
-  DollarSign,
-  Layers,
-  FolderTree,
-  AlertTriangle,
-  BadgeCheck,
-  Megaphone,
-  Crown,
-  CreditCard,
-  Mail,
-  Clapperboard,
+  Film, 
+  FileText, 
+  FolderTree, 
+  Crown, 
+  Palette, 
+  Wrench, 
+  Flag, 
+  FileCode, 
+  Network, 
+  Smartphone, 
+  ChevronDown, 
+  ChevronRight,
+  Search,
+  Bell,
+  LogOut,
+  Moon,
+  Sun,
+  User
 } from "lucide-react";
+
+interface MenuItem {
+  title: string;
+  icon: React.ElementType;
+  href?: string;
+  subItems?: { title: string; href: string }[];
+}
+
+const MENU_ITEMS: MenuItem[] = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboard,
+    href: "/admin",
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    subItems: [
+      { title: "General Settings", href: "/admin/settings" },
+      { title: "Site Features", href: "/admin/settings" },
+      { title: "E-mail Setup", href: "/admin/email-settings" },
+      { title: "FFmpeg Setup", href: "/admin/ffmpeg" },
+    ],
+  },
+  {
+    title: "Payments & Ads",
+    icon: CreditCard,
+    subItems: [
+      { title: "Payment Settings", href: "/admin/payment-settings" },
+      { title: "Manage Website Ads", href: "/admin/ads" },
+    ],
+  },
+  {
+    title: "Languages",
+    icon: Globe,
+    subItems: [
+      { title: "Manage Languages", href: "/admin/languages" },
+    ],
+  },
+  {
+    title: "Users",
+    icon: Users,
+    subItems: [
+      { title: "Manage Users", href: "/admin/users" },
+      { title: "Verification Requests", href: "/admin/verification-requests" },
+    ],
+  },
+  {
+    title: "Videos",
+    icon: Video,
+    subItems: [
+      { title: "Manage Videos", href: "/admin/videos" },
+    ],
+  },
+  {
+    title: "Movies",
+    icon: Film,
+    subItems: [
+      { title: "Manage Movies", href: "/admin/movies" },
+    ],
+  },
+  {
+    title: "Articles",
+    icon: FileText,
+    subItems: [
+      { title: "Manage Articles", href: "/admin/articles" },
+    ],
+  },
+  {
+    title: "Categories",
+    icon: FolderTree,
+    subItems: [
+      { title: "Manage Categories", href: "/admin/categories" },
+    ],
+  },
+  {
+    title: "Pro System",
+    icon: Crown,
+    subItems: [
+      { title: "Pro Settings", href: "/admin/pro-settings" },
+    ],
+  },
+  {
+    title: "Design",
+    icon: Palette,
+    subItems: [
+      { title: "Themes", href: "/admin/themes" },
+    ],
+  },
+  {
+    title: "Tools",
+    icon: Wrench,
+    subItems: [
+      { title: "System Status", href: "/admin/system-status" },
+      { title: "Backup & Restore", href: "/admin/backup" },
+    ],
+  },
+  {
+    title: "Reports",
+    icon: Flag,
+    subItems: [
+      { title: "Video Reports", href: "/admin/reports" },
+    ],
+  },
+  {
+    title: "Pages",
+    icon: FileCode,
+    subItems: [
+      { title: "Manage Custom Pages", href: "/admin/pages" },
+    ],
+  },
+  {
+    title: "Sitemap",
+    icon: Network,
+    subItems: [
+      { title: "Generate Sitemap", href: "/admin/sitemap" },
+    ],
+  },
+  {
+    title: "Mobile & API Settings",
+    icon: Smartphone,
+    subItems: [
+      { title: "API Keys", href: "/admin/api-settings" },
+    ],
+  },
+];
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleSection = (title: string) => {
+    setOpenSections((prev) => ({ ...prev, [title]: !prev[title] }));
+  };
+
   return (
-    <div className="min-h-screen bg-[#f4f7f6] text-[#333] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#16191c] text-[#e2e8f0] flex flex-col font-sans">
       {/* Top Header Navbar */}
-      <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 sticky top-0 z-50">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-[var(--primary)] transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to PlayTube</span>
+      <header className="bg-[#1b1e22] border-b border-[#2c3136] h-14 flex items-center justify-between px-4 sticky top-0 z-50">
+        {/* Left: Brand Logo */}
+        <div className="flex items-center gap-6">
+          <Link href="/admin" className="flex items-center gap-2">
+            <div className="w-0 h-0 border-y-[9px] border-y-transparent border-l-[16px] border-l-[#04abf2]" />
+            <span className="font-bold text-lg tracking-tight text-white">playtube</span>
           </Link>
-          <div className="h-4 w-px bg-gray-300" />
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white font-bold text-lg shadow-xs">
-              P
-            </div>
-            <span className="font-bold text-gray-800 tracking-tight text-lg">
-              PlayTube <span className="text-xs bg-sky-100 text-[var(--primary)] font-semibold px-2 py-0.5 rounded-full ml-1">Admin Panel</span>
-            </span>
+
+          {/* Admin Search Bar */}
+          <div className="relative hidden md:flex items-center">
+            <input
+              type="text"
+              placeholder="Search"
+              className="w-56 h-8 pl-8 pr-3 text-xs bg-[#16191c] border border-[#2c3136] rounded-full focus:outline-none focus:border-[#04abf2] text-neutral-200 placeholder-neutral-500"
+            />
+            <Search className="w-3.5 h-3.5 text-neutral-500 absolute left-2.5" />
           </div>
         </div>
 
+        {/* Right: Notifications & Profile Dropdown */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm">
-            <div className="w-8 h-8 rounded-full bg-sky-50 text-[var(--primary)] font-semibold flex items-center justify-center border border-sky-200">
-              A
-            </div>
-            <div className="flex flex-col">
-              <span className="font-semibold text-gray-800 text-xs">Administrator</span>
-              <span className="text-[10px] text-emerald-600 font-medium">● Online</span>
-            </div>
+          <button className="p-1.5 text-neutral-400 hover:text-white rounded-md transition-colors relative">
+            <Bell className="w-4 h-4" />
+          </button>
+
+          {/* Admin Profile Dropdown */}
+          <div className="relative" ref={profileRef}>
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center gap-2 text-xs font-medium text-neutral-200 hover:text-white transition-colors cursor-pointer"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/upload/photos/d-avatar.jpg"
+                alt="admin"
+                className="w-7 h-7 rounded-full object-cover bg-neutral-700"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
+                }}
+              />
+              <span>admin</span>
+              <ChevronDown className="w-3 h-3 text-neutral-400" />
+            </button>
+
+            {profileOpen && (
+              <div className="absolute right-0 mt-2 w-64 bg-[#212529] border border-[#2d3238] rounded-lg shadow-2xl py-3 z-50 text-xs">
+                <div className="flex flex-col items-center px-4 pb-3 border-b border-[#2d3238]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/upload/photos/d-avatar.jpg"
+                    alt="admin"
+                    className="w-14 h-14 rounded-full object-cover bg-neutral-700 mb-2"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
+                    }}
+                  />
+                  <p className="font-semibold text-white text-sm">admin</p>
+                  <p className="text-[11px] text-neutral-400">admin@playtube.local</p>
+                  
+                  <Link
+                    href="/"
+                    className="mt-2.5 px-4 py-1 bg-[#2c3136] hover:bg-[#383f46] text-white rounded-full text-xs font-medium transition-colors"
+                  >
+                    View Profile
+                  </Link>
+
+                  <Link
+                    href="/login"
+                    className="mt-3 text-red-400 hover:text-red-300 font-semibold text-xs"
+                  >
+                    Sign Out!
+                  </Link>
+                </div>
+
+                {/* Day / Night Mode Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center justify-between px-4 pt-3 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  <span className="text-xs">
+                    {theme === "dark" ? "Day mode ☀️" : "Night mode 🌙"}
+                  </span>
+                  {theme === "dark" ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-sky-400" />}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -60,134 +280,71 @@ export default function AdminLayout({
       {/* Main Body */}
       <div className="flex flex-1">
         {/* Left Navigation Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 p-4 shrink-0 flex flex-col justify-between hidden md:flex">
-          <div className="space-y-6">
-            <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
-                Main
-              </p>
-              <nav className="space-y-1">
-                <Link
-                  href="/admin"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[var(--primary)] bg-sky-50 hover:bg-sky-100 transition-colors"
-                >
-                  <LayoutDashboard className="w-4 h-4 text-[var(--primary)]" />
-                  <span>Dashboard</span>
-                </Link>
-                <Link
-                  href="/admin/videos"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <Video className="w-4 h-4 text-gray-400" />
-                  <span>Manage Videos</span>
-                </Link>
-                <Link
-                  href="/admin/users"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <Users className="w-4 h-4 text-gray-400" />
-                  <span>Manage Users</span>
-                </Link>
-                <Link
-                  href="/admin/categories"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <FolderTree className="w-4 h-4 text-gray-400" />
-                  <span>Manage Categories</span>
-                </Link>
-                <Link
-                  href="/admin/settings"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <Settings className="w-4 h-4 text-gray-400" />
-                  <span>General Settings</span>
-                </Link>
-              </nav>
-            </div>
+        <aside className="w-60 bg-[#1b1e22] border-r border-[#2c3136] shrink-0 overflow-y-auto hidden md:block">
+          <nav className="p-2 space-y-0.5 text-xs">
+            {MENU_ITEMS.map((item) => {
+              const Icon = item.icon;
+              const isDashboard = item.href === "/admin";
+              const isActive = item.href ? pathname === item.href : false;
+              const isOpen = openSections[item.title];
 
-            <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
-                Moderation & Growth
-              </p>
-              <nav className="space-y-1">
-                <Link
-                  href="/admin/verification-requests"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <BadgeCheck className="w-4 h-4 text-gray-400" />
-                  <span>Verification Requests</span>
-                </Link>
-                <Link
-                  href="/admin/reports"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <AlertTriangle className="w-4 h-4 text-gray-400" />
-                  <span>Video Reports</span>
-                </Link>
-              </nav>
-            </div>
+              if (!item.subItems) {
+                return (
+                  <Link
+                    key={item.title}
+                    href={item.href || "/admin"}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${
+                      isActive
+                        ? "text-[#04abf2] bg-[#16191c]"
+                        : "text-neutral-300 hover:bg-[#16191c] hover:text-white"
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 ${isActive ? "text-[#04abf2]" : "text-neutral-400"}`} />
+                    <span>{item.title}</span>
+                  </Link>
+                );
+              }
 
-            <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
-                Monetization & Ads
-              </p>
-              <nav className="space-y-1">
-                <Link
-                  href="/admin/ads"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <Megaphone className="w-4 h-4 text-gray-400" />
-                  <span>Website Ads</span>
-                </Link>
-                <Link
-                  href="/admin/pro-settings"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <Crown className="w-4 h-4 text-gray-400" />
-                  <span>PRO System</span>
-                </Link>
-                <Link
-                  href="/admin/payment-settings"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <CreditCard className="w-4 h-4 text-gray-400" />
-                  <span>Payment Settings</span>
-                </Link>
-              </nav>
-            </div>
+              return (
+                <div key={item.title}>
+                  <button
+                    onClick={() => toggleSection(item.title)}
+                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-neutral-300 hover:bg-[#16191c] hover:text-white font-medium transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="w-4 h-4 text-neutral-400" />
+                      <span>{item.title}</span>
+                    </div>
+                    <span className="text-neutral-500 font-bold text-sm">
+                      {isOpen ? "-" : "+"}
+                    </span>
+                  </button>
 
-            <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
-                Server & System
-              </p>
-              <nav className="space-y-1">
-                <Link
-                  href="/admin/email-settings"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <Mail className="w-4 h-4 text-gray-400" />
-                  <span>E-mail Setup</span>
-                </Link>
-                <Link
-                  href="/admin/ffmpeg"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <Clapperboard className="w-4 h-4 text-gray-400" />
-                  <span>FFmpeg Setup</span>
-                </Link>
-              </nav>
-            </div>
-          </div>
-
-          <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-xs text-gray-500">
-            <p className="font-semibold text-gray-700">PlayTube Next.js Standard</p>
-            <p className="text-[11px] mt-0.5">Version 3.1.1-Huipper</p>
-            <p className="text-[10px] text-gray-400 mt-2">Drizzle ORM • PostgreSQL 16</p>
-          </div>
+                  {isOpen && (
+                    <div className="pl-9 pr-2 py-1 space-y-1">
+                      {item.subItems.map((sub) => (
+                        <Link
+                          key={sub.title}
+                          href={sub.href}
+                          className={`block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${
+                            pathname === sub.href
+                              ? "text-[#04abf2] font-semibold"
+                              : "text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {sub.title}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-[#16191c]">
           {children}
         </main>
       </div>

@@ -2,16 +2,15 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import {
   Search,
-  Upload,
   Plus,
   Video,
-  Flame,
   Clock,
   ThumbsUp,
   Bookmark,
-  Compass,
   FileText,
   User,
   Settings,
@@ -29,6 +28,15 @@ import {
   Users,
   Crown,
   Wallet,
+  HelpCircle,
+  TrendingUp,
+  BarChart2,
+  Tv,
+  Clapperboard,
+  LogIn,
+  UserPlus,
+  Flame,
+  Lightbulb,
 } from "lucide-react";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
@@ -37,6 +45,10 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const createMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useTheme();
+
+  // Simulated logged in state - default to true for demonstration/admin
+  const isLoggedIn = true;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -59,15 +71,15 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full h-14 bg-[var(--header-bg)] border-b border-[var(--border)] px-4 flex items-center justify-between shadow-xs">
+    <header className="sticky top-0 z-40 w-full h-14 bg-[var(--header-bg)] border-b border-[var(--border)] px-4 flex items-center justify-between transition-colors">
       <div className="flex items-center gap-3">
         {/* PlayTube 9-dot Grid Toggle Icon */}
         <button
           onClick={onToggleSidebar}
           aria-label="Toggle navigation"
-          className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full cursor-pointer transition-colors"
+          className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-md cursor-pointer transition-colors"
         >
-          <svg className="w-5 h-5 text-neutral-700 dark:text-neutral-200" viewBox="0 0 276.167 276.167" fill="currentColor">
+          <svg className="w-5 h-5 text-neutral-700 dark:text-neutral-300" viewBox="0 0 276.167 276.167" fill="currentColor">
             <path d="M33.144,2.471C15.336,2.471,0.85,16.958,0.85,34.765s14.48,32.293,32.294,32.293s32.294-14.486,32.294-32.293 S50.951,2.471,33.144,2.471z"/>
             <path d="M137.663,2.471c-17.807,0-32.294,14.487-32.294,32.294s14.487,32.293,32.294,32.293c17.808,0,32.297-14.486,32.297-32.293 S155.477,2.471,137.663,2.471z"/>
             <path d="M243.873,67.059c17.804,0,32.294-14.486,32.294-32.293S261.689,2.471,243.873,2.471s-32.294,14.487-32.294,32.294 S226.068,67.059,243.873,67.059z"/>
@@ -80,55 +92,53 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           </svg>
         </button>
 
-        <Link href="/" className="flex items-center gap-1.5 font-bold text-xl tracking-tight text-neutral-900 dark:text-white">
-          <div className="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white shadow-xs">
-            <Video className="w-4 h-4 fill-current" />
-          </div>
-          <span className="font-bold text-xl tracking-tight">Play<span className="text-[var(--primary)]">Tube</span></span>
+        {/* PlayTube Brand Logo */}
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-0 h-0 border-y-[10px] border-y-transparent border-l-[18px] border-l-[#04abf2]" />
+          <span className="font-bold text-xl tracking-tight text-neutral-900 dark:text-white">playtube</span>
         </Link>
       </div>
 
-      {/* Pill Search Bar */}
+      {/* Pill Search Bar with Bright Cyan Search Button */}
       <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-4 hidden sm:flex items-center">
-        <div className="relative w-full flex">
+        <div className="relative w-full flex items-center bg-[var(--search-bg)] border border-[var(--search-border)] rounded-full overflow-hidden h-9">
           <input
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Search videos, channels..."
-            className="w-full h-9 pl-4 pr-10 text-sm bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-l-full focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-neutral-100 placeholder-neutral-500"
+            placeholder="Search for videos"
+            className="w-full h-full pl-4 pr-3 text-xs bg-transparent focus:outline-none text-neutral-900 dark:text-neutral-100 placeholder-neutral-500"
           />
           <button
             type="submit"
             aria-label="Search"
-            className="h-9 px-5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-r-full flex items-center justify-center cursor-pointer transition-colors shadow-xs"
+            className="h-full px-5 bg-[#04abf2] hover:bg-[#039be5] text-white flex items-center justify-center cursor-pointer transition-colors"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-3.5 h-3.5" />
           </button>
         </div>
       </form>
 
       {/* Right Action Icons */}
-      <div className="flex items-center gap-2">
-        {/* Create Dropdown (Upload Video, Import Video, Upload Shorts) */}
+      <div className="flex items-center gap-3">
+        {/* Create Button */}
         <div className="relative" ref={createMenuRef}>
           <button
             onClick={() => setCreateMenuOpen(!createMenuOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-hover)] rounded-md transition-colors cursor-pointer shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-neutral-700 dark:text-neutral-200 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
-            <span className="hidden md:inline">Create</span>
-            <ChevronDown className="w-3 h-3 opacity-80" />
+            <Video className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+            <span className="hidden sm:inline">Create</span>
           </button>
 
           {createMenuOpen && (
-            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-[var(--border)] py-1.5 z-50 text-sm">
+            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-[#212121] rounded-lg shadow-2xl border border-[var(--border)] py-1.5 z-50 text-xs">
               <Link
                 href="/upload-video"
                 onClick={() => setCreateMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                <Upload className="w-4 h-4 text-blue-500" />
+                <Video className="w-4 h-4 text-[#04abf2]" />
                 <span>Upload Video</span>
               </Link>
               <Link
@@ -136,7 +146,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 onClick={() => setCreateMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                <Video className="w-4 h-4 text-emerald-500" />
+                <Layers className="w-4 h-4 text-emerald-500" />
                 <span>Import Video</span>
               </Link>
               <Link
@@ -159,111 +169,213 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           )}
         </div>
 
-        {/* User Account Dropdown */}
+        {/* Message Icon */}
+        <Link
+          href="/messages"
+          className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
+          title="Messages"
+        >
+          <MessageSquare className="w-4 h-4" />
+        </Link>
+
+        {/* Notification Bell */}
+        <button
+          className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors relative"
+          title="Notifications"
+        >
+          <Bell className="w-4 h-4" />
+        </button>
+
+        {/* User Account Dropdown (Exact PlayTube Parity) */}
         <div className="relative" ref={userMenuRef}>
           <button
             onClick={() => setUserMenuOpen(!userMenuOpen)}
-            className="flex items-center gap-1.5 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            className="flex items-center gap-2 text-xs font-medium text-neutral-700 dark:text-neutral-200 hover:opacity-80 transition-opacity cursor-pointer pl-1"
           >
+            <span className="hidden sm:inline text-xs">My Account</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/upload/photos/d-avatar.jpg"
               alt="Account"
-              className="w-8 h-8 rounded-full object-cover bg-neutral-200 border border-[var(--border)]"
+              className="w-7 h-7 rounded-full object-cover bg-neutral-200 border border-neutral-700"
               onError={(e) => {
                 (e.target as HTMLImageElement).src =
-                  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60";
+                  "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
               }}
             />
           </button>
 
           {userMenuOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-[var(--border)] py-1.5 z-50 text-sm">
-              <div className="px-4 py-2 border-b border-[var(--border)]">
-                <p className="font-semibold text-neutral-900 dark:text-white truncate">Administrator</p>
-                <p className="text-xs text-neutral-500 truncate">@admin</p>
-              </div>
+            <div className="absolute right-0 mt-2 w-56 bg-[var(--card-bg)] text-[var(--foreground)] rounded-lg shadow-2xl border border-[var(--border)] py-1.5 z-50 text-xs">
+              {isLoggedIn ? (
+                <>
+                  {/* Account Header Info */}
+                  <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/upload/photos/d-avatar.jpg"
+                      alt="Avatar"
+                      className="w-10 h-10 rounded-full object-cover bg-neutral-200 dark:bg-neutral-700"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "https://api.dicebear.com/7.x/bottts/svg?seed=admin";
+                      }}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-neutral-900 dark:text-white truncate">admin</p>
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">@admin</p>
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">0 Points</p>
+                    </div>
+                  </div>
 
-              <Link
-                href="/channel/admin"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <User className="w-4 h-4 text-neutral-500" />
-                <span>My Channel</span>
-              </Link>
-              <Link
-                href="/subscriptions"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <Layers className="w-4 h-4 text-neutral-500" />
-                <span>Subscriptions</span>
-              </Link>
-              <Link
-                href="/saved-videos"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <Bookmark className="w-4 h-4 text-neutral-500" />
-                <span>Saved Videos</span>
-              </Link>
-              <Link
-                href="/manage-videos"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <Film className="w-4 h-4 text-neutral-500" />
-                <span>Manage Videos</span>
-              </Link>
-              <Link
-                href="/go-pro"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors font-medium"
-              >
-                <Crown className="w-4 h-4 text-amber-500" />
-                <span>Go Pro (VIP)</span>
-              </Link>
-              <Link
-                href="/wallet"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <Wallet className="w-4 h-4 text-neutral-500" />
-                <span>Wallet & Earnings</span>
-              </Link>
-              <Link
-                href="/messages"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <MessageSquare className="w-4 h-4 text-neutral-500" />
-                <span>Messages</span>
-              </Link>
-              <Link
-                href="/settings"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                <Settings className="w-4 h-4 text-neutral-500" />
-                <span>Settings</span>
-              </Link>
-              <Link
-                href="/admin"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-t border-[var(--border)]"
-              >
-                <ShieldAlert className="w-4 h-4 text-[var(--primary)]" />
-                <span className="font-medium text-[var(--primary)]">Admin Panel</span>
-              </Link>
-              <Link
-                href="/login"
-                onClick={() => setUserMenuOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
-              >
-                <LogOut className="w-4 h-4 text-red-600" />
-                <span>Sign Out</span>
-              </Link>
+                  {/* Mode Switcher (Day / Night) */}
+                  <button
+                    onClick={toggleTheme}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
+                  >
+                    <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
+                    <span>Mode</span>
+                  </button>
+
+                  {/* PlayTube User Actions */}
+                  <div className="py-1">
+                    <Link
+                      href="/switch-account"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <Users className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Switch Account</span>
+                    </Link>
+                    <Link
+                      href="/subscriptions"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <User className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Subscriptions</span>
+                    </Link>
+                    <Link
+                      href="/wallet"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <DollarSign className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Wallet</span>
+                    </Link>
+                    <Link
+                      href="/saved-videos"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <Bookmark className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>PlayLists</span>
+                    </Link>
+                    <Link
+                      href="/history"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <Clock className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>History</span>
+                    </Link>
+                  </div>
+
+                  <div className="py-1 border-t border-[var(--border)]">
+                    <Link
+                      href="/liked-videos"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <ThumbsUp className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Liked videos</span>
+                    </Link>
+                    <Link
+                      href="/articles"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <FileText className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>My articles</span>
+                    </Link>
+                    <Link
+                      href="/manage-videos"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <Video className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Video Studio</span>
+                    </Link>
+                    <Link
+                      href="/settings"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <Settings className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Edit</span>
+                    </Link>
+                    <Link
+                      href="/settings"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <Settings className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Settings</span>
+                    </Link>
+                    <Link
+                      href="/advertising"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <Layers className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                      <span>Advertising</span>
+                    </Link>
+                    <Link
+                      href="/admin"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-[#04abf2] hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-t border-[var(--border)]"
+                    >
+                      <ShieldAlert className="w-4 h-4 text-[#04abf2]" />
+                      <span className="font-medium text-[#04abf2]">Admin Panel</span>
+                    </Link>
+                    <Link
+                      href="/login"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4 text-red-500" />
+                      <span>Log out</span>
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Logged Out Dropdown */}
+                  <button
+                    onClick={toggleTheme}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
+                  >
+                    <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
+                    <span>Mode</span>
+                  </button>
+                  <Link
+                    href="/login"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <LogIn className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                    <span>Login</span>
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <UserPlus className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                    <span>Register</span>
+                  </Link>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -273,88 +385,160 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 }
 
 export function Sidebar({ isOpen }: { isOpen: boolean }) {
-  const discoveryItems = [
-    { label: "Home", href: "/", icon: Compass },
-    { label: "Trending", href: "/videos/trending", icon: Flame },
-    { label: "Latest Videos", href: "/videos/latest", icon: Video },
-    { label: "Top Videos", href: "/videos/top", icon: Sparkles },
-    { label: "Shorts", href: "/shorts", icon: Sparkles },
-    { label: "Movies", href: "/movies", icon: Film },
-    { label: "Articles", href: "/articles", icon: Newspaper },
-    { label: "Popular Channels", href: "/popular-channels", icon: Users },
-  ];
+  const pathname = usePathname();
 
-  const libraryItems = [
-    { label: "Subscriptions", href: "/subscriptions", icon: Layers },
-    { label: "History", href: "/history", icon: Clock },
-    { label: "Liked Videos", href: "/liked-videos", icon: ThumbsUp },
-    { label: "Saved Videos", href: "/saved-videos", icon: Bookmark },
-  ];
-
-  const footerLinks = [
-    { label: "Terms of Use", href: "/terms/terms" },
-    { label: "Privacy Policy", href: "/terms/privacy" },
-    { label: "About Us", href: "/terms/about" },
-    { label: "Contact Us", href: "/contact-us" },
-  ];
+  const isCurrent = (path: string) => pathname === path;
 
   return (
     <aside
-      className={`fixed top-14 left-0 bottom-0 z-30 w-60 bg-[var(--sidebar-bg)] border-r border-[var(--border)] overflow-y-auto transition-transform duration-200 ease-in-out ${
+      className={`fixed lg:sticky top-14 left-0 z-30 w-60 h-[calc(100vh-3.5rem)] bg-[var(--sidebar-bg)] border-r border-[var(--border)] shrink-0 overflow-y-auto transition-transform duration-200 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       }`}
     >
-      <div className="p-3 space-y-4">
-        {/* Discovery Section */}
+      <div className="p-3 space-y-6 text-xs">
+        {/* Top Group */}
         <div className="space-y-1">
-          <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-neutral-400">Discover</p>
-          {discoveryItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-[var(--primary)] transition-colors"
-              >
-                <Icon className="w-4 h-4 text-neutral-500" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+          <Link
+            href="/"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/")
+                ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
+          >
+            {isCurrent("/") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <Video className={`w-4 h-4 ${isCurrent("/") ? "text-[#04abf2]" : "text-neutral-500"}`} />
+            <span>Home</span>
+          </Link>
+          <Link
+            href="/history"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/history")
+                ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
+          >
+            <Clock className="w-4 h-4 text-neutral-500" />
+            <span>History</span>
+          </Link>
+          <Link
+            href="/wallet"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/wallet")
+                ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
+          >
+            <DollarSign className="w-4 h-4 text-neutral-500" />
+            <span>Purchases</span>
+          </Link>
+          <Link
+            href="/articles"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/articles")
+                ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
+          >
+            {isCurrent("/articles") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <FileText className={`w-4 h-4 ${isCurrent("/articles") ? "text-[#04abf2]" : "text-neutral-500"}`} />
+            <span>Articles</span>
+          </Link>
         </div>
 
-        <div className="border-t border-[var(--border)]" />
-
-        {/* Library Section */}
-        <div className="space-y-1">
-          <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-neutral-400">My Library</p>
-          {libraryItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-[var(--primary)] transition-colors"
-              >
-                <Icon className="w-4 h-4 text-neutral-500" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+        {/* Discovery Group */}
+        <div className="pt-2 border-t border-[var(--border)] space-y-1">
+          <Link
+            href="/videos/latest"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <Tv className="w-4 h-4 text-neutral-500" />
+            <span>Latest videos</span>
+          </Link>
+          <Link
+            href="/videos/trending"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <TrendingUp className="w-4 h-4 text-neutral-500" />
+            <span>Trending</span>
+          </Link>
+          <Link
+            href="/videos/top"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <BarChart2 className="w-4 h-4 text-neutral-500" />
+            <span>Top videos</span>
+          </Link>
+          <Link
+            href="/movies"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <Clapperboard className="w-4 h-4 text-neutral-500" />
+            <span>Movies</span>
+          </Link>
+          <Link
+            href="/stock-videos"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <Video className="w-4 h-4 text-neutral-500" />
+            <span>Stock Videos</span>
+          </Link>
+          <Link
+            href="/popular-channels"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <Users className="w-4 h-4 text-neutral-500" />
+            <span>Popular Channels</span>
+          </Link>
+          <Link
+            href="/shorts"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <Sparkles className="w-4 h-4 text-neutral-500" />
+            <span>Shorts</span>
+          </Link>
         </div>
 
-        <div className="border-t border-[var(--border)]" />
+        {/* Explore More Group */}
+        <div className="pt-2 border-t border-[var(--border)] space-y-1">
+          <p className="px-3 text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
+            EXPLORE MORE
+          </p>
+          <Link
+            href="/help"
+            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+          >
+            <HelpCircle className="w-4 h-4 text-neutral-500" />
+            <span>Help</span>
+          </Link>
+        </div>
 
-        {/* Footer info links */}
-        <div className="px-3 py-2 text-xs text-neutral-400 space-y-2">
+        {/* Footer Links & Copyright */}
+        <div className="pt-4 border-t border-[var(--border)] px-3 text-[11px] text-neutral-500 space-y-2">
           <div className="flex flex-wrap gap-x-2 gap-y-1">
-            {footerLinks.map((link) => (
-              <Link key={link.label} href={link.href} className="hover:underline hover:text-neutral-600 dark:hover:text-neutral-300">
-                {link.label}
-              </Link>
-            ))}
+            <Link href="/terms/refund" className="hover:underline">Refund Policy</Link>
+            <span>•</span>
+            <Link href="/faqs" className="hover:underline">FAQs</Link>
+            <span>•</span>
+            <Link href="/terms/terms" className="hover:underline">Terms of use</Link>
+            <span>•</span>
+            <Link href="/terms/privacy" className="hover:underline">Privacy Policy</Link>
+            <span>•</span>
+            <Link href="/terms/about" className="hover:underline">About us</Link>
+            <span>•</span>
+            <Link href="/contact-us" className="hover:underline">Contact us</Link>
+            <span>•</span>
+            <Link href="/developers" className="hover:underline">Developers</Link>
+            <span>•</span>
+            <Link href="/language" className="hover:underline">Language</Link>
           </div>
-          <p className="text-[11px] text-neutral-400/80 pt-2">© 2026 PlayTube Inc.</p>
+          <p className="text-[10px] text-neutral-500 dark:text-neutral-400 pt-2">
+            Copyright © 2026 PlayTube. All rights reserved.
+          </p>
         </div>
       </div>
     </aside>
