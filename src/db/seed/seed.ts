@@ -1,5 +1,6 @@
 import { db, pool } from "@/db";
 import { categories, users, videos, siteConfig } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function seedDatabase() {
   console.log("Seeding database with default PlayTube categories and admin...");
@@ -24,20 +25,63 @@ export async function seedDatabase() {
   }
 
   // Default Administrator Account
-  const [adminUser] = await db
-    .insert(users)
-    .values({
-      name: "PlayTube Admin",
-      username: "admin",
-      email: "admin@playtube.local",
-      emailVerified: true,
-      role: "admin",
-      isAdmin: true,
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60",
-      verified: true,
-    })
-    .onConflictDoNothing({ target: users.username })
-    .returning();
+  const existingAdmin = await db
+    .select()
+    .from(users)
+    .where(eq(users.username, "admin"))
+    .limit(1);
+
+  let adminUser = existingAdmin[0];
+
+  if (!adminUser) {
+    try {
+      const { auth } = await import("@/lib/auth/auth");
+      const res = await auth.api.signUpEmail({
+        body: {
+          email: "admin@playtube.local",
+          password: "admin",
+          name: "PlayTube Admin",
+          username: "admin",
+        },
+      });
+
+      await db
+        .update(users)
+        .set({
+          role: "admin",
+          isAdmin: true,
+          emailVerified: true,
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60",
+          verified: true,
+        })
+        .where(eq(users.id, Number(res.user.id)));
+
+      const [updated] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, Number(res.user.id)))
+        .limit(1);
+      adminUser = updated;
+      console.log("[OK] Admin account created via Better Auth with password 'admin'");
+    } catch (err: any) {
+      console.warn("Could not create admin via Better Auth signUpEmail, falling back to direct insert:", err?.message || err);
+      const [inserted] = await db
+        .insert(users)
+        .values({
+          name: "PlayTube Admin",
+          username: "admin",
+          email: "admin@playtube.local",
+          emailVerified: true,
+          role: "admin",
+          isAdmin: true,
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60",
+          verified: true,
+        })
+        .onConflictDoNothing({ target: users.username })
+        .returning();
+      adminUser = inserted || existingAdmin[0];
+    }
+  }
 
   // Initial Demo Video if videos table is empty
   const existingVideos = await db.select().from(videos).limit(1);

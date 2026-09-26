@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/db/seed/seed.ts",
+    "db:reset": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/reset-db.ts",
     "setup": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/setup.ts",
     "cron": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/cron.ts",
     "db:generate": "drizzle-kit generate",

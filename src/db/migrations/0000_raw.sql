@@ -1,12 +1,16 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE "accounts" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" text PRIMARY KEY DEFAULT gen_random_uuid()::text NOT NULL,
 	"user_id" integer NOT NULL,
 	"account_id" text NOT NULL,
 	"provider_id" text NOT NULL,
 	"access_token" text,
 	"refresh_token" text,
 	"id_token" text,
-	"expires_at" timestamp,
+	"access_token_expires_at" timestamp,
+	"refresh_token_expires_at" timestamp,
+	"scope" text,
 	"password" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -69,7 +73,7 @@ CREATE TABLE "playlists" (
 );
 ;
 CREATE TABLE "sessions" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" text PRIMARY KEY DEFAULT gen_random_uuid()::text NOT NULL,
 	"user_id" integer NOT NULL,
 	"token" text NOT NULL,
 	"expires_at" timestamp NOT NULL,
@@ -98,6 +102,7 @@ CREATE TABLE "users" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(255),
 	"username" varchar(50) NOT NULL,
+	"display_username" varchar(255),
 	"email" varchar(255) NOT NULL,
 	"email_verified" boolean DEFAULT false,
 	"image" varchar(500),
@@ -126,7 +131,7 @@ CREATE TABLE "users" (
 );
 ;
 CREATE TABLE "verifications" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" text PRIMARY KEY DEFAULT gen_random_uuid()::text NOT NULL,
 	"identifier" text NOT NULL,
 	"value" text NOT NULL,
 	"expires_at" timestamp NOT NULL,
