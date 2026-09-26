@@ -17,6 +17,12 @@ export const auth = betterAuth({
   plugins: [
     username(), // Enable native username plugin so users can sign in with username or email
   ],
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://playtube-delta.vercel.app",
+    process.env.NEXT_PUBLIC_APP_URL || "",
+    process.env.BETTER_AUTH_URL || "",
+  ].filter(Boolean),
   advanced: {
     database: {
       generateId: "serial",
