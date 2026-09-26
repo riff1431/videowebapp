@@ -20,7 +20,7 @@ const SYSTEM_CHECKS: StatusItem[] = [
     value: "v24.x LTS",
     required: ">= 20.x",
     status: "ok",
-    notes: "Meets latest Node 24 requirement per AGENT.md",
+    notes: "Meets latest Node 24 requirement",
   },
   {
     name: "Next.js Version",
@@ -33,10 +33,10 @@ const SYSTEM_CHECKS: StatusItem[] = [
   {
     name: "PostgreSQL Connection",
     category: "database",
-    value: "Connected (localhost:5432/playtube)",
+    value: "Connected (Supabase Cloud PostgreSQL / Pooler)",
     required: "PostgreSQL 16+",
     status: "ok",
-    notes: "Drizzle ORM migration status: up to date",
+    notes: "Drizzle ORM connected to Supabase project playtube-next",
   },
   {
     name: "Authentication Driver",
@@ -49,10 +49,10 @@ const SYSTEM_CHECKS: StatusItem[] = [
   {
     name: "Storage Driver",
     category: "storage",
-    value: "Local (public/upload/)",
-    required: "Writable storage directory",
+    value: "Supabase Storage (Cloud)",
+    required: "Supabase S3 / Storage Buckets",
     status: "ok",
-    notes: "Videos, thumbnails, avatars writable",
+    notes: "Buckets: playtube-videos, playtube-uploads",
   },
   {
     name: "Upload Max Size",

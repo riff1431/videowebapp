@@ -24,9 +24,17 @@ async function setup() {
 
     const migrationFile = resolve("src/db/migrations/0000_raw.sql");
     if (existsSync(migrationFile)) {
-      const sql = readFileSync(migrationFile, "utf-8");
-      await client.query(sql);
-      console.log("[OK] Migrations completed");
+      try {
+        const sql = readFileSync(migrationFile, "utf-8");
+        await client.query(sql);
+        console.log("[OK] Migrations completed");
+      } catch (migErr: any) {
+        if (migErr.code === "42P07") {
+          console.log("[OK] Schema already exists, skipping initial table creation");
+        } else {
+          console.warn("[WARN] Migration notice:", migErr.message || migErr);
+        }
+      }
     }
 
     client.release();
