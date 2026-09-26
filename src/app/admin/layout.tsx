@@ -58,10 +58,14 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Settings",
     icon: Settings,
     subItems: [
-      { title: "General Settings", href: "/admin/settings" },
-      { title: "Site Features", href: "/admin/settings" },
+      { title: "General Configuration", href: "/admin/settings" },
+      { title: "Website Information", href: "/admin/site-settings" },
+      { title: "Import & Upload Configuration", href: "/admin/ffmpeg" },
+      { title: "Video & Player Settings", href: "/admin/video-settings" },
       { title: "E-mail Setup", href: "/admin/email-settings" },
-      { title: "FFmpeg Setup", href: "/admin/ffmpeg" },
+      { title: "Social Login Settings", href: "/admin/social-login" },
+      { title: "Setup Live Streaming", href: "/admin/live" },
+      { title: "CronJob Settings", href: "/admin/cronjob-settings" },
     ],
   },
   {

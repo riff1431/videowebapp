@@ -37,18 +37,13 @@ export default async function AdminFfmpegPage() {
 
   return (
     <div className="space-y-6 max-w-4xl text-[var(--admin-text-main)]">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center">
-          <Clapperboard className="w-5 h-5" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">
-            FFmpeg & Video Transcoding Setup
-          </h1>
-          <p className="text-sm text-[var(--admin-text-muted)] mt-0.5">
-            Configure server FFmpeg binaries and automated multi-resolution encoding profiles
-          </p>
-        </div>
+      <div>
+        <h3 className="text-xl font-bold tracking-tight text-[var(--admin-text-main)]">
+          Import & Upload Configuration
+        </h3>
+        <p className="text-xs text-[var(--admin-text-muted)] mt-1">
+          Admin Panel &gt; Settings &gt; Import & Upload Configuration
+        </p>
       </div>
 
       <form action={handleSave} className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-xl p-6 shadow-xs space-y-6 transition-colors duration-200">

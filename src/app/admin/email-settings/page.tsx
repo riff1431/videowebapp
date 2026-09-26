@@ -34,18 +34,13 @@ export default async function AdminEmailSettingsPage() {
 
   return (
     <div className="space-y-6 max-w-4xl text-[var(--admin-text-main)]">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
-          <Mail className="w-5 h-5" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--admin-text-main)] tracking-tight">
-            E-mail & SMTP Setup
-          </h1>
-          <p className="text-sm text-[var(--admin-text-muted)] mt-0.5">
-            Configure outgoing mail server for user notifications, password resets, and digests
-          </p>
-        </div>
+      <div>
+        <h3 className="text-xl font-bold tracking-tight text-[var(--admin-text-main)]">
+          E-mail Setup
+        </h3>
+        <p className="text-xs text-[var(--admin-text-muted)] mt-1">
+          Admin Panel &gt; Settings &gt; E-mail Setup
+        </p>
       </div>
 
       <form action={handleSave} className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-xl p-6 shadow-xs space-y-6 transition-colors duration-200">
