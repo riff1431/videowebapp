@@ -59,18 +59,18 @@
   --search-border: #333333;
 
   /* Admin Theme Tokens - Dark Mode (PlayTube Night Mode) */
-  --admin-bg: #16191c;
-  --admin-header-bg: #1b1e22;
-  --admin-sidebar-bg: #1b1e22;
-  --admin-card-bg: #212529;
-  --admin-card-border: #2c3136;
-  --admin-card-hover: #262b30;
-  --admin-text-main: #e2e8f0;
-  --admin-text-muted: #8e9cae;
-  --admin-input-bg: #16191c;
-  --admin-input-border: #2c3136;
-  --admin-alert-bg: #4c1d24;
-  --admin-alert-border: #6d242e;
+  --admin-bg: #1c1e22;
+  --admin-header-bg: #111215;
+  --admin-sidebar-bg: #111215;
+  --admin-card-bg: #22252a;
+  --admin-card-border: #292d33;
+  --admin-card-hover: #292d33;
+  --admin-text-main: #f1f5f9;
+  --admin-text-muted: #8c96a3;
+  --admin-input-bg: #1c1e22;
+  --admin-input-border: #292d33;
+  --admin-alert-bg: #5c2430;
+  --admin-alert-border: #732a39;
   --admin-alert-text: #fca5a5;
 }
 

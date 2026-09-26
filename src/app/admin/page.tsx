@@ -1,6 +1,14 @@
 import React from "react";
 import { db } from "@/db";
-import { users, videos, comments, subscriptions, articles, views, likesDislikes, watchLater } from "@/db/schema";
+import {
+  users,
+  videos,
+  comments,
+  subscriptions,
+  views,
+  likesDislikes,
+  watchLater,
+} from "@/db/schema";
 import { count, eq } from "drizzle-orm";
 import {
   Video,
@@ -10,14 +18,14 @@ import {
   MessageSquare,
   ThumbsUp,
   ThumbsDown,
-  Bookmark
+  Bookmark,
 } from "lucide-react";
-import { AdminCharts } from "./AdminCharts";
+import { AdminHeaderFilter, AdminSideCharts, CommentsLikesDislikesChart } from "./AdminCharts";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  // Query all 8 KPI counts safely from the database
+  // Query all 8 KPI counts from the database
   const [
     [videosCount],
     [usersCount],
@@ -33,110 +41,118 @@ export default async function AdminDashboardPage() {
     db.select({ value: count() }).from(comments).catch(() => [{ value: 0 }]),
     db.select({ value: count() }).from(subscriptions).catch(() => [{ value: 0 }]),
     db.select({ value: count() }).from(views).catch(() => [{ value: 0 }]),
-    db.select({ value: count() }).from(likesDislikes).where(eq(likesDislikes.type, 1)).catch(() => [{ value: 0 }]),
-    db.select({ value: count() }).from(likesDislikes).where(eq(likesDislikes.type, 2)).catch(() => [{ value: 0 }]),
+    db
+      .select({ value: count() })
+      .from(likesDislikes)
+      .where(eq(likesDislikes.type, 1))
+      .catch(() => [{ value: 0 }]),
+    db
+      .select({ value: count() })
+      .from(likesDislikes)
+      .where(eq(likesDislikes.type, 2))
+      .catch(() => [{ value: 0 }]),
     db.select({ value: count() }).from(watchLater).catch(() => [{ value: 0 }]),
   ]);
 
+  // Exact 8 widgets from screenshot 1 & 2
   const kpis = [
     {
       title: "TOTAL VIDEOS",
       value: videosCount?.value || 0,
       icon: Video,
-      bgColor: "bg-blue-600",
+      iconBg: "bg-[#2563eb]", // Rich blue
     },
     {
-      title: "TOTAL VIEWS",
+      title: "TOTAL VIDEOS VIEWS",
       value: viewsCount?.value || 0,
       icon: Eye,
-      bgColor: "bg-cyan-600",
+      iconBg: "bg-[#0284c7]", // Rich cyan/sky
     },
     {
       title: "TOTAL USERS",
       value: usersCount?.value || 1,
       icon: Users,
-      bgColor: "bg-amber-600",
+      iconBg: "bg-[#b45309]", // Amber/brown
     },
     {
       title: "TOTAL SUBSCRIPTIONS",
       value: subsCount?.value || 0,
       icon: UserPlus,
-      bgColor: "bg-purple-600",
+      iconBg: "bg-[#9333ea]", // Purple/magenta
     },
     {
       title: "TOTAL VIDEOS COMMENTS",
       value: commentsCount?.value || 0,
       icon: MessageSquare,
-      bgColor: "bg-emerald-600",
+      iconBg: "bg-[#15803d]", // Green
     },
     {
       title: "TOTAL VIDEOS LIKES",
       value: likesCount?.value || 0,
       icon: ThumbsUp,
-      bgColor: "bg-blue-500",
+      iconBg: "bg-[#3b82f6]", // Blue
     },
     {
       title: "TOTAL VIDEOS DISLIKES",
       value: dislikesCount?.value || 0,
       icon: ThumbsDown,
-      bgColor: "bg-indigo-600",
+      iconBg: "bg-[#0284c7]", // Cyan
     },
     {
       title: "TOTAL SAVED VIDEOS",
       value: savedCount?.value || 0,
       icon: Bookmark,
-      bgColor: "bg-cyan-700",
+      iconBg: "bg-[#a16207]", // Gold/brown
     },
   ];
 
   return (
-    <div className="space-y-6 text-[var(--admin-text-main)]">
-      {/* Welcome Title */}
-      <div>
-        <h1 className="text-xl font-bold tracking-tight text-[var(--admin-text-main)]">
-          Welcome back, admin
-        </h1>
-      </div>
+    <div className="space-y-6 text-[var(--admin-text-main)] w-full max-w-full">
+      {/* 1. Full-Width Header: Welcome back, admin + Range Dropdown + System Status Alert */}
+      <AdminHeaderFilter />
 
-      {/* Red/Burgundy Alert Banner matching PlayTube */}
-      <div className="bg-[var(--admin-alert-bg)] border border-[var(--admin-alert-border)] text-[var(--admin-alert-text)] px-4 py-3 rounded-md text-xs flex items-center justify-between shadow-xs">
-        <div className="flex items-center gap-2">
-          <span className="font-bold">Important!</span>
-          <span>There are some errors found on your system, please review System Status.</span>
-        </div>
-      </div>
-
-      {/* Main Grid: Charts on Left (7 cols), 8 KPI Widgets on Right (5 cols) */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        {/* Left Column: Analytics Charts */}
-        <div className="xl:col-span-7 space-y-6">
-          <AdminCharts />
+      {/* 2. Charts & Stats Grid: Left 2 Charts (lg:7) and Right 8 KPI Cards (lg:5) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* Left Column: Stacked Users Chart & Videos/Posts Chart */}
+        <div className="lg:col-span-7 flex flex-col justify-between">
+          <AdminSideCharts
+            usersCount={usersCount?.value || 1}
+            videosCount={videosCount?.value || 0}
+          />
         </div>
 
-        {/* Right Column: 8 KPI Metric Cards (2x4 grid) */}
-        <div className="xl:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
+        {/* Right Column: 8 KPI Metric Cards (2 cols x 4 rows) enlarged to fill height evenly */}
+        <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4 h-full content-between">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;
             return (
               <div
                 key={kpi.title}
-                className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-lg p-4 flex items-center gap-4 shadow-xs"
+                className="bg-[var(--admin-card-bg)] border border-[var(--admin-card-border)] rounded-lg p-5 sm:p-6 flex flex-col justify-between shadow-xs hover:border-[var(--admin-card-border)]/80 transition-all min-h-[140px]"
               >
-                <div className={`w-11 h-11 rounded-lg ${kpi.bgColor} text-white flex items-center justify-center shrink-0`}>
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-[var(--admin-text-muted)] uppercase tracking-wider">
-                    {kpi.title}
-                  </p>
-                  <h3 className="text-xl font-bold text-[var(--admin-text-main)] mt-0.5">
+                <p className="text-[11px] font-semibold text-[var(--admin-text-muted)] tracking-wider">
+                  {kpi.title}
+                </p>
+
+                <div className="flex items-center gap-4 mt-3">
+                  <div
+                    className={`w-11 h-11 rounded-full ${kpi.iconBg} text-white flex items-center justify-center shrink-0 shadow-xs`}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <span className="text-3xl font-bold text-[var(--admin-text-main)] tracking-tight">
                     {kpi.value.toLocaleString()}
-                  </h3>
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
+      </div>
+
+      {/* 3. Lower Row: Full-width Comments, Likes, Dislikes Chart */}
+      <div className="w-full">
+        <CommentsLikesDislikesChart />
       </div>
     </div>
   );

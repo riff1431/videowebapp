@@ -11,24 +11,24 @@ import {
   SidebarClose,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { 
-  LayoutDashboard, 
-  Settings, 
-  CreditCard, 
-  Globe, 
-  Users, 
-  Video, 
-  Film, 
-  FileText, 
-  FolderTree, 
-  Crown, 
-  Palette, 
-  Wrench, 
-  Flag, 
-  FileCode, 
-  Network, 
-  Smartphone, 
-  ChevronDown, 
+import {
+  LayoutDashboard,
+  Settings,
+  CreditCard,
+  Globe,
+  Users,
+  Video,
+  Film,
+  FileText,
+  FolderTree,
+  Crown,
+  Palette,
+  Wrench,
+  Flag,
+  FileCode,
+  Network,
+  Smartphone,
+  ChevronDown,
   ChevronRight,
   Search,
   Bell,
@@ -36,7 +36,9 @@ import {
   Moon,
   Sun,
   User,
-  X
+  X,
+  Database,
+  DollarSign
 } from "lucide-react";
 
 interface MenuItem {
@@ -64,7 +66,7 @@ const MENU_ITEMS: MenuItem[] = [
   },
   {
     title: "Payments & Ads",
-    icon: CreditCard,
+    icon: DollarSign,
     subItems: [
       { title: "Payment Settings", href: "/admin/payment-settings" },
       { title: "Manage Website Ads", href: "/admin/ads" },
@@ -163,6 +165,13 @@ const MENU_ITEMS: MenuItem[] = [
       { title: "API Keys", href: "/admin/api-settings" },
     ],
   },
+  {
+    title: "Backup",
+    icon: Database,
+    subItems: [
+      { title: "Backup Database", href: "/admin/backup" },
+    ],
+  },
 ];
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
@@ -218,16 +227,14 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                   setOpenMobile(false);
                 }
               }}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${
-                isActive
-                  ? "text-[#04abf2] bg-[var(--admin-bg)] font-semibold"
-                  : "text-[var(--admin-text-main)] hover:bg-[var(--admin-card-hover)]"
-              }`}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${isActive
+                ? "text-[#04abf2] bg-[var(--admin-bg)] font-semibold"
+                : "text-[var(--admin-text-main)] hover:bg-[var(--admin-card-hover)]"
+                }`}
             >
               <Icon
-                className={`w-4 h-4 ${
-                  isActive ? "text-[#04abf2]" : "text-[var(--admin-text-muted)]"
-                }`}
+                className={`w-4 h-4 ${isActive ? "text-[#04abf2]" : "text-[var(--admin-text-muted)]"
+                  }`}
               />
               <span>{item.title}</span>
             </Link>
@@ -260,11 +267,10 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                         setOpenMobile(false);
                       }
                     }}
-                    className={`block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${
-                      pathname === sub.href
-                        ? "text-[#04abf2] font-semibold"
-                        : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
-                    }`}
+                    className={`block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${pathname === sub.href
+                      ? "text-[#04abf2] font-semibold"
+                      : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
+                      }`}
                   >
                     {sub.title}
                   </Link>
@@ -356,7 +362,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                   <p className="text-[11px] text-[var(--admin-text-muted)]">
                     {user?.email || "admin@playtube.local"}
                   </p>
-                  
+
                   <Link
                     href="/"
                     className="mt-2.5 px-4 py-1 rounded-full text-xs font-medium transition-colors border"
