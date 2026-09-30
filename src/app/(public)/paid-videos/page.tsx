@@ -1,6 +1,4 @@
-import React from "react";
-import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
+import { requireAuth } from "@/lib/auth/require-auth";
 import { db } from "@/db";
 import { users, videos, transactions } from "@/db/schema";
 import { eq, desc, and } from "drizzle-orm";
@@ -18,6 +16,7 @@ export default async function PaidVideosPage({
 }: {
   searchParams?: Promise<{ tab?: string }>;
 }) {
+  await requireAuth("/paid-videos");
   const resolvedParams = searchParams ? await searchParams : {};
   const currentTab = resolvedParams.tab as any;
 

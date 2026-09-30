@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth/auth-client";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/";
+
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberDevice, setRememberDevice] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +40,7 @@ export default function LoginPage() {
       if (res?.error) {
         setError(res.error.message || "Invalid username/email or password");
       } else {
-        router.push("/");
+        router.push(redirectUrl);
         router.refresh();
       }
     } catch (err: any) {
@@ -47,93 +51,110 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-140px)] py-10 px-4">
-      <div className="w-full max-w-md bg-[var(--card-bg)] text-[var(--foreground)] rounded-xl shadow-lg border border-[var(--border)] p-8">
-        {/* PlayTube Logo */}
-        <div className="flex flex-col items-center mb-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo.png"
-            alt="PlayTube"
-            className="h-9 mb-4 dark:hidden"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-light.png"
-            alt="PlayTube"
-            className="h-9 mb-4 hidden dark:block"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-          <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Login
-          </h2>
-        </div>
+    <div className="w-full flex items-center justify-center p-4">
+      {/* PlayTube Standard Login Card */}
+      <div className="w-full max-w-[410px] bg-white dark:bg-[#1a1a1a] text-neutral-800 dark:text-neutral-100 rounded-xl shadow-lg border border-neutral-100 dark:border-neutral-800 p-8 sm:p-9">
+        <h1 className="text-xl font-bold text-neutral-800 dark:text-white mb-6 text-left">
+          Log In
+        </h1>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-md text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Username or E-mail
-            </label>
             <input
               type="text"
               required
               value={usernameOrEmail}
               onChange={(e) => setUsernameOrEmail(e.target.value)}
-              placeholder="Username or E-mail"
-              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              placeholder="Username"
+              className="w-full h-11 px-4 text-xs sm:text-sm bg-[#ececec] dark:bg-neutral-800/90 rounded-md border-0 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#04abf2] transition-all"
             />
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                Password
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-xs text-[var(--primary)] hover:underline"
-              >
-                Forgot your password?
-              </Link>
-            </div>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              className="w-full h-11 px-4 text-xs sm:text-sm bg-[#ececec] dark:bg-neutral-800/90 rounded-md border-0 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#04abf2] transition-all"
             />
+          </div>
+
+          <div className="flex justify-end pt-0.5 pb-2">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-neutral-500 dark:text-neutral-400 hover:text-[#04abf2] dark:hover:text-[#04abf2] transition-colors"
+            >
+              Forgot your password?
+            </Link>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-10 mt-2 bg-[#04abf2] hover:bg-[#039be5] text-white font-semibold text-xs rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
+            className="w-full h-10 bg-[#04abf2] hover:bg-[#0399d8] active:bg-[#028ec8] text-white text-xs sm:text-sm font-semibold rounded-md transition-colors cursor-pointer shadow-xs disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            {loading ? "Signing in..." : "Login"}
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Logging in...</span>
+              </>
+            ) : (
+              <span>Log In</span>
+            )}
           </button>
+
+          {/* Remember this device pill */}
+          <div className="pt-2 flex">
+            <button
+              type="button"
+              onClick={() => setRememberDevice(!rememberDevice)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#e1f3fd] dark:bg-sky-950/60 border border-[#b8e4fb] dark:border-sky-800 text-[#0092d6] dark:text-sky-300 text-xs font-normal cursor-pointer select-none transition-colors"
+            >
+              <span className="w-3.5 h-3.5 rounded-full border-2 border-[#0092d6] flex items-center justify-center shrink-0">
+                {rememberDevice && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0092d6]" />
+                )}
+              </span>
+              <span>Remember this device</span>
+            </button>
+          </div>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-[var(--border)] text-center text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="border-t border-neutral-100 dark:border-neutral-800/80 my-5" />
+
+        <div className="text-xs text-neutral-600 dark:text-neutral-400">
           New here?{" "}
-          <Link href="/register" className="font-semibold text-[#04abf2] hover:underline">
+          <Link
+            href="/register"
+            className="font-semibold text-neutral-900 dark:text-white hover:text-[#04abf2] dark:hover:text-[#04abf2] transition-colors ml-1"
+          >
             Register
           </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <Loader2 className="w-8 h-8 text-[#04abf2] animate-spin" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

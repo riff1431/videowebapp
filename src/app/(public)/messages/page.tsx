@@ -5,6 +5,7 @@ import { users, messages } from "@/db/schema";
 import { eq, or, and, desc, ne } from "drizzle-orm";
 import { MessageSquare, Send, Trash2, Search, User, CheckCheck, Clock } from "lucide-react";
 import { sendMessageAction, clearChatAction } from "@/modules/messages/message.actions";
+import { requireAuth } from "@/lib/auth/require-auth";
 
 interface MessagesPageProps {
   searchParams: Promise<{
@@ -15,10 +16,15 @@ interface MessagesPageProps {
 export const revalidate = 0; // Dynamic chat
 
 export default async function MessagesPage({ searchParams }: MessagesPageProps) {
+  const session = await requireAuth("/messages");
   const resolvedParams = await searchParams;
   const targetUsername = resolvedParams.user || "";
 
-  const [currentUser] = await db.select().from(users).limit(1);
+  const [currentUser] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, Number(session.user.id)))
+    .limit(1);
 
   // Fetch all potential conversation partners
   const contactUsers = await db

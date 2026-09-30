@@ -2,9 +2,16 @@ import React from "react";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { User, Shield, Key, Image as ImageIcon, Save } from "lucide-react";
+import { requireAuth } from "@/lib/auth/require-auth";
+import { eq } from "drizzle-orm";
 
 export default async function SettingsPage() {
-  const [currentUser] = await db.select().from(users).limit(1);
+  const session = await requireAuth("/settings");
+  const [currentUser] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, Number(session.user.id)))
+    .limit(1);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">

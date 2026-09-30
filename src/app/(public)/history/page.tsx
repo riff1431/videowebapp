@@ -3,16 +3,12 @@ import { VideoCard } from "@/components/common/VideoCard";
 import { db } from "@/db";
 import { videos, users, watchHistory } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
+import { requireAuth } from "@/lib/auth/require-auth";
 import { History as HistoryIcon, VideoOff, Trash2 } from "lucide-react";
 
 export default async function HistoryPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  const targetUserId = session?.user?.id ? Number(session.user.id) : 1;
+  const session = await requireAuth("/history");
+  const targetUserId = Number(session.user.id);
 
   const historyVideos = await db
     .select({

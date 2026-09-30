@@ -6,6 +6,7 @@ import { videos } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Film, Edit3, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { updateVideoAction } from "@/modules/videos/video.actions";
+import { requireAuth } from "@/lib/auth/require-auth";
 
 interface EditVideoPageProps {
   params: Promise<{
@@ -14,6 +15,7 @@ interface EditVideoPageProps {
 }
 
 export default async function EditVideoPage({ params }: EditVideoPageProps) {
+  await requireAuth("/manage-videos");
   const resolvedParams = await params;
   const videoDbId = parseInt(resolvedParams.id, 10);
 

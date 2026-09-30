@@ -5,14 +5,15 @@ import { videos, users, watchLater } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { VideoCard } from "@/components/common/VideoCard";
 import { Bookmark } from "lucide-react";
+import { requireAuth } from "@/lib/auth/require-auth";
 
 export const revalidate = 0; // Dynamic
 
 export default async function SavedVideosPage() {
-  const [user] = await db.select().from(users).limit(1);
+  const session = await requireAuth("/saved-videos");
+  const targetUserId = Number(session.user.id);
 
-  const savedList = user
-    ? await db
+  const savedList = await db
         .select({
           id: videos.id,
           videoId: videos.videoId,
@@ -31,9 +32,8 @@ export default async function SavedVideosPage() {
         .from(watchLater)
         .innerJoin(videos, eq(watchLater.videoId, videos.id))
         .innerJoin(users, eq(videos.userId, users.id))
-        .where(eq(watchLater.userId, user.id))
-        .orderBy(desc(watchLater.createdAt))
-    : [];
+        .where(eq(watchLater.userId, targetUserId))
+        .orderBy(desc(watchLater.createdAt));
 
   return (
     <div className="space-y-6">

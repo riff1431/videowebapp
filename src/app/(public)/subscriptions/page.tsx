@@ -4,8 +4,10 @@ import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { Users as UsersIcon } from "lucide-react";
+import { requireAuth } from "@/lib/auth/require-auth";
 
 export default async function SubscriptionsPage() {
+  await requireAuth("/subscriptions");
   // Query videos from registered channels
   const feedVideos = await db
     .select({

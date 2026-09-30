@@ -146,14 +146,20 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         {/* Create Button */}
         <div className="relative" ref={createMenuRef}>
           <button
-            onClick={() => setCreateMenuOpen(!createMenuOpen)}
+            onClick={() => {
+              if (!isLoggedIn) {
+                router.push("/login?redirect=" + encodeURIComponent("/upload-video"));
+              } else {
+                setCreateMenuOpen(!createMenuOpen);
+              }
+            }}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-neutral-700 dark:text-neutral-200 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors cursor-pointer"
           >
             <Video className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
             <span className="hidden sm:inline">Create</span>
           </button>
 
-          {createMenuOpen && (
+          {isLoggedIn && createMenuOpen && (
             <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-[#212121] rounded-lg shadow-2xl border border-[var(--border)] py-1.5 z-50 text-xs">
               <Link
                 href="/upload-video"
@@ -191,22 +197,26 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           )}
         </div>
 
-        {/* Message Icon */}
-        <Link
-          href="/messages"
-          className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
-          title="Messages"
-        >
-          <MessageSquare className="w-4 h-4" />
-        </Link>
+        {isLoggedIn && (
+          <>
+            {/* Message Icon */}
+            <Link
+              href="/messages"
+              className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
+              title="Messages"
+            >
+              <MessageSquare className="w-4 h-4" />
+            </Link>
 
-        {/* Notification Bell */}
-        <button
-          className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors relative"
-          title="Notifications"
-        >
-          <Bell className="w-4 h-4" />
-        </button>
+            {/* Notification Bell */}
+            <button
+              className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors relative"
+              title="Notifications"
+            >
+              <Bell className="w-4 h-4" />
+            </button>
+          </>
+        )}
 
         {/* User Account Dropdown (Exact PlayTube Parity) */}
         <div className="relative" ref={userMenuRef}>
@@ -431,14 +441,20 @@ export function Sidebar({
   isCollapsed?: boolean;
 }) {
   const pathname = usePathname();
+  const { data: session } = authClient.useSession();
+  const isLoggedIn = !!session?.user;
 
   const isCurrent = (path: string) => pathname === path;
 
   // Primary links used in mini sidebar mode
   const miniLinks = [
     { href: "/", label: "Home", icon: Video },
-    { href: "/history", label: "History", icon: History },
-    { href: "/paid-videos", label: "Purchases", icon: DollarSign },
+    ...(isLoggedIn
+      ? [
+          { href: "/history", label: "History", icon: History },
+          { href: "/paid-videos", label: "Purchases", icon: DollarSign },
+        ]
+      : []),
     { href: "/articles", label: "Articles", icon: FileText },
     { href: "/videos/latest", label: "Latest videos", icon: Video },
     { href: "/videos/trending", label: "Trending", icon: TrendingUp },
@@ -502,32 +518,38 @@ export function Sidebar({
             <Video className={`w-4 h-4 ${isCurrent("/") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Home</span>
           </Link>
-          <Link
-            href="/history"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/history")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-              }`}
-          >
-            {isCurrent("/history") && (
-              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
-            )}
-            <History className={`w-4 h-4 ${isCurrent("/history") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>History</span>
-          </Link>
-          <Link
-            href="/paid-videos"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/paid-videos")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-              }`}
-          >
-            {isCurrent("/paid-videos") && (
-              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
-            )}
-            <DollarSign className={`w-4 h-4 ${isCurrent("/paid-videos") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Purchases</span>
-          </Link>
+
+          {isLoggedIn && (
+            <>
+              <Link
+                href="/history"
+                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/history")
+                    ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                    : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+                  }`}
+              >
+                {isCurrent("/history") && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+                )}
+                <History className={`w-4 h-4 ${isCurrent("/history") ? "text-[#04abf2]" : "text-neutral-500"}`} />
+                <span>History</span>
+              </Link>
+              <Link
+                href="/paid-videos"
+                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/paid-videos")
+                    ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                    : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+                  }`}
+              >
+                {isCurrent("/paid-videos") && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+                )}
+                <DollarSign className={`w-4 h-4 ${isCurrent("/paid-videos") ? "text-[#04abf2]" : "text-neutral-500"}`} />
+                <span>Purchases</span>
+              </Link>
+            </>
+          )}
+
           <Link
             href="/articles"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/articles")

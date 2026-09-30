@@ -4,8 +4,10 @@ import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { ThumbsUp } from "lucide-react";
+import { requireAuth } from "@/lib/auth/require-auth";
 
 export default async function LikedVideosPage() {
+  await requireAuth("/liked-videos");
   const likedVideos = await db
     .select({
       id: videos.id,

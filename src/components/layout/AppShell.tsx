@@ -45,19 +45,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
+  const isAuthPage =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname?.startsWith("/reset-password");
+
   return (
     <div className="min-h-screen flex flex-col bg-[var(--background)]">
       <Header onToggleSidebar={handleToggleSidebar} />
       <div className="flex-1 flex w-full">
-        <Sidebar isOpen={mobileOpen} isCollapsed={isCollapsed} />
-        {/* Backdrop for mobile drawer */}
-        {mobileOpen && (
-          <div
-            onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 z-20 bg-black/50 lg:hidden"
-          />
+        {!isAuthPage && (
+          <>
+            <Sidebar isOpen={mobileOpen} isCollapsed={isCollapsed} />
+            {/* Backdrop for mobile drawer */}
+            {mobileOpen && (
+              <div
+                onClick={() => setMobileOpen(false)}
+                className="fixed inset-0 z-20 bg-black/50 lg:hidden"
+              />
+            )}
+          </>
         )}
-        <main className="flex-1 min-w-0 p-4 md:p-6 w-full overflow-x-hidden">
+        <main
+          className={`flex-1 min-w-0 w-full overflow-x-hidden ${
+            isAuthPage
+              ? "p-4 sm:p-8 flex items-center justify-center min-h-[calc(100vh-3.5rem)] bg-[#f4f5f7] dark:bg-[#0f0f0f]"
+              : "p-4 md:p-6"
+          }`}
+        >
           {children}
         </main>
       </div>

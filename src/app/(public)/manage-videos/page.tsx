@@ -5,10 +5,12 @@ import { videos, users } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { Film, Edit3, Trash2, Eye, Plus, Play, Lock, Globe } from "lucide-react";
 import { deleteVideoAction } from "@/modules/videos/video.actions";
+import { requireAuth } from "@/lib/auth/require-auth";
 
 export const revalidate = 0; // Dynamic creator dashboard
 
 export default async function ManageVideosPage() {
+  await requireAuth("/manage-videos");
   // Query all videos uploaded by primary creator / user
   const userVideos = await db
     .select({
