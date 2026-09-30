@@ -1,19 +1,6 @@
-import { Pool } from "pg";
+import { pool } from "../src/db";
 
 async function inspectAndMigrate() {
-  const dbUrl = process.env.DATABASE_URL;
-  if (!dbUrl) {
-    console.error("No DATABASE_URL");
-    process.exit(1);
-  }
-
-  const pool = new Pool({
-    connectionString: dbUrl,
-    ssl: dbUrl.includes("supabase.co") || dbUrl.includes("pooler")
-      ? { rejectUnauthorized: false }
-      : false,
-  });
-
   const client = await pool.connect();
   try {
     const res = await client.query(
@@ -105,8 +92,12 @@ async function inspectAndMigrate() {
         "user_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
         "video_id" integer REFERENCES "videos"("id") ON DELETE CASCADE,
         "type" varchar(50) NOT NULL,
+        "text" text,
+        "image" text,
         "time" timestamp DEFAULT now() NOT NULL
       );
+      ALTER TABLE "activities" ADD COLUMN IF NOT EXISTS "text" text;
+      ALTER TABLE "activities" ADD COLUMN IF NOT EXISTS "image" text;
     `);
 
     console.log("Checking announcements table...");

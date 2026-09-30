@@ -344,7 +344,9 @@ export const activities = pgTable("activities", {
     .references(() => users.id, { onDelete: "cascade" }),
   videoId: integer("video_id")
     .references(() => videos.id, { onDelete: "cascade" }),
-  type: varchar("type", { length: 50 }).notNull(), // upload, like, comment, subscribe
+  type: varchar("type", { length: 50 }).notNull(), // upload, like, comment, subscribe, post
+  text: text("text"),
+  image: text("image"),
   time: timestamp("time").defaultNow().notNull(),
 }, (table) => [
   index("act_user_idx").on(table.userId),
