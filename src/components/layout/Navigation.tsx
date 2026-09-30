@@ -447,7 +447,7 @@ export function Sidebar({
     { href: "/stock-videos", label: "Stock Videos", icon: Video },
     { href: "/popular-channels", label: "Popular Channels", icon: Star },
     { href: "/shorts", label: "Shorts", icon: ShortsIcon },
-    { href: "/help", label: "Help", icon: HelpCircle },
+    { href: "/contact-us", label: "Help", icon: HelpCircle },
   ];
 
   return (
@@ -644,10 +644,14 @@ export function Sidebar({
             EXPLORE MORE
           </p>
           <Link
-            href="/help"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            href="/contact-us"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+              isCurrent("/contact-us")
+                ? "bg-black/5 dark:bg-white/10 text-[#04abf2] font-semibold"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <HelpCircle className="w-4 h-4 text-neutral-500" />
+            <HelpCircle className={`w-4 h-4 ${isCurrent("/contact-us") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Help</span>
           </Link>
         </div>
