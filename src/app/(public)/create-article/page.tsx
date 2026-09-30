@@ -194,17 +194,6 @@ export default function CreateArticlePage() {
               The article
             </legend>
 
-            {/* Menu Bar (File, Edit, View...) */}
-            <div className="flex items-center gap-3 px-3 py-1.5 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/30 text-[11px] text-neutral-700 dark:text-neutral-300 select-none">
-              <span className="hover:text-[#04abf2] cursor-pointer">File</span>
-              <span className="hover:text-[#04abf2] cursor-pointer">Edit</span>
-              <span className="hover:text-[#04abf2] cursor-pointer">View</span>
-              <span className="hover:text-[#04abf2] cursor-pointer">Insert</span>
-              <span className="hover:text-[#04abf2] cursor-pointer">Format</span>
-              <span className="hover:text-[#04abf2] cursor-pointer">Tools</span>
-              <span className="hover:text-[#04abf2] cursor-pointer">Table</span>
-            </div>
-
             {/* Toolbar Buttons Row */}
             <div className="flex flex-wrap items-center gap-1 px-2.5 py-1.5 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/30 dark:bg-neutral-800/20 text-neutral-600 dark:text-neutral-300">
               <button
@@ -386,11 +375,10 @@ export default function CreateArticlePage() {
             <button
               type="button"
               onClick={() => setCategoryOpen(!categoryOpen)}
-              className={`w-full px-3.5 py-2.5 text-sm text-left flex items-center justify-between bg-white dark:bg-[#141414] border rounded-md transition-colors ${
-                categoryOpen
-                  ? "border-[#04abf2] ring-1 ring-[#04abf2]"
-                  : "border-neutral-300 dark:border-neutral-700/80"
-              }`}
+              className={`w-full px-3.5 py-2.5 text-sm text-left flex items-center justify-between bg-white dark:bg-[#141414] border rounded-md transition-colors ${categoryOpen
+                ? "border-[#04abf2] ring-1 ring-[#04abf2]"
+                : "border-neutral-300 dark:border-neutral-700/80"
+                }`}
             >
               <span className={category === "Category" ? "text-neutral-400" : "text-neutral-800 dark:text-neutral-100"}>
                 {category}
@@ -409,11 +397,10 @@ export default function CreateArticlePage() {
                         setCategory(cat);
                         setCategoryOpen(false);
                       }}
-                      className={`px-3.5 py-2 cursor-pointer transition-colors ${
-                        isSelected
-                          ? "bg-[#04abf2] text-white font-medium"
-                          : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }`}
+                      className={`px-3.5 py-2 cursor-pointer transition-colors ${isSelected
+                        ? "bg-[#04abf2] text-white font-medium"
+                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        }`}
                     >
                       {cat}
                     </div>

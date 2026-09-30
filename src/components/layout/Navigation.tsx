@@ -439,7 +439,7 @@ export function Sidebar({
     { href: "/history", label: "History", icon: History },
     { href: "/paid-videos", label: "Purchases", icon: DollarSign },
     { href: "/articles", label: "Articles", icon: FileText },
-    { href: "/videos/latest", label: "Latest videos", icon: Tv },
+    { href: "/videos/latest", label: "Latest videos", icon: Video },
     { href: "/videos/trending", label: "Trending", icon: TrendingUp },
     { href: "/videos/top", label: "Top videos", icon: BarChart2 },
     { href: "/movies", label: "Movies", icon: Clapperboard },
@@ -552,30 +552,58 @@ export function Sidebar({
         <div className="pt-2 border-t border-[var(--border)] space-y-1">
           <Link
             href="/videos/latest"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/videos/latest")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <Tv className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/videos/latest") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <Video className={`w-4 h-4 ${isCurrent("/videos/latest") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Latest videos</span>
           </Link>
           <Link
             href="/videos/trending"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/videos/trending")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <TrendingUp className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/videos/trending") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <TrendingUp className={`w-4 h-4 ${isCurrent("/videos/trending") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Trending</span>
           </Link>
           <Link
             href="/videos/top"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/videos/top")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <BarChart2 className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/videos/top") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <BarChart2 className={`w-4 h-4 ${isCurrent("/videos/top") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Top videos</span>
           </Link>
           <Link
             href="/movies"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/movies")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <Clapperboard className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/movies") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <Clapperboard className={`w-4 h-4 ${isCurrent("/movies") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Movies</span>
           </Link>
           <Link
