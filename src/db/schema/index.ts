@@ -368,6 +368,87 @@ export const siteConfig = pgTable("config", {
   value: text("value").notNull(),
 });
 
+// ==========================================
+// Payments & Ads Tables (PlayTube Full Parity)
+// ==========================================
+export const bankReceipts = pgTable("bank_receipts", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  receiptImg: text("receipt_img").notNull(),
+  price: doublePrecision("price").notNull().default(0),
+  mode: varchar("mode", { length: 50 }).default("wallet"), // wallet, pro
+  status: integer("status").default(0), // 0: pending, 1: approved, 2: declined
+  approvedAt: timestamp("approved_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const videoAds = pgTable("video_ads", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: varchar("type", { length: 50 }).default("video"), // video, image, vast
+  adMedia: text("ad_media").notNull(),
+  adUrl: text("ad_url").notNull(),
+  clicks: integer("clicks").default(0),
+  views: integer("views").default(0),
+  duration: integer("duration").default(10), // duration in seconds
+  active: boolean("active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const websiteAds = pgTable("website_ads", {
+  id: serial("id").primaryKey(),
+  placement: varchar("placement", { length: 100 }).notNull().unique(), // header, footer, watch_sidebar, watch_comments
+  code: text("code").default(""),
+  active: boolean("active").default(true),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const userAds = pgTable("user_ads", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 255 }).notNull(),
+  url: text("url").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  targetAudience: varchar("target_audience", { length: 100 }).default("All"),
+  placement: varchar("placement", { length: 100 }).default("Videos (Format Video / Image)"),
+  pricing: varchar("pricing", { length: 50 }).default("cpc"), // cpc, cpm
+  dayLimit: doublePrecision("day_limit").default(0),
+  totalLimit: doublePrecision("total_limit").default(0),
+  mediaUrl: text("media_url"),
+  status: integer("status").default(1), // 1: Active, 0: Inactive
+  clicks: integer("clicks").default(0),
+  views: integer("views").default(0),
+  spent: doublePrecision("spent").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const paymentRequests = pgTable("payment_requests", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  amount: doublePrecision("amount").notNull(),
+  currency: varchar("currency", { length: 10 }).default("USD"),
+  paypalEmail: varchar("paypal_email", { length: 255 }),
+  status: integer("status").default(0), // 0: pending, 1: paid, 2: declined
+  reviewedAt: timestamp("reviewed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const currencies = pgTable("currencies", {
+  id: serial("id").primaryKey(),
+  currencyCode: varchar("currency_code", { length: 10 }).notNull().unique(),
+  currencySymbol: varchar("currency_symbol", { length: 10 }).notNull(),
+  isDefault: boolean("is_default").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+
 
 
 

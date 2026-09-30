@@ -72,8 +72,15 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Payments & Ads",
     icon: DollarSign,
     subItems: [
-      { title: "Payment Settings", href: "/admin/payment-settings" },
-      { title: "Manage Website Ads", href: "/admin/ads" },
+      { title: "Payment Configuration", href: "/admin/payment-settings" },
+      { title: "Advertisement Settings", href: "/admin/ads-settings" },
+      { title: "Manage Bank Receipts", href: "/admin/bank-receipts" },
+      { title: "Manage Video Ads", href: "/admin/manage-video-ads" },
+      { title: "Manage Website Ads", href: "/admin/manage-website-ads" },
+      { title: "Manage User Ads", href: "/admin/manage-user-ads" },
+      { title: "Payment Requests", href: "/admin/payment-requests" },
+      { title: "Manage Currencies", href: "/admin/manage-currencies" },
+      { title: "Earnings", href: "/admin/earnings" },
     ],
   },
   {
