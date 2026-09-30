@@ -15,6 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      
       <body className="antialiased bg-[var(--background)] text-[var(--foreground)]">
         <ThemeProvider>
           <AppShell>{children}</AppShell>
