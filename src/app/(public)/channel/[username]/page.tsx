@@ -80,10 +80,6 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
               src={channelUser.avatar || "/upload/photos/d-avatar.jpg"}
               alt={displayName}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60";
-              }}
             />
           </div>
 

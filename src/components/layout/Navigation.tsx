@@ -17,7 +17,6 @@ import {
   Settings,
   ShieldAlert,
   LogOut,
-  Folder,
   Layers,
   Sparkles,
   DollarSign,
@@ -39,6 +38,7 @@ import {
   Flame,
   Lightbulb,
   History,
+  Star,
 } from "lucide-react";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
@@ -85,15 +85,15 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-md cursor-pointer transition-colors"
         >
           <svg className="w-5 h-5 text-neutral-700 dark:text-neutral-300" viewBox="0 0 276.167 276.167" fill="currentColor">
-            <path d="M33.144,2.471C15.336,2.471,0.85,16.958,0.85,34.765s14.48,32.293,32.294,32.293s32.294-14.486,32.294-32.293 S50.951,2.471,33.144,2.471z"/>
-            <path d="M137.663,2.471c-17.807,0-32.294,14.487-32.294,32.294s14.487,32.293,32.294,32.293c17.808,0,32.297-14.486,32.297-32.293 S155.477,2.471,137.663,2.471z"/>
-            <path d="M243.873,67.059c17.804,0,32.294-14.486,32.294-32.293S261.689,2.471,243.873,2.471s-32.294,14.487-32.294,32.294 S226.068,67.059,243.873,67.059z"/>
-            <path d="M32.3,170.539c17.807,0,32.297-14.483,32.297-32.293c0-17.811-14.49-32.297-32.297-32.297S0,120.436,0,138.246 C0,156.056,14.493,170.539,32.3,170.539z"/>
-            <path d="M136.819,170.539c17.804,0,32.294-14.483,32.294-32.293c0-17.811-14.478-32.297-32.294-32.297 c-17.813,0-32.294,14.486-32.294,32.297C104.525,156.056,119.012,170.539,136.819,170.539z"/>
-            <path d="M243.038,170.539c17.811,0,32.294-14.483,32.294-32.293c0-17.811-14.483-32.297-32.294-32.297 s-32.306,14.486-32.306,32.297C210.732,156.056,225.222,170.539,243.038,170.539z"/>
-            <path d="M33.039,209.108c-17.807,0-32.3,14.483-32.3,32.294c0,17.804,14.493,32.293,32.3,32.293s32.293-14.482,32.293-32.293 S50.846,209.108,33.039,209.108z"/>
-            <path d="M137.564,209.108c-17.808,0-32.3,14.483-32.3,32.294c0,17.804,14.487,32.293,32.3,32.293 c17.804,0,32.293-14.482,32.293-32.293S155.368,209.108,137.564,209.108z"/>
-            <path d="M243.771,209.108c-17.804,0-32.294,14.483-32.294,32.294c0,17.804,14.49,32.293,32.294,32.293 c17.811,0,32.294-14.482,32.294-32.293S261.575,209.108,243.771,209.108z"/>
+            <path d="M33.144,2.471C15.336,2.471,0.85,16.958,0.85,34.765s14.48,32.293,32.294,32.293s32.294-14.486,32.294-32.293 S50.951,2.471,33.144,2.471z" />
+            <path d="M137.663,2.471c-17.807,0-32.294,14.487-32.294,32.294s14.487,32.293,32.294,32.293c17.808,0,32.297-14.486,32.297-32.293 S155.477,2.471,137.663,2.471z" />
+            <path d="M243.873,67.059c17.804,0,32.294-14.486,32.294-32.293S261.689,2.471,243.873,2.471s-32.294,14.487-32.294,32.294 S226.068,67.059,243.873,67.059z" />
+            <path d="M32.3,170.539c17.807,0,32.297-14.483,32.297-32.293c0-17.811-14.49-32.297-32.297-32.297S0,120.436,0,138.246 C0,156.056,14.493,170.539,32.3,170.539z" />
+            <path d="M136.819,170.539c17.804,0,32.294-14.483,32.294-32.293c0-17.811-14.478-32.297-32.294-32.297 c-17.813,0-32.294,14.486-32.294,32.297C104.525,156.056,119.012,170.539,136.819,170.539z" />
+            <path d="M243.038,170.539c17.811,0,32.294-14.483,32.294-32.293c0-17.811-14.483-32.297-32.294-32.297 s-32.306,14.486-32.306,32.297C210.732,156.056,225.222,170.539,243.038,170.539z" />
+            <path d="M33.039,209.108c-17.807,0-32.3,14.483-32.3,32.294c0,17.804,14.493,32.293,32.3,32.293s32.293-14.482,32.293-32.293 S50.846,209.108,33.039,209.108z" />
+            <path d="M137.564,209.108c-17.808,0-32.3,14.483-32.3,32.294c0,17.804,14.487,32.293,32.3,32.293 c17.804,0,32.293-14.482,32.293-32.293S155.368,209.108,137.564,209.108z" />
+            <path d="M243.771,209.108c-17.804,0-32.294,14.483-32.294,32.294c0,17.804,14.49,32.293,32.294,32.293 c17.811,0,32.294-14.482,32.294-32.293S261.575,209.108,243.771,209.108z" />
           </svg>
         </button>
 
@@ -444,16 +444,15 @@ export function Sidebar({
     { href: "/videos/top", label: "Top videos", icon: BarChart2 },
     { href: "/movies", label: "Movies", icon: Clapperboard },
     { href: "/stock-videos", label: "Stock Videos", icon: Video },
-    { href: "/popular-channels", label: "Popular Channels", icon: Users },
+    { href: "/popular-channels", label: "Popular Channels", icon: Star },
     { href: "/shorts", label: "Shorts", icon: Sparkles },
     { href: "/help", label: "Help", icon: HelpCircle },
   ];
 
   return (
     <aside
-      className={`fixed lg:sticky top-14 left-0 z-30 h-[calc(100vh-3.5rem)] bg-[var(--sidebar-bg)] border-r border-[var(--border)] shrink-0 overflow-y-auto overflow-x-hidden transition-[width,transform] duration-200 ease-in-out ${
-        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      } ${isCollapsed ? "lg:w-16 w-60" : "w-60"}`}
+      className={`fixed lg:sticky top-14 left-0 z-30 h-[calc(100vh-3.5rem)] bg-[var(--sidebar-bg)] border-r border-[var(--border)] shrink-0 overflow-y-auto overflow-x-hidden transition-[width,transform] duration-200 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        } ${isCollapsed ? "lg:w-16 w-60" : "w-60"}`}
     >
       {/* Mini Icon-Only Rail for Collapsed Desktop */}
       {isCollapsed && (
@@ -466,11 +465,10 @@ export function Sidebar({
                 <Link
                   href={item.href}
                   title={item.label}
-                  className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
-                    active
+                  className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${active
                       ? "bg-black/5 dark:bg-white/10 text-[#04abf2]"
                       : "text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-neutral-900 dark:hover:text-white"
-                  }`}
+                    }`}
                 >
                   <Icon className={`w-5 h-5 ${active ? "text-[#04abf2]" : ""}`} />
                 </Link>
@@ -492,11 +490,10 @@ export function Sidebar({
         <div className="space-y-1">
           <Link
             href="/"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/")
                 ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -506,11 +503,10 @@ export function Sidebar({
           </Link>
           <Link
             href="/history"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/history")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/history")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/history") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -520,11 +516,10 @@ export function Sidebar({
           </Link>
           <Link
             href="/paid-videos"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/paid-videos")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/paid-videos")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/paid-videos") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -534,11 +529,10 @@ export function Sidebar({
           </Link>
           <Link
             href="/articles"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/articles")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/articles")
                 ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/articles") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -552,11 +546,10 @@ export function Sidebar({
         <div className="pt-2 border-t border-[var(--border)] space-y-1">
           <Link
             href="/videos/latest"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/videos/latest")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/videos/latest")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/videos/latest") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -566,11 +559,10 @@ export function Sidebar({
           </Link>
           <Link
             href="/videos/trending"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/videos/trending")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/videos/trending")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/videos/trending") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -580,11 +572,10 @@ export function Sidebar({
           </Link>
           <Link
             href="/videos/top"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/videos/top")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/videos/top")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/videos/top") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -594,11 +585,10 @@ export function Sidebar({
           </Link>
           <Link
             href="/movies"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/movies")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/movies")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/movies") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -608,11 +598,10 @@ export function Sidebar({
           </Link>
           <Link
             href="/stock-videos"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/stock-videos")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/stock-videos")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/stock-videos") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
@@ -622,25 +611,23 @@ export function Sidebar({
           </Link>
           <Link
             href="/popular-channels"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/popular-channels")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/popular-channels")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/popular-channels") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
-            <Users className={`w-4 h-4 ${isCurrent("/popular-channels") ? "text-[#04abf2]" : "text-neutral-500"}`} />
+            <Star className={`w-4 h-4 ${isCurrent("/popular-channels") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Popular Channels</span>
           </Link>
           <Link
             href="/shorts"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/shorts")
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/shorts")
                 ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+              }`}
           >
             {isCurrent("/shorts") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />

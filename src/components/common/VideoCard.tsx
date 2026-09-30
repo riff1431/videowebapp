@@ -48,13 +48,9 @@ export function VideoCard(props: VideoCardProps) {
       <Link href={`/watch/${videoId}`} className="relative aspect-video w-full bg-neutral-900 block overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={thumbnail}
+          src={thumbnail || "/upload/photos/d-cover.jpg"}
           alt={title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60";
-          }}
         />
         {duration && (
           <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 text-[11px] font-medium bg-black/80 text-white rounded">
@@ -71,10 +67,6 @@ export function VideoCard(props: VideoCardProps) {
               src={channelInfo.avatar || "/upload/photos/d-avatar.jpg"}
               alt={channelInfo.name || channelInfo.username}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60";
-              }}
             />
           </div>
         </Link>
