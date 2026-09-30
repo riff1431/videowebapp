@@ -462,6 +462,37 @@ export const languageKeys = pgTable("language_keys", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const customProfileFields = pgTable("custom_profile_fields", {
+  id: serial("id").primaryKey(),
+  fieldType: varchar("field_type", { length: 50 }).default("textbox").notNull(),
+  fieldName: varchar("field_name", { length: 255 }).notNull(),
+  fieldLength: integer("field_length").default(32).notNull(),
+  fieldDescription: text("field_description").default(""),
+  placement: varchar("placement", { length: 50 }).default("general").notNull(), // general, profile, social, none
+  showOnRegistration: boolean("show_on_registration").default(false),
+  showOnProfile: boolean("show_on_profile").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const verificationRequests = pgTable("verification_requests", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: varchar("status", { length: 20 }).default("pending").notNull(), // pending, verified, rejected
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const monetizationRequests = pgTable("monetization_requests", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: varchar("status", { length: 20 }).default("pending").notNull(), // pending, verified, rejected
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+
 
 
 

@@ -95,8 +95,11 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Users",
     icon: Users,
     subItems: [
-      { title: "Manage Users", href: "/admin/users" },
-      { title: "Verification Requests", href: "/admin/verification-requests" },
+      { title: "Manage Users", href: "/admin/manage-users" },
+      { title: "Affiliates Settings", href: "/admin/affiliates-settings" },
+      { title: "Manage Custom Profile Fields", href: "/admin/manage-profile-fields" },
+      { title: "Manage Verification Requests", href: "/admin/verification-requests" },
+      { title: "Manage Monetization Requests", href: "/admin/monitization-requests" },
     ],
   },
   {
