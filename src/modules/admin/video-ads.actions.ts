@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { videoAds } from "@/db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function createVideoAdAction(formData: FormData) {
@@ -10,11 +10,11 @@ export async function createVideoAdAction(formData: FormData) {
     const name = (formData.get("name") as string)?.trim();
     const type = (formData.get("type") as string) || "video";
     const adMedia = (formData.get("adMedia") as string)?.trim();
-    const adUrl = (formData.get("adUrl") as string)?.trim();
-    const duration = Number(formData.get("duration") || 10);
+    const adUrl = (formData.get("adUrl") as string)?.trim() || "";
+    const duration = Number(formData.get("duration") || 0);
 
-    if (!name || !adMedia || !adUrl) {
-      return { success: false, error: "Name, Media URL and Target Link are required" };
+    if (!name || !adMedia) {
+      return { success: false, error: "Name and Media/Link URL are required" };
     }
 
     await db.insert(videoAds).values({
@@ -29,7 +29,7 @@ export async function createVideoAdAction(formData: FormData) {
     revalidatePath("/admin/manage-video-ads");
     return { success: true };
   } catch (err: any) {
-    return { success: false, error: err.message || "Failed to create video ad" };
+    return { success: false, error: err.message || "Failed to create ad" };
   }
 }
 

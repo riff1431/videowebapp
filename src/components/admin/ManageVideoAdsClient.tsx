@@ -2,11 +2,8 @@
 
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
-import { Plus, Trash2, ExternalLink, X } from "lucide-react";
-import {
-  createVideoAdAction,
-  deleteVideoAdsAction,
-} from "@/modules/admin/video-ads.actions";
+import { Trash2, ExternalLink } from "lucide-react";
+import { deleteVideoAdsAction } from "@/modules/admin/video-ads.actions";
 
 interface VideoAdItem {
   id: number;
@@ -28,7 +25,7 @@ export function ManageVideoAdsClient({ initialAds }: ManageVideoAdsClientProps) 
   const [ads, setAds] = useState<VideoAdItem[]>(initialAds);
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [, startTransition] = useTransition();
 
   const filtered = ads.filter((a) =>
@@ -61,18 +58,6 @@ export function ManageVideoAdsClient({ initialAds }: ManageVideoAdsClientProps) 
     }
   };
 
-  const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const res = await createVideoAdAction(formData);
-    if (res.success) {
-      setShowCreateModal(false);
-      window.location.reload();
-    } else {
-      alert(res.error || "Failed to create ad");
-    }
-  };
-
   return (
     <div className="space-y-6 text-neutral-800 dark:text-[#adb5bd] w-full max-w-full font-sans antialiased">
       {/* Breadcrumb Header */}
@@ -95,18 +80,54 @@ export function ManageVideoAdsClient({ initialAds }: ManageVideoAdsClientProps) 
       </div>
 
       {/* Main Table Card matching Screenshot */}
-      <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-[#292d33] rounded-lg shadow-xs overflow-hidden">
-        <div className="p-5 border-b border-neutral-200 dark:border-[#292d33] flex items-center justify-between">
+      <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-[#292d33] rounded-lg shadow-xs">
+        <div className="p-5 border-b border-neutral-200 dark:border-[#292d33] flex items-center justify-between relative">
           <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white">
             Manage Video Ads
           </h6>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#04abf2] hover:bg-[#0396d5] text-white text-xs font-semibold rounded transition-colors shadow-xs cursor-pointer"
-          >
-            <span>Create New Ad</span>
-            <span className="text-[10px]">▼</span>
-          </button>
+          
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#04abf2] hover:bg-[#0396d5] text-white text-xs font-semibold rounded transition-colors shadow-xs cursor-pointer"
+            >
+              <span>Create New Ad</span>
+              <span className="text-[10px]">▼</span>
+            </button>
+
+            {isDropdownOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsDropdownOpen(false)}
+                />
+                <div className="absolute right-0 mt-1.5 w-44 bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-[#292d33] rounded shadow-lg py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                  <Link
+                    href="/admin/create-video-ad?type=video"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="block px-4 py-2 text-xs text-neutral-800 dark:text-[#ced4da] hover:bg-neutral-100 dark:hover:bg-[#2c3036] transition-colors"
+                  >
+                    Video Ad
+                  </Link>
+                  <Link
+                    href="/admin/create-video-ad?type=image"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="block px-4 py-2 text-xs text-neutral-800 dark:text-[#ced4da] hover:bg-neutral-100 dark:hover:bg-[#2c3036] transition-colors"
+                  >
+                    Image Ad
+                  </Link>
+                  <Link
+                    href="/admin/create-video-ad?type=vast"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="block px-4 py-2 text-xs text-neutral-800 dark:text-[#ced4da] hover:bg-neutral-100 dark:hover:bg-[#2c3036] transition-colors"
+                  >
+                    Vast / Vpaid
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -238,96 +259,6 @@ export function ManageVideoAdsClient({ initialAds }: ManageVideoAdsClientProps) 
         </div>
       </div>
 
-      {/* Create Video Ad Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-[#292d33] rounded-lg max-w-lg w-full p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-150">
-            <button
-              onClick={() => setShowCreateModal(false)}
-              className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 dark:hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <h4 className="text-base font-bold text-neutral-900 dark:text-white mb-4">
-              Create New Video Ad
-            </h4>
-
-            <form onSubmit={handleCreateSubmit} className="space-y-4 text-xs">
-              <div className="space-y-1">
-                <label className="text-neutral-700 dark:text-[#ced4da] font-medium block">Ad Name</label>
-                <input
-                  name="name"
-                  type="text"
-                  required
-                  placeholder="e.g. Summer Promo 2026"
-                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-neutral-700 dark:text-[#ced4da] font-medium block">Ad Type</label>
-                <select
-                  name="type"
-                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
-                >
-                  <option value="video">Video (MP4 / WebM)</option>
-                  <option value="image">Image Overlay</option>
-                  <option value="vast">VAST / VPAID XML</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-neutral-700 dark:text-[#ced4da] font-medium block">Media File URL</label>
-                <input
-                  name="adMedia"
-                  type="url"
-                  required
-                  placeholder="https://example.com/ad-clip.mp4"
-                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs font-mono focus:outline-hidden focus:border-[#04abf2]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-neutral-700 dark:text-[#ced4da] font-medium block">Target Redirect URL</label>
-                <input
-                  name="adUrl"
-                  type="url"
-                  required
-                  placeholder="https://advertiser-site.com"
-                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs font-mono focus:outline-hidden focus:border-[#04abf2]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-neutral-700 dark:text-[#ced4da] font-medium block">Skippable After (Seconds)</label>
-                <input
-                  name="duration"
-                  type="number"
-                  defaultValue={5}
-                  min={0}
-                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
-                />
-              </div>
-
-              <div className="pt-2 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 border border-neutral-300 dark:border-[#2f343b] rounded text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#181a1d]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 bg-[#04abf2] hover:bg-[#0396d5] text-white font-semibold rounded shadow-xs"
-                >
-                  Create Ad
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
