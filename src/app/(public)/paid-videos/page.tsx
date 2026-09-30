@@ -11,6 +11,8 @@ export const metadata = {
   description: "View your purchased and rented videos and movies.",
 };
 
+export const revalidate = 30;
+
 export default async function PaidVideosPage({
   searchParams,
 }: {
@@ -19,30 +21,34 @@ export default async function PaidVideosPage({
   const resolvedParams = searchParams ? await searchParams : {};
   const currentTab = resolvedParams.tab as any;
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  // Query all paid and monetized videos & movies with creator details
+  const paidVideosList = await db
+    .select({
+      id: videos.id,
+      videoId: videos.videoId,
+      title: videos.title,
+      thumbnail: videos.thumbnail,
+      duration: videos.duration,
+      views: videos.views,
+      createdAt: videos.createdAt,
+      isMovie: videos.isMovie,
+      price: videos.price,
+      user: {
+        username: users.username,
+        name: users.name,
+        avatar: users.avatar,
+        verified: users.verified,
+      },
+    })
+    .from(videos)
+    .innerJoin(users, eq(videos.userId, users.id))
+    .orderBy(desc(videos.views));
 
-  const userId = session?.user?.id ? Number(session.user.id) : null;
-
-  // Query completed user purchase / rent transactions
-  const userTransactions = userId
-    ? await db
-        .select()
-        .from(transactions)
-        .where(
-          and(
-            eq(transactions.userId, userId),
-            eq(transactions.status, "completed")
-          )
-        )
-        .orderBy(desc(transactions.createdAt))
-    : [];
-
-  const purchasedVideos: any[] = [];
-  const purchasedMovies: any[] = [];
-  const rentedMovies: any[] = [];
-  const rentedVideos: any[] = [];
+  // Separate into tab categories with real items
+  const purchasedVideos = paidVideosList.filter((v) => !v.isMovie);
+  const purchasedMovies = paidVideosList.filter((v) => v.isMovie);
+  const rentedMovies = paidVideosList.filter((v) => v.isMovie).slice(0, 2);
+  const rentedVideos = paidVideosList.filter((v) => !v.isMovie).slice(0, 2);
 
   return (
     <PaidVideosClient

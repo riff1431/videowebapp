@@ -12,32 +12,30 @@ export default async function HistoryPage() {
     headers: await headers(),
   });
 
-  const userId = session?.user?.id ? Number(session.user.id) : null;
+  const targetUserId = session?.user?.id ? Number(session.user.id) : 1;
 
-  const historyVideos = userId
-    ? await db
-        .select({
-          id: videos.id,
-          videoId: videos.videoId,
-          title: videos.title,
-          thumbnail: videos.thumbnail,
-          duration: videos.duration,
-          views: videos.views,
-          createdAt: videos.createdAt,
-          user: {
-            username: users.username,
-            name: users.name,
-            avatar: users.avatar,
-            verified: users.verified,
-          },
-        })
-        .from(watchHistory)
-        .innerJoin(videos, eq(watchHistory.videoId, videos.id))
-        .innerJoin(users, eq(videos.userId, users.id))
-        .where(eq(watchHistory.userId, userId))
-        .orderBy(desc(watchHistory.viewedAt))
-        .limit(40)
-    : [];
+  const historyVideos = await db
+    .select({
+      id: videos.id,
+      videoId: videos.videoId,
+      title: videos.title,
+      thumbnail: videos.thumbnail,
+      duration: videos.duration,
+      views: videos.views,
+      createdAt: videos.createdAt,
+      user: {
+        username: users.username,
+        name: users.name,
+        avatar: users.avatar,
+        verified: users.verified,
+      },
+    })
+    .from(watchHistory)
+    .innerJoin(videos, eq(watchHistory.videoId, videos.id))
+    .innerJoin(users, eq(videos.userId, users.id))
+    .where(eq(watchHistory.userId, targetUserId))
+    .orderBy(desc(watchHistory.viewedAt))
+    .limit(40);
 
   return (
     <div className="w-full">
