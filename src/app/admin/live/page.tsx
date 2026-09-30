@@ -33,19 +33,19 @@ export default async function AdminLivePage() {
   }
 
   return (
-    <div className="space-y-6 text-[var(--admin-text-main)] w-full max-w-full">
+    <div className="space-y-6 text-neutral-800 dark:text-[var(--admin-text-main)] w-full max-w-full">
       {/* Breadcrumb Header */}
       <div>
-        <h3 className="text-xl font-bold tracking-tight text-[var(--admin-text-main)]">
+        <h3 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
           Live Settings
         </h3>
-        <p className="text-xs text-[var(--admin-text-muted)] mt-1">
+        <p className="text-xs text-neutral-500 dark:text-[var(--admin-text-muted)] mt-1">
           Admin Panel &gt; Settings &gt; Live Settings
         </p>
       </div>
 
       {/* Info Notice */}
-      <div className="w-full bg-[#1e293b]/60 border border-blue-500/30 text-blue-300 px-4 py-3 rounded-md text-xs">
+      <div className="w-full bg-blue-50 dark:bg-[#1e293b]/60 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-md text-xs">
         <strong>Info:</strong> PlayTube Live Streaming is powered by Agora.io WebRTC infrastructure. Enter your Agora App ID and certificates below to enable live broadcast.
       </div>
 

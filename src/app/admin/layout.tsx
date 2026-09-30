@@ -290,7 +290,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[var(--admin-bg)] text-[var(--admin-text-main)] flex flex-col font-sans transition-colors duration-200">
       {/* Top Header Navbar */}
-      <header className="bg-[var(--admin-header-bg)] border-b border-[var(--admin-card-border)] h-14 flex items-center justify-between px-4 sticky top-0 z-40 shadow-xs">
+      <header className="bg-white dark:bg-[#111215] border-b border-neutral-200 dark:border-[#292d33] h-14 flex items-center justify-between px-4 sticky top-0 z-40 shadow-xs">
         {/* Left: Mobile Toggle & Brand Logo */}
         <div className="flex items-center gap-2 md:gap-6">
           {/* Mobile Sidebar Hamburger Trigger (matching PlayTube navigation-toggler) */}
@@ -301,12 +301,15 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           <Link href="/admin" className="flex items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={theme === "dark" ? "/logo-light.png" : "/logo.png"}
+              src="/logo.png"
               alt="playtube"
-              className="h-7 w-auto"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = "none";
-              }}
+              className="h-7 w-auto block dark:hidden"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-light.png"
+              alt="playtube"
+              className="h-7 w-auto hidden dark:block"
             />
           </Link>
 
@@ -315,15 +318,28 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             <input
               type="text"
               placeholder="Search"
-              className="w-56 h-8 pl-8 pr-3 text-xs bg-[var(--admin-input-bg)] border border-[var(--admin-input-border)] rounded-full focus:outline-none focus:border-[#04abf2] text-[var(--admin-text-main)] placeholder-[var(--admin-text-muted)]"
+              className="w-56 h-8 pl-8 pr-3 text-xs bg-neutral-100 dark:bg-[#1c1e22] border border-neutral-200 dark:border-[#292d33] rounded-full focus:outline-none focus:border-[#04abf2] text-neutral-800 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500"
             />
-            <Search className="w-3.5 h-3.5 text-[var(--admin-text-muted)] absolute left-2.5" />
+            <Search className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500 absolute left-2.5" />
           </div>
         </div>
 
-        {/* Right: Notifications & Profile Dropdown */}
+        {/* Right: Notifications & Theme Toggle & Profile Dropdown */}
         <div className="flex items-center gap-3">
-          <button className="p-1.5 text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)] rounded-md transition-colors relative cursor-pointer">
+          {/* Direct Day / Night mode toggle in header */}
+          <button
+            onClick={toggleTheme}
+            title={theme === "dark" ? "Switch to Day Mode" : "Switch to Night Mode"}
+            className="p-1.5 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-md transition-colors cursor-pointer"
+          >
+            {theme === "dark" ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-sky-500" />
+            )}
+          </button>
+
+          <button className="p-1.5 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-md transition-colors relative cursor-pointer">
             <Bell className="w-4 h-4" />
           </button>
 
@@ -416,7 +432,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       {/* Main Body */}
       <div className="flex flex-1 relative">
         {/* Desktop Left Navigation Sidebar */}
-        <aside className="w-60 bg-[var(--admin-sidebar-bg)] border-r border-[var(--admin-card-border)] shrink-0 overflow-y-auto hidden md:block">
+        <aside className="w-60 bg-white dark:bg-[#111215] border-r border-neutral-200 dark:border-[#292d33] shrink-0 overflow-y-auto hidden md:block">
           {renderNavLinks(false)}
         </aside>
 
@@ -431,15 +447,21 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             />
 
             {/* Sidebar Sheet Panel */}
-            <aside className="relative w-64 max-w-[80vw] bg-[var(--admin-sidebar-bg)] border-r border-[var(--admin-card-border)] h-full overflow-y-auto shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200">
+            <aside className="relative w-64 max-w-[80vw] bg-white dark:bg-[#111215] border-r border-neutral-200 dark:border-[#292d33] h-full overflow-y-auto shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200">
               {/* Header inside drawer */}
-              <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--admin-card-border)] shrink-0">
+              <div className="h-14 flex items-center justify-between px-4 border-b border-neutral-200 dark:border-[#292d33] shrink-0">
                 <Link href="/admin" onClick={() => setOpenMobile(false)}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={theme === "dark" ? "/logo-light.png" : "/logo.png"}
+                    src="/logo.png"
                     alt="playtube"
-                    className="h-6 w-auto"
+                    className="h-6 w-auto block dark:hidden"
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo-light.png"
+                    alt="playtube"
+                    className="h-6 w-auto hidden dark:block"
                   />
                 </Link>
                 <SidebarClose />
@@ -454,7 +476,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         )}
 
         {/* Content Area */}
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-[var(--admin-bg)] transition-colors duration-200 w-full min-w-0">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-[#f4f5fd] dark:bg-[#1c1e22] text-[#212529] dark:text-[#f1f5f9] transition-colors duration-200 w-full min-w-0">
           {children}
         </main>
       </div>

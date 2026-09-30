@@ -73,10 +73,10 @@ export function GeneralSettingsClient({
   };
 
   return (
-    <div className="space-y-6 text-[#adb5bd] w-full max-w-full font-sans antialiased">
+    <div className="space-y-6 text-neutral-800 dark:text-[#adb5bd] w-full max-w-full font-sans antialiased">
       {/* Top Header & Breadcrumbs */}
       <div>
-        <h3 className="text-[22px] font-semibold text-white tracking-tight">
+        <h3 className="text-[22px] font-semibold text-neutral-900 dark:text-white tracking-tight">
           General Configuration
         </h3>
         <nav className="flex items-center gap-1.5 text-xs text-[#008DD1] mt-1">
@@ -90,10 +90,10 @@ export function GeneralSettingsClient({
             </svg>
             <span>Admin Panel</span>
           </Link>
-          <span className="text-gray-500">&gt;</span>
+          <span className="text-neutral-500 dark:text-gray-400 dark:text-gray-500">&gt;</span>
           <span className="text-[#008DD1]">Settings</span>
-          <span className="text-gray-500">&gt;</span>
-          <span className="text-gray-400">General Configuration</span>
+          <span className="text-neutral-500 dark:text-gray-400 dark:text-gray-500">&gt;</span>
+          <span className="text-neutral-500 dark:text-gray-400">General Configuration</span>
         </nav>
       </div>
 
@@ -113,19 +113,19 @@ export function GeneralSettingsClient({
         {/* LEFT COLUMN: Card 1 - General Configuration                               */}
         {/* ========================================================================= */}
         <div className="space-y-6">
-          <div className="bg-[#22252a] border border-[#292d33] rounded-lg p-6 shadow-sm">
-            <h6 className="text-[15px] font-bold text-white mb-6">
+          <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-neutral-200 dark:border-[#292d33] rounded-lg p-6 shadow-xs">
+            <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white mb-6">
               General Configuration
             </h6>
 
-            <div className="space-y-5 divide-y divide-[#2a2e36]">
+            <div className="space-y-5 divide-y divide-neutral-200 dark:divide-[#2a2e36]">
               {/* 1. Switch Account */}
               <div className="pt-0 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Switch Account
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to switch account.
                   </p>
                 </div>
@@ -138,16 +138,16 @@ export function GeneralSettingsClient({
 
               {/* 2. Switch Account Counts */}
               <div className="pt-4">
-                <label className="text-xs text-[#ced4da] block mb-1">
+                <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                   Switch Account Counts
                 </label>
                 <input
                   type="text"
                   value={config["switch_account_counts"] ?? "3"}
                   onChange={(e) => updateSetting("switch_account_counts", e.target.value)}
-                  className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
-                <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                   Switch Account Counts
                 </span>
               </div>
@@ -155,10 +155,10 @@ export function GeneralSettingsClient({
               {/* 3. Developer Mode */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Developer Mode
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Turn on error reporting so developer can see errors.
                   </p>
                 </div>
@@ -172,10 +172,10 @@ export function GeneralSettingsClient({
               {/* 4. Developers (API System) */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Developers (API System)
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Show /developers page to all users for API requests.
                   </p>
                 </div>
@@ -189,10 +189,10 @@ export function GeneralSettingsClient({
               {/* 5. Maintenance Mode */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Maintenance Mode
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Turn the whole site under Maintenance.
                     <br />
                     You can get the site back by visiting{" "}
@@ -216,10 +216,10 @@ export function GeneralSettingsClient({
               {/* 6. SEO Links */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     SEO Links
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Enable SEO links E.g: site.com/this-is-a-video-_ID.html, this will improve your Google Ranking
                   </p>
                 </div>
@@ -233,10 +233,10 @@ export function GeneralSettingsClient({
               {/* 7. History System */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     History System
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Users will be able to view their watched videos.
                   </p>
                 </div>
@@ -250,10 +250,10 @@ export function GeneralSettingsClient({
               {/* 8. Popular Channels */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Popular Channels
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Show popular channels ranked by most subscribers.
                   </p>
                 </div>
@@ -268,7 +268,7 @@ export function GeneralSettingsClient({
               <div className="pt-4 flex items-start justify-between">
                 <div>
                   <div className="inline-flex items-center">
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338]">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338]">
                       Article System
                     </label>
                     <RoleFilterDropdown
@@ -276,7 +276,7 @@ export function GeneralSettingsClient({
                       onChange={(val) => updateSetting("who_can_article", val)}
                     />
                   </div>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Create articles in blog section.
                   </p>
                 </div>
@@ -290,10 +290,10 @@ export function GeneralSettingsClient({
               {/* 10. Show Articles In Home Page */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Show Articles In Home Page
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Articles will seen in home page.
                   </p>
                 </div>
@@ -308,10 +308,10 @@ export function GeneralSettingsClient({
               <div className="pt-4 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                       +18 Pop-up
                     </label>
-                    <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                    <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                       Show +18 Pop-up when user access the site.
                     </p>
                   </div>
@@ -322,16 +322,16 @@ export function GeneralSettingsClient({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     +18 Block Time
                   </label>
                   <input
                     type="text"
                     value={config["time_18"] ?? "1"}
                     onChange={(e) => updateSetting("time_18", e.target.value.replace(/[^0-9.]/g, ""))}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
-                  <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                  <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Set the amount of hours to block a user which isn't above 18 years old.
                   </span>
                 </div>
@@ -341,10 +341,10 @@ export function GeneralSettingsClient({
               <div className="pt-4 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                       Language Modal
                     </label>
-                    <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                    <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                       Show language modal when user access the site.
                     </p>
                   </div>
@@ -355,19 +355,19 @@ export function GeneralSettingsClient({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     Default Language
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mb-1">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mb-1">
                     Choose thhe site default language.
                   </p>
                   <select
                     value={config["language"] ?? "english"}
                     onChange={(e) => updateSetting("language", e.target.value)}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                   >
                     {languages.map((l) => (
-                      <option key={l.key} value={l.key} className="bg-[#181a1d]">
+                      <option key={l.key} value={l.key} className="bg-neutral-50 dark:bg-[#181a1d]">
                         {l.name}
                       </option>
                     ))}
@@ -378,10 +378,10 @@ export function GeneralSettingsClient({
               {/* 13. Report Copyright */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Report Copyright
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to create copyright takedown requests.
                   </p>
                 </div>
@@ -396,7 +396,7 @@ export function GeneralSettingsClient({
               <div className="pt-4 flex items-start justify-between">
                 <div>
                   <div className="inline-flex items-center">
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338]">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338]">
                       Playlist Subscription
                     </label>
                     <RoleFilterDropdown
@@ -404,7 +404,7 @@ export function GeneralSettingsClient({
                       onChange={(val) => updateSetting("who_can_playlist", val)}
                     />
                   </div>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to subscribe to playlists
                   </p>
                 </div>
@@ -419,7 +419,7 @@ export function GeneralSettingsClient({
               <div className="pt-4 flex items-start justify-between">
                 <div>
                   <div className="inline-flex items-center">
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338]">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338]">
                       Create Post System
                     </label>
                     <RoleFilterDropdown
@@ -427,7 +427,7 @@ export function GeneralSettingsClient({
                       onChange={(val) => updateSetting("who_can_post", val)}
                     />
                   </div>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to create post under channel page.
                   </p>
                 </div>
@@ -440,10 +440,10 @@ export function GeneralSettingsClient({
 
               {/* 16. Favourite category */}
               <div className="pt-4">
-                <label className="text-xs text-[#ced4da] block mb-1">
+                <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                   Favourite category
                 </label>
-                <div className="p-2.5 bg-[#181a1d] border border-[#2f343b] rounded space-y-2">
+                <div className="p-2.5 bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] rounded space-y-2">
                   <div className="flex flex-wrap gap-1.5">
                     {categories.map((cat) => {
                       const isSelected = selectedCats.includes(cat.key);
@@ -467,14 +467,14 @@ export function GeneralSettingsClient({
                     <span className="text-xs text-[#6c757d]">Select</span>
                   )}
                 </div>
-                <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                   Choose which categories you would like to see on your home page.
                 </span>
               </div>
 
               {/* 17. Video Pagination Limit */}
               <div className="pt-4">
-                <label className="text-xs text-[#ced4da] block mb-1">
+                <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                   Video Pagination Limit
                 </label>
                 <input
@@ -483,16 +483,16 @@ export function GeneralSettingsClient({
                   max="10000"
                   value={config["videos_load_limit"] ?? "20"}
                   onChange={(e) => updateSetting("videos_load_limit", e.target.value)}
-                  className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
-                <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                   Choose the limit of how many videos will show on each page.
                 </span>
               </div>
 
               {/* 18. Censored Words */}
               <div className="pt-4">
-                <label className="text-xs text-[#ced4da] block mb-1">
+                <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                   Censored Words
                 </label>
                 <input
@@ -500,25 +500,25 @@ export function GeneralSettingsClient({
                   value={config["censored_words"] ?? ""}
                   placeholder=""
                   onChange={(e) => updateSetting("censored_words", e.target.value)}
-                  className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
-                <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                   Set censored words, seperated by a comma (,)
                 </span>
               </div>
 
               {/* 19. Date Format */}
               <div className="pt-4">
-                <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block mb-1">
+                <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block mb-1">
                   Date Format
                 </label>
-                <p className="text-[11px] text-[#8c96a3] mb-1">
+                <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mb-1">
                   Set your site default date format.
                 </p>
                 <select
                   value={config["date_style"] ?? "m/d/y"}
                   onChange={(e) => updateSetting("date_style", e.target.value)}
-                  className="w-full bg-[#181a1d] border border-[#2f343b] text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="m/d/y">mm/dd/yy</option>
                   <option value="d/m/y">dd/mm/yy</option>
@@ -538,19 +538,19 @@ export function GeneralSettingsClient({
         {/* ========================================================================= */}
         <div className="space-y-6">
           {/* CARD 1: Login & Registration */}
-          <div className="bg-[#22252a] border border-[#292d33] rounded-lg p-6 shadow-sm">
-            <h6 className="text-[15px] font-bold text-white mb-6">
+          <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-neutral-200 dark:border-[#292d33] rounded-lg p-6 shadow-xs">
+            <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white mb-6">
               Login &amp; Registration
             </h6>
 
-            <div className="space-y-5 divide-y divide-[#2a2e36]">
+            <div className="space-y-5 divide-y divide-neutral-200 dark:divide-[#2a2e36]">
               {/* User Registration */}
               <div className="pt-0 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     User Registration
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to create accounts in your site.
                   </p>
                 </div>
@@ -564,10 +564,10 @@ export function GeneralSettingsClient({
               {/* Account Validation */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Account Validation
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Send an activation link after registration.
                   </p>
                 </div>
@@ -581,10 +581,10 @@ export function GeneralSettingsClient({
               {/* Auto Username On Register */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Auto Username On Register
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Generate an auto username on sign up.
                     <br />
                     Registration form will ask for user's first name and last name.
@@ -600,10 +600,10 @@ export function GeneralSettingsClient({
               {/* Two-Factor Settings */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Two-Factor Settings
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Send confirmation code to email or SMS when user login.
                   </p>
                 </div>
@@ -617,10 +617,10 @@ export function GeneralSettingsClient({
               {/* Google Authenticator Settings */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Google Authenticator Settings
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Google Authenticator code when user login.
                   </p>
                 </div>
@@ -635,10 +635,10 @@ export function GeneralSettingsClient({
               <div className="pt-4 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                       Authy Settings
                     </label>
-                    <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                    <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                       Authy code when user login.
                     </p>
                   </div>
@@ -649,16 +649,16 @@ export function GeneralSettingsClient({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     Authy Token
                   </label>
                   <input
                     type="text"
                     value={config["authy_token"] ?? ""}
                     onChange={(e) => updateSetting("authy_token", e.target.value)}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
-                  <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                  <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Authy Token from your twilio account
                   </span>
                 </div>
@@ -667,10 +667,10 @@ export function GeneralSettingsClient({
               {/* Password Complexity System */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Password Complexity System
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     The system will require a powerful password on sign up,
                     <br />
                     including letters, numbers and special characters.
@@ -686,10 +686,10 @@ export function GeneralSettingsClient({
               {/* Remember This Device */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Remember This Device
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Remember this device in welcome page.
                   </p>
                 </div>
@@ -704,10 +704,10 @@ export function GeneralSettingsClient({
               <div className="pt-4 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                       Recaptcha
                     </label>
-                    <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                    <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                       Enable reCaptcha to prevent spam.
                     </p>
                   </div>
@@ -718,14 +718,14 @@ export function GeneralSettingsClient({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     Recaptcha Key
                   </label>
                   <input
                     type="text"
                     value={config["recaptcha_key"] ?? ""}
                     onChange={(e) => updateSetting("recaptcha_key", e.target.value)}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                 </div>
               </div>
@@ -734,10 +734,10 @@ export function GeneralSettingsClient({
               <div className="pt-4 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                       Prevent Bad Login Attempts
                     </label>
-                    <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                    <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                       Enable this feature to track and stop brute-force attacks.
                     </p>
                   </div>
@@ -748,30 +748,30 @@ export function GeneralSettingsClient({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     Login Limit
                   </label>
                   <input
                     type="text"
                     value={config["bad_login_limit"] ?? "4"}
                     onChange={(e) => updateSetting("bad_login_limit", e.target.value)}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
-                  <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                  <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     How many times a user can try to login before a lockout?
                   </span>
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     Lockout Time (In Minutes)
                   </label>
                   <input
                     type="text"
                     value={config["lock_time"] ?? "10"}
                     onChange={(e) => updateSetting("lock_time", e.target.value)}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
-                  <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                  <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     For how long should the user stay locked out?
                   </span>
                 </div>
@@ -780,19 +780,19 @@ export function GeneralSettingsClient({
           </div>
 
           {/* CARD 2: User Configuration */}
-          <div className="bg-[#22252a] border border-[#292d33] rounded-lg p-6 shadow-sm">
-            <h6 className="text-[15px] font-bold text-white mb-6">
+          <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-neutral-200 dark:border-[#292d33] rounded-lg p-6 shadow-xs">
+            <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white mb-6">
               User Configuration
             </h6>
 
-            <div className="space-y-5 divide-y divide-[#2a2e36]">
+            <div className="space-y-5 divide-y divide-neutral-200 dark:divide-[#2a2e36]">
               {/* Delete User Account */}
               <div className="pt-0 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     Delete User Account
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to delete their accounts.
                   </p>
                 </div>
@@ -806,10 +806,10 @@ export function GeneralSettingsClient({
               {/* User Verification Badge */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     User Verification Badge
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Adding verification badge to users
                   </p>
                 </div>
@@ -823,10 +823,10 @@ export function GeneralSettingsClient({
               {/* User Block System */}
               <div className="pt-4 flex items-start justify-between">
                 <div>
-                  <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338] inline-block">
+                  <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338] inline-block">
                     User Block System
                   </label>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to block each other.
                   </p>
                 </div>
@@ -842,7 +842,7 @@ export function GeneralSettingsClient({
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="inline-flex items-center">
-                      <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338]">
+                      <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338]">
                         Paid Subscribers
                       </label>
                       <RoleFilterDropdown
@@ -850,7 +850,7 @@ export function GeneralSettingsClient({
                         onChange={(val) => updateSetting("who_can_payed_subscribers", val)}
                       />
                     </div>
-                    <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                    <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                       Users should pay to subscribe to a channel.
                     </p>
                   </div>
@@ -861,16 +861,16 @@ export function GeneralSettingsClient({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     Commission
                   </label>
                   <input
                     type="text"
                     value={config["admin_com_subscribers"] ?? "2"}
                     onChange={(e) => updateSetting("admin_com_subscribers", e.target.value.replace(/[^0-9.]/g, ""))}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
-                  <span className="text-[11px] text-[#8c96a3] mt-1 block">
+                  <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Your percentage cut from paid subscribers (Leave it 0 if you don't want to get any commissions.)
                   </span>
                 </div>
@@ -880,7 +880,7 @@ export function GeneralSettingsClient({
               <div className="pt-4 flex items-start justify-between">
                 <div>
                   <div className="inline-flex items-center">
-                    <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338]">
+                    <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338]">
                       Donation System
                     </label>
                     <RoleFilterDropdown
@@ -888,7 +888,7 @@ export function GeneralSettingsClient({
                       onChange={(val) => updateSetting("who_can_donate", val)}
                     />
                   </div>
-                  <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                  <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                     Allow users to donate to channels.
                   </p>
                 </div>
@@ -904,7 +904,7 @@ export function GeneralSettingsClient({
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="inline-flex items-center">
-                      <label className="text-[13px] font-medium text-white px-2 py-0.5 rounded bg-[#323338]">
+                      <label className="text-[13px] font-medium text-neutral-800 dark:text-white px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#323338]">
                         User Invite System
                       </label>
                       <RoleFilterDropdown
@@ -912,7 +912,7 @@ export function GeneralSettingsClient({
                         onChange={(val) => updateSetting("who_can_invite_links", val)}
                       />
                     </div>
-                    <p className="text-[11px] text-[#8c96a3] mt-1.5">
+                    <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1.5">
                       Allow users to invite other users to your site.
                     </p>
                   </div>
@@ -923,24 +923,24 @@ export function GeneralSettingsClient({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     How many links can a user generate?
                   </label>
                   <input
                     type="text"
                     value={config["user_links_limit"] ?? "10"}
                     onChange={(e) => updateSetting("user_links_limit", e.target.value)}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] focus:border-[#04abf2] text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#ced4da] block mb-1">
+                  <label className="text-xs text-neutral-700 dark:text-[#ced4da] block mb-1">
                     User can generate X links within?
                   </label>
                   <select
                     value={config["expire_user_links"] ?? "month"}
                     onChange={(e) => updateSetting("expire_user_links", e.target.value)}
-                    className="w-full bg-[#181a1d] border border-[#2f343b] text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                   >
                     <option value="hour">1 Hour</option>
                     <option value="day">1 Day</option>
@@ -954,24 +954,24 @@ export function GeneralSettingsClient({
           </div>
 
           {/* CARD 3: Other Settings */}
-          <div className="bg-[#22252a] border border-[#292d33] rounded-lg p-6 shadow-sm">
-            <h6 className="text-[15px] font-bold text-white mb-6">
+          <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-neutral-200 dark:border-[#292d33] rounded-lg p-6 shadow-xs">
+            <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white mb-6">
               Other Settings
             </h6>
 
-            <div className="space-y-5 divide-y divide-[#2a2e36]">
+            <div className="space-y-5 divide-y divide-neutral-200 dark:divide-[#2a2e36]">
               {/* Messaging & Notifications Server */}
               <div className="pt-0 space-y-1.5">
-                <label className="text-xs text-[#ced4da] block">
+                <label className="text-xs text-neutral-700 dark:text-[#ced4da] block">
                   Messaging &amp; Notifications Server
                 </label>
-                <p className="text-[11px] text-[#8c96a3]">
+                <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3]">
                   Choose which server to use, NodeJS or Ajax. See How to run and install Nodejs/forever/npm on your server?
                 </p>
                 <select
                   value={config["server"] ?? "ajax"}
                   onChange={(e) => updateSetting("server", e.target.value)}
-                  className="w-full bg-[#181a1d] border border-[#2f343b] text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="ajax">AJAX</option>
                   <option value="nodejs">WebSockets</option>
@@ -980,16 +980,16 @@ export function GeneralSettingsClient({
 
               {/* Comment System */}
               <div className="pt-4 space-y-1.5">
-                <label className="text-xs text-[#ced4da] block">
+                <label className="text-xs text-neutral-700 dark:text-[#ced4da] block">
                   Comment System
                 </label>
-                <p className="text-[11px] text-[#8c96a3]">
+                <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3]">
                   Choose the comment system default provider.
                 </p>
                 <select
                   value={config["comment_system"] ?? "default"}
                   onChange={(e) => updateSetting("comment_system", e.target.value)}
-                  className="w-full bg-[#181a1d] border border-[#2f343b] text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="default">AJAX (PlayTube)</option>
                   <option value="fb">FaceBook</option>
@@ -999,16 +999,16 @@ export function GeneralSettingsClient({
 
               {/* Default Showen Comments */}
               <div className="pt-4 space-y-1.5">
-                <label className="text-xs text-[#ced4da] block">
+                <label className="text-xs text-neutral-700 dark:text-[#ced4da] block">
                   Default Showen Comments
                 </label>
-                <p className="text-[11px] text-[#8c96a3]">
+                <p className="text-[11px] text-neutral-500 dark:text-[#8c96a3]">
                   How many comments to show by default?
                 </p>
                 <select
                   value={config["comments_default_num"] ?? "40"}
                   onChange={(e) => updateSetting("comments_default_num", e.target.value)}
-                  className="w-full bg-[#181a1d] border border-[#2f343b] text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="10">10</option>
                   <option value="20">20</option>
