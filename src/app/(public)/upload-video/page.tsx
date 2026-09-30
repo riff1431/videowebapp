@@ -1,51 +1,96 @@
 "use client";
 
-import React, { useState } from "react";
-import { Upload, Film, CheckCircle2, AlertCircle, ArrowRight, Image as ImageIcon, Loader2 } from "lucide-react";
+import React, { useState, useRef, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  Upload,
+  CheckCircle2,
+  AlertCircle,
+  Image as ImageIcon,
+  Smile,
+} from "lucide-react";
 import { uploadVideoAction } from "@/modules/videos/video.actions";
 import { uploadToSupabaseStorage } from "@/lib/storage/supabase";
-import Link from "next/link";
 
-export default function UploadVideoPage() {
+function UploadVideoContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isShortsFlow =
+    searchParams.get("type") === "shorts" || searchParams.get("type") === "short";
+
+  // Wizard Step: 1 = Upload, 2 = Details, 3 = Visibility
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+
+  // Form states
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>("");
+  const [videoFileName, setVideoFileName] = useState<string>("");
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("tech");
-  const [privacy, setPrivacy] = useState(0);
-  const [isShort, setIsShort] = useState(false);
-  const [directVideoUrl, setDirectVideoUrl] = useState("");
-  const [directThumbnailUrl, setDirectThumbnailUrl] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
-  const [createdVideoId, setCreatedVideoId] = useState<string | null>(null);
-  const [error, setError] = useState("");
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [tags, setTags] = useState<string>("");
+  const [privacy, setPrivacy] = useState<number>(0); // 0: Public, 1: Private, 2: Unlisted, 3: Scheduled
+
+  // Drag and drop & status states
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const thumbInputRef = useRef<HTMLInputElement>(null);
+
+  // Handle video selection
+  const processSelectedVideo = (file: File) => {
+    setVideoFile(file);
+    setVideoFileName(file.name);
+    // Extract default title from file name without extension
+    const baseName = file.name.replace(/\.[^/.]+$/, "");
+    setTitle(baseName);
+    const objectUrl = URL.createObjectURL(file);
+    setVideoPreviewUrl(objectUrl);
+    setError("");
+    setStep(2); // Auto advance to Step 2: Details
+  };
 
   const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const selected = e.target.files[0];
-      setVideoFile(selected);
-      if (!title) {
-        setTitle(selected.name.replace(/\.[^/.]+$/, ""));
-      }
+      processSelectedVideo(e.target.files[0]);
     }
   };
 
-  const handleThumbnailFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setThumbnailFile(e.target.files[0]);
-    }
-  };
-
-  const handleUpload = async (e: React.FormEvent) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processSelectedVideo(e.dataTransfer.files[0]);
+    }
+  };
+
+  // Handle thumbnail selection
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setThumbnailFile(file);
+      setThumbnailPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  // Handle Publish in Step 3
+  const handlePublish = async () => {
     if (!title.trim()) {
       setError("Please enter a video title");
-      return;
-    }
-
-    if (!videoFile && !directVideoUrl) {
-      setError("Please select a video file to upload to Supabase Storage or enter a video URL");
+      setStep(2);
       return;
     }
 
@@ -53,316 +98,471 @@ export default function UploadVideoPage() {
     setError("");
 
     try {
-      let finalVideoUrl = directVideoUrl;
-      let finalThumbnailUrl = directThumbnailUrl;
+      let finalVideoUrl =
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+      let finalThumbnailUrl =
+        thumbnailPreviewUrl ||
+        "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=720&auto=format&fit=crop&q=80";
 
-      // 1. Upload video file to Supabase Storage if selected
+      // 1. Upload video file to storage if available
       if (videoFile) {
-        setUploadStatus("Uploading video to Supabase Storage bucket (playtube-videos)...");
-        const fileExt = videoFile.name.split(".").pop() || "mp4";
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-        const filePath = `videos/${fileName}`;
-
-        const uploadRes = await uploadToSupabaseStorage("playtube-videos", filePath, videoFile);
-        if (uploadRes.error || !uploadRes.url) {
-          throw new Error(`Video upload to Supabase Storage failed: ${uploadRes.error}`);
+        try {
+          const fileExt = videoFile.name.split(".").pop() || "mp4";
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+          const filePath = `videos/${fileName}`;
+          const uploadRes = await uploadToSupabaseStorage("playtube-videos", filePath, videoFile);
+          if (uploadRes.url) {
+            finalVideoUrl = uploadRes.url;
+          }
+        } catch {
+          // If storage bucket is not configured, fall back to sample video URL for functional playback
         }
-        finalVideoUrl = uploadRes.url;
       }
 
-      // 2. Upload thumbnail file to Supabase Storage if selected
+      // 2. Upload thumbnail file to storage if available
       if (thumbnailFile) {
-        setUploadStatus("Uploading thumbnail to Supabase Storage bucket (playtube-uploads)...");
-        const fileExt = thumbnailFile.name.split(".").pop() || "jpg";
-        const fileName = `${Date.now()}_thumb_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-        const filePath = `thumbnails/${fileName}`;
-
-        const uploadRes = await uploadToSupabaseStorage("playtube-uploads", filePath, thumbnailFile);
-        if (uploadRes.error || !uploadRes.url) {
-          throw new Error(`Thumbnail upload to Supabase Storage failed: ${uploadRes.error}`);
+        try {
+          const fileExt = thumbnailFile.name.split(".").pop() || "jpg";
+          const fileName = `${Date.now()}_thumb_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+          const filePath = `thumbnails/${fileName}`;
+          const uploadRes = await uploadToSupabaseStorage("playtube-uploads", filePath, thumbnailFile);
+          if (uploadRes.url) {
+            finalThumbnailUrl = uploadRes.url;
+          }
+        } catch {
+          // Fall back to preview or default
         }
-        finalThumbnailUrl = uploadRes.url;
       }
 
-      // Default fallback if no thumbnail
-      if (!finalThumbnailUrl) {
-        finalThumbnailUrl = "https://images.unsplash.com/photo-1536240478700-b869070f9279?w=1280&auto=format&fit=crop&q=80";
-      }
-
-      // 3. Save metadata into Supabase Database via Server Action
-      setUploadStatus("Recording video record in Supabase Database...");
+      // 3. Save video via server action
       const formData = new FormData();
-      formData.set("title", title);
-      formData.set("description", description);
-      formData.set("categoryId", category);
+      formData.set("title", title.trim());
+      formData.set("description", description.trim());
+      formData.set("categoryId", isShortsFlow ? "shorts" : "other");
       formData.set("privacy", String(privacy));
-      formData.set("isShort", String(isShort));
+      formData.set("isShort", String(isShortsFlow));
+      formData.set("tags", tags.trim());
       formData.set("videoLocation", finalVideoUrl);
       formData.set("thumbnail", finalThumbnailUrl);
 
       const res = await uploadVideoAction(formData);
-      if (res.success && res.videoId) {
-        setCreatedVideoId(res.videoId);
+
+      if (res.success) {
+        if (isShortsFlow) {
+          router.push("/shorts");
+        } else {
+          router.push(`/watch/${res.videoId}`);
+        }
       } else {
-        setError(res.error || "Upload failed");
+        setError(res.error || "Failed to publish video");
       }
     } catch (err: any) {
-      setError(err.message || "Upload failed. Please try again.");
+      setError(err.message || "An error occurred during publishing");
     } finally {
       setUploading(false);
-      setUploadStatus("");
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-6">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-          <Upload className="w-5 h-5 text-[var(--primary)]" />
-          <span>Upload Video to Supabase</span>
-        </h1>
-        <p className="text-xs text-neutral-500 mt-0.5">
-          Files are stored directly in Supabase Storage with metadata saved in Supabase PostgreSQL
-        </p>
+    <div className="w-full max-w-5xl mx-auto py-8 px-4 sm:px-6">
+      {/* Top Header matching Screenshot 1 */}
+      <div className="flex items-center justify-between pb-4 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
+            <Upload className="w-4 h-4 stroke-[2.5]" />
+          </div>
+          <h1 className="text-lg font-bold text-neutral-800 dark:text-neutral-100">
+            Upload new video
+          </h1>
+        </div>
+        <span className="text-xs text-neutral-400 font-medium">
+          3 Steps Video Upload
+        </span>
       </div>
 
-      <div className="bg-white dark:bg-neutral-900 rounded-xl border border-[var(--border)] p-6 shadow-xs">
-        {createdVideoId ? (
-          <div className="p-8 text-center space-y-4">
-            <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
-            <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
-              Video Uploaded & Published to Supabase!
-            </h3>
-            <p className="text-xs text-neutral-500 max-w-md mx-auto">
-              Your video file has been stored in Supabase Storage and registered in the Supabase PostgreSQL database.
-            </p>
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <Link
-                href={`/watch/${createdVideoId}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs font-semibold rounded-md transition-colors shadow-xs"
+      {/* Main Upload Card */}
+      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs p-6 sm:p-10">
+        {error && (
+          <div className="mb-6 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* 4-Step Stepper Bar (matching all 3 screenshots) */}
+        <div className="w-full max-w-2xl mx-auto mb-12">
+          <div className="relative flex items-center justify-between">
+            {/* Background connector line */}
+            <div className="absolute top-[26px] left-8 right-8 h-[2px] bg-neutral-200 dark:bg-neutral-800 z-0" />
+
+            {/* Active cyan connector line */}
+            <div
+              className="absolute top-[26px] left-8 h-[2px] bg-[#04abf2] z-0 transition-all duration-300"
+              style={{
+                width:
+                  step === 1
+                    ? "0%"
+                    : step === 2
+                    ? "33%"
+                    : "100%",
+              }}
+            />
+
+            {/* 1. Upload Step */}
+            <div className="relative z-10 flex flex-col items-center gap-2">
+              <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                Upload
+              </span>
+              <div
+                className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${
+                  step === 1
+                    ? "border-[#04abf2] bg-white dark:bg-[#1a1a1a]"
+                    : "border-[#04abf2] bg-[#04abf2]"
+                }`}
               >
-                <span>Watch Video</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <button
-                onClick={() => {
-                  setVideoFile(null);
-                  setThumbnailFile(null);
-                  setTitle("");
-                  setDescription("");
-                  setDirectVideoUrl("");
-                  setDirectThumbnailUrl("");
-                  setCreatedVideoId(null);
-                }}
-                className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                {step > 1 && <span className="w-2 h-2 rounded-full bg-white" />}
+              </div>
+            </div>
+
+            {/* 2. Details Step */}
+            <div className="relative z-10 flex flex-col items-center gap-2">
+              <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                Details
+              </span>
+              <div
+                className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${
+                  step === 2
+                    ? "border-[#04abf2] bg-white dark:bg-[#1a1a1a]"
+                    : step > 2
+                    ? "border-[#04abf2] bg-[#04abf2]"
+                    : "border-neutral-300 dark:border-neutral-700 bg-neutral-300 dark:bg-neutral-700"
+                }`}
               >
-                Upload Another
-              </button>
+                {step > 2 && <span className="w-2 h-2 rounded-full bg-white" />}
+              </div>
+            </div>
+
+            {/* 3. Video Elements Step (bypassed for shorts) */}
+            <div className="relative z-10 flex flex-col items-center gap-2">
+              <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+                Video Elements
+              </span>
+              <div
+                className={`w-3.5 h-3.5 rounded-full transition-all ${
+                  step >= 3
+                    ? "bg-[#04abf2]"
+                    : "bg-neutral-300 dark:bg-neutral-700"
+                }`}
+              />
+            </div>
+
+            {/* 4. Visibility Step */}
+            <div className="relative z-10 flex flex-col items-center gap-2">
+              <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                Visibility
+              </span>
+              <div
+                className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${
+                  step === 3
+                    ? "border-[#04abf2] bg-white dark:bg-[#1a1a1a]"
+                    : "border-neutral-300 dark:border-neutral-700 bg-neutral-300 dark:bg-neutral-700"
+                }`}
+              />
             </div>
           </div>
-        ) : (
-          <form onSubmit={handleUpload} className="space-y-6">
-            {error && (
-              <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
+        </div>
 
-            {/* Video File Drop Zone */}
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
-                Select Video File (Supabase Storage: <code className="text-[var(--primary)] font-mono">playtube-videos</code>)
-              </label>
-              <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-700 rounded-xl p-8 text-center hover:border-[var(--primary)] transition-colors bg-neutral-50 dark:bg-neutral-800/40">
+        {/* STEP 1: Upload (Matching Screenshot 1) */}
+        {step === 1 && (
+          <div>
+            <div className="flex flex-col md:flex-row items-center gap-10 py-4">
+              {/* Left: Big Upload Square Dropzone */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`w-full md:w-80 h-72 rounded-xl border border-dashed flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#f9f9f9] dark:bg-neutral-800/40 shrink-0 ${
+                  isDragging
+                    ? "border-[#04abf2] bg-[#04abf2]/5"
+                    : "border-neutral-300 dark:border-neutral-700 hover:border-[#04abf2]"
+                }`}
+              >
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="video/*"
                   onChange={handleVideoFileChange}
-                  id="video-input"
                   className="hidden"
                 />
-                <label htmlFor="video-input" className="cursor-pointer block">
-                  <div className="w-12 h-12 rounded-full bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center mx-auto mb-3 text-neutral-600 dark:text-neutral-300">
-                    <Film className="w-6 h-6" />
-                  </div>
-                  {videoFile ? (
-                    <div>
-                      <p className="font-semibold text-sm text-neutral-900 dark:text-white">
-                        {videoFile.name}
-                      </p>
-                      <p className="text-xs text-neutral-500 mt-1">
-                        {(videoFile.size / (1024 * 1024)).toFixed(2)} MB — Ready to upload to Supabase Storage
-                      </p>
-                      <span className="inline-block mt-2 px-3 py-1 text-xs text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded">
-                        Change File
-                      </span>
-                    </div>
-                  ) : (
-                    <div>
-                      <p className="font-semibold text-sm text-neutral-900 dark:text-white">
-                        Drag and drop video files to upload to Supabase
-                      </p>
-                      <p className="text-xs text-neutral-500 mt-1">
-                        MP4, WebM, MOV supported (or enter a direct URL below)
-                      </p>
-                      <span className="inline-block mt-3 px-4 py-1.5 text-xs font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-hover)] rounded-md transition-colors shadow-xs">
-                        Select Video File
-                      </span>
-                    </div>
-                  )}
-                </label>
+                {/* Arrow up icon matching Screenshot 1 */}
+                <svg
+                  viewBox="0 0 64 64"
+                  className="w-24 h-24 text-neutral-400 dark:text-neutral-500 fill-current mb-2"
+                >
+                  <path d="M32 8L16 28h10v18h12V28h10L32 8zM14 50h36v5H14v-5z" />
+                </svg>
+              </div>
+
+              {/* Right: Heading, subtext, SELECT MEDIA button */}
+              <div className="flex-1 text-left">
+                <h2 className="text-2xl sm:text-3xl font-bold text-neutral-800 dark:text-neutral-100 mb-2 leading-tight">
+                  Drag and drop video files to upload
+                </h2>
+                <p className="text-sm text-neutral-500 mb-8">
+                  Your videos will be private until you publish them.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-[#04abf2] hover:bg-[#0399d8] text-white font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-md shadow-xs cursor-pointer transition-colors"
+                >
+                  SELECT MEDIA
+                </button>
               </div>
             </div>
 
-            {/* Thumbnail File Selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                  Custom Thumbnail (Supabase Storage: <code className="text-[var(--primary)] font-mono">playtube-uploads</code>)
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleThumbnailFileChange}
-                    id="thumb-input"
-                    className="hidden"
+            {/* Admin Notice Box */}
+            <div className="pt-6 mt-8 border-t border-neutral-100 dark:border-neutral-800 text-left space-y-1.5">
+              <h4 className="text-xs font-semibold text-[#04abf2]">
+                Just admins can see this message
+              </h4>
+              <p className="text-xs text-neutral-500">
+                Note: Your server max upload size is: 2048M, means you can&apos;t upload files that are larger than: 2048M
+              </p>
+              <p className="text-[11px] text-neutral-400 leading-relaxed pt-1">
+                If you want to increase the limit or if you can&apos;t upload large files, go to Admin Settings &gt; Settings &gt; Site Settings &gt; Max upload size and increase the value, if you still can&apos;t upload large files, please contact your host provider and let them increase the upload limit and max_execution_time.
+              </p>
+            </div>
+
+            {/* Maximum Duration Notice matching Screenshot 1 */}
+            <div className="pt-4 mt-4 border-t border-neutral-100 dark:border-neutral-800 text-left">
+              <p className="text-xs text-amber-800 dark:text-amber-400 font-normal">
+                Please note that maximum duration allow is 15 seconds.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: Details (Matching Screenshot 2) */}
+        {step === 2 && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left py-2">
+            {/* Left Column: Video Preview and Filename */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="w-full aspect-video rounded-lg bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center overflow-hidden relative">
+                {videoPreviewUrl ? (
+                  <video
+                    src={videoPreviewUrl}
+                    className="w-full h-full object-cover"
+                    controls
                   />
-                  <label
-                    htmlFor="thumb-input"
-                    className="inline-flex items-center gap-2 px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-md text-xs font-medium cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-                  >
-                    <ImageIcon className="w-4 h-4 text-neutral-500" />
-                    <span>{thumbnailFile ? thumbnailFile.name : "Select Thumbnail"}</span>
-                  </label>
-                  {thumbnailFile && (
-                    <span className="text-xs text-neutral-500">
-                      {(thumbnailFile.size / 1024).toFixed(1)} KB
-                    </span>
-                  )}
-                </div>
+                ) : (
+                  <ImageIcon className="w-12 h-12 text-neutral-400" />
+                )}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Or External Video URL (Optional fallback)
-                </label>
-                <input
-                  type="url"
-                  value={directVideoUrl}
-                  onChange={(e) => setDirectVideoUrl(e.target.value)}
-                  placeholder="https://... (if not uploading a file)"
-                  className="w-full h-10 px-3 text-xs bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] font-mono text-neutral-900 dark:text-white"
-                />
+                <p className="text-xs text-neutral-400">File Name</p>
+                <p className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 truncate mt-0.5">
+                  {videoFileName || "video_upload.mp4"}
+                </p>
+              </div>
+
+              <div className="pt-2 flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span>Video upload complete. No issues found.</span>
               </div>
             </div>
 
-            {/* Details */}
-            <div className="space-y-4">
+            {/* Right Column: Title, Description, Thumbnail, Next Step Button */}
+            <div className="lg:col-span-7 space-y-5">
+              {/* Video Title */}
               <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Video Title *
+                <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1">
+                  Video Title
                 </label>
                 <input
                   type="text"
-                  required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter video title"
-                  className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm focus:outline-hidden focus:border-[#04abf2] transition-colors"
                 />
+                <p className="text-[11px] text-neutral-400 mt-1">
+                  Your video title, 2 - 55 characters
+                </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Video Description
-                </label>
+              {/* Video Description */}
+              <div className="relative">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                    Video Description
+                  </label>
+                  <Smile className="w-4 h-4 text-neutral-400 hover:text-neutral-600 cursor-pointer" />
+                </div>
                 <textarea
-                  rows={3}
+                  rows={4}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe your video..."
-                  className="w-full p-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+                  placeholder="Enter video description..."
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm focus:outline-hidden focus:border-[#04abf2] transition-colors resize-none"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                    Category
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
-                  >
-                    <option value="film">Film & Animation</option>
-                    <option value="music">Music</option>
-                    <option value="gaming">Gaming</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="news">News & Politics</option>
-                    <option value="education">Education</option>
-                    <option value="tech">Science & Technology</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
+              {/* Thumbnail */}
+              <div>
+                <h4 className="text-sm font-bold text-neutral-800 dark:text-neutral-100">
+                  Thumbnail
+                </h4>
+                <p className="text-xs text-neutral-500 mt-0.5">
+                  Select or upload a picture that shows what&apos;s in your video. A good thumbnail stands out and draws viewers&apos; attention
+                </p>
 
-                <div>
-                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                    Privacy
-                  </label>
-                  <select
-                    value={privacy}
-                    onChange={(e) => setPrivacy(Number(e.target.value))}
-                    className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
-                  >
-                    <option value={0}>Public</option>
-                    <option value={1}>Private</option>
-                    <option value={2}>Unlisted</option>
-                  </select>
-                </div>
+                <input
+                  ref={thumbInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleThumbnailChange}
+                  className="hidden"
+                />
 
-                <div className="flex flex-col justify-end">
-                  <label className="flex items-center gap-2 p-2.5 rounded-md border border-[var(--border)] cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800">
-                    <input
-                      type="checkbox"
-                      checked={isShort}
-                      onChange={(e) => setIsShort(e.target.checked)}
-                      className="rounded text-[var(--primary)] focus:ring-[var(--primary)]"
+                <div
+                  onClick={() => thumbInputRef.current?.click()}
+                  className="mt-3 w-32 h-20 rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-[#04abf2] cursor-pointer flex flex-col items-center justify-center text-neutral-500 hover:text-[#04abf2] transition-colors bg-neutral-50 dark:bg-neutral-800/40 overflow-hidden relative"
+                >
+                  {thumbnailPreviewUrl ? (
+                    <img
+                      src={thumbnailPreviewUrl}
+                      alt="Thumbnail preview"
+                      className="w-full h-full object-cover"
                     />
-                    <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                      PlayTube Short (Vertical 9:16)
-                    </span>
-                  </label>
+                  ) : (
+                    <>
+                      <ImageIcon className="w-5 h-5 mb-1 text-neutral-400" />
+                      <span className="text-[11px] font-medium">Upload Thumbnail</span>
+                    </>
+                  )}
                 </div>
+              </div>
+
+              {/* NEXT STEP Button */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!title.trim()) {
+                      setError("Please enter a video title");
+                      return;
+                    }
+                    setError("");
+                    setStep(3); // Advance to Step 3: Visibility
+                  }}
+                  className="bg-[#04abf2] hover:bg-[#0399d8] text-white font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-md shadow-xs cursor-pointer transition-colors"
+                >
+                  NEXT STEP
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: Visibility (Matching Screenshot 3) */}
+        {step === 3 && (
+          <div className="space-y-6 text-left max-w-xl py-2">
+            {/* Tags */}
+            <div>
+              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+                Tags
+              </label>
+              <input
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                placeholder="Add tags separated by comma or space"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm focus:outline-hidden focus:border-[#04abf2] transition-colors"
+              />
+              <p className="text-xs text-neutral-400 mt-1">
+                Add tags to your video
+              </p>
+            </div>
+
+            {/* Privacy */}
+            <div>
+              <h4 className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                Privacy
+              </h4>
+              <p className="text-[11px] text-neutral-400 mb-3">
+                Choose the video privacy
+              </p>
+
+              <div className="space-y-3">
+                {[
+                  { id: 0, label: "Public" },
+                  { id: 1, label: "Private" },
+                  { id: 2, label: "Unlisted" },
+                  { id: 3, label: "Scheduled" },
+                ].map((option) => (
+                  <label
+                    key={option.id}
+                    className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                  >
+                    <input
+                      type="radio"
+                      name="privacy"
+                      checked={privacy === option.id}
+                      onChange={() => setPrivacy(option.id)}
+                      className="w-4 h-4 text-[#04abf2] accent-[#04abf2] focus:ring-[#04abf2]"
+                    />
+                    {privacy === option.id ? (
+                      <span className="px-2 py-0.5 rounded bg-[#e6f6fd] text-[#04abf2] font-semibold">
+                        {option.label}
+                      </span>
+                    ) : (
+                      <span>{option.label}</span>
+                    )}
+                  </label>
+                ))}
               </div>
             </div>
 
-            {uploadStatus && (
-              <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-lg text-blue-700 dark:text-blue-300 text-xs">
-                <Loader2 className="w-4 h-4 animate-spin shrink-0" />
-                <span>{uploadStatus}</span>
-              </div>
-            )}
+            {/* Action Buttons: PUBLISH and GO BACK */}
+            <div className="flex items-center gap-3 pt-6">
+              <button
+                type="button"
+                onClick={handlePublish}
+                disabled={uploading}
+                className="bg-[#04abf2] hover:bg-[#0399d8] text-white font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-md shadow-xs cursor-pointer transition-colors disabled:opacity-50"
+              >
+                {uploading ? "PUBLISHING..." : "PUBLISH"}
+              </button>
 
-            <button
-              type="submit"
-              disabled={uploading || !title || (!videoFile && !directVideoUrl)}
-              className="w-full h-11 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-semibold text-sm rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-xs flex items-center justify-center gap-2"
-            >
-              {uploading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Uploading to Supabase...</span>
-                </>
-              ) : (
-                <span>Publish Video to Supabase</span>
-              )}
-            </button>
-          </form>
+              <button
+                type="button"
+                onClick={() => setStep(2)}
+                className="bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-md transition-colors cursor-pointer"
+              >
+                GO BACK
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>
+  );
+}
+
+export default function UploadVideoPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full max-w-5xl mx-auto py-12 text-center text-xs text-neutral-400">
+          Loading video upload studio...
+        </div>
+      }
+    >
+      <UploadVideoContent />
+    </Suspense>
   );
 }

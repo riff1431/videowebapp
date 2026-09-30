@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { authClient } from "@/lib/auth/auth-client";
+import { ShortsIcon } from "@/components/common/ShortsIcon";
 import {
   Search,
   Plus,
@@ -445,7 +446,7 @@ export function Sidebar({
     { href: "/movies", label: "Movies", icon: Clapperboard },
     { href: "/stock-videos", label: "Stock Videos", icon: Video },
     { href: "/popular-channels", label: "Popular Channels", icon: Star },
-    { href: "/shorts", label: "Shorts", icon: Sparkles },
+    { href: "/shorts", label: "Shorts", icon: ShortsIcon },
     { href: "/help", label: "Help", icon: HelpCircle },
   ];
 
@@ -632,7 +633,7 @@ export function Sidebar({
             {isCurrent("/shorts") && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
-            <Sparkles className={`w-4 h-4 ${isCurrent("/shorts") ? "text-[#04abf2]" : "text-neutral-500"}`} />
+            <ShortsIcon className={`w-4 h-4 ${isCurrent("/shorts") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Shorts</span>
           </Link>
         </div>

@@ -18,6 +18,7 @@ const uploadVideoSchema = z.object({
   duration: z.string().default("00:00"),
   privacy: z.coerce.number().default(0),
   isShort: z.boolean().default(false),
+  tags: z.string().optional(),
 });
 
 export async function uploadVideoAction(formData: FormData) {
@@ -30,6 +31,7 @@ export async function uploadVideoAction(formData: FormData) {
       thumbnail: formData.get("thumbnail") as string,
       privacy: formData.get("privacy") ? Number(formData.get("privacy")) : 0,
       isShort: formData.get("isShort") === "true",
+      tags: (formData.get("tags") as string) || "",
     };
 
     const parsed = uploadVideoSchema.parse(rawData);
@@ -51,10 +53,11 @@ export async function uploadVideoAction(formData: FormData) {
         description: parsed.description || "",
         categoryId: parsed.categoryId,
         videoLocation: parsed.videoLocation,
+        tags: parsed.tags || "",
         thumbnail:
           parsed.thumbnail ||
           "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1280&auto=format&fit=crop&q=80",
-        duration: "03:45",
+        duration: parsed.isShort ? "00:30" : "03:45",
         privacy: parsed.privacy,
         isShort: parsed.isShort,
         videoType: "video/mp4",
@@ -63,6 +66,7 @@ export async function uploadVideoAction(formData: FormData) {
 
     revalidatePath("/");
     revalidatePath("/videos/latest");
+    revalidatePath("/shorts");
     revalidatePath("/admin/videos");
 
     return { success: true, videoId: newVideo.videoId };
