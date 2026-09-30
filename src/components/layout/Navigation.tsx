@@ -437,7 +437,7 @@ export function Sidebar({
   const miniLinks = [
     { href: "/", label: "Home", icon: Video },
     { href: "/history", label: "History", icon: History },
-    { href: "/wallet", label: "Purchases", icon: DollarSign },
+    { href: "/paid-videos", label: "Purchases", icon: DollarSign },
     { href: "/articles", label: "Articles", icon: FileText },
     { href: "/videos/latest", label: "Latest videos", icon: Tv },
     { href: "/videos/trending", label: "Trending", icon: TrendingUp },
@@ -519,14 +519,17 @@ export function Sidebar({
             <span>History</span>
           </Link>
           <Link
-            href="/wallet"
+            href="/paid-videos"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
-              isCurrent("/wallet")
-                ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
+              isCurrent("/paid-videos")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
                 : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
             }`}
           >
-            <DollarSign className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/paid-videos") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <DollarSign className={`w-4 h-4 ${isCurrent("/paid-videos") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Purchases</span>
           </Link>
           <Link
