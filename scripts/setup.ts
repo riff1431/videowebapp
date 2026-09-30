@@ -36,7 +36,7 @@ async function setup() {
         }
       }
 
-      // Ensure Better Auth parity columns and defaults exist
+      // Ensure Better Auth parity columns, defaults, and all parity tables exist
       try {
         await client.query(`
           ALTER TABLE "accounts" 
@@ -46,6 +46,65 @@ async function setup() {
           ALTER TABLE "accounts" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;
           ALTER TABLE "sessions" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;
           ALTER TABLE "verifications" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;
+
+          CREATE TABLE IF NOT EXISTS "articles" (
+            "id" serial PRIMARY KEY NOT NULL,
+            "user_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+            "title" varchar(255) NOT NULL,
+            "description" text NOT NULL,
+            "text" text NOT NULL,
+            "category" varchar(100) DEFAULT 'general',
+            "image" varchar(500) DEFAULT '/upload/photos/d-cover.jpg',
+            "tags" varchar(500) DEFAULT '',
+            "views" integer DEFAULT 0,
+            "shared" integer DEFAULT 0,
+            "active" boolean DEFAULT true,
+            "created_at" timestamp DEFAULT now() NOT NULL,
+            "updated_at" timestamp DEFAULT now() NOT NULL
+          );
+
+          CREATE TABLE IF NOT EXISTS "article_comments" (
+            "id" serial PRIMARY KEY NOT NULL,
+            "user_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+            "article_id" integer NOT NULL REFERENCES "articles"("id") ON DELETE CASCADE,
+            "text" text NOT NULL,
+            "created_at" timestamp DEFAULT now() NOT NULL
+          );
+
+          CREATE TABLE IF NOT EXISTS "transactions" (
+            "id" serial PRIMARY KEY NOT NULL,
+            "user_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+            "type" varchar(50) NOT NULL,
+            "amount" double precision NOT NULL,
+            "currency" varchar(10) DEFAULT 'USD',
+            "status" varchar(50) DEFAULT 'completed',
+            "description" text,
+            "created_at" timestamp DEFAULT now() NOT NULL
+          );
+
+          CREATE TABLE IF NOT EXISTS "messages" (
+            "id" serial PRIMARY KEY NOT NULL,
+            "from_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+            "to_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+            "text" text NOT NULL,
+            "seen" boolean DEFAULT false,
+            "created_at" timestamp DEFAULT now() NOT NULL
+          );
+
+          CREATE TABLE IF NOT EXISTS "activities" (
+            "id" serial PRIMARY KEY NOT NULL,
+            "user_id" integer NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+            "video_id" integer REFERENCES "videos"("id") ON DELETE CASCADE,
+            "type" varchar(50) NOT NULL,
+            "time" timestamp DEFAULT now() NOT NULL
+          );
+
+          CREATE TABLE IF NOT EXISTS "announcements" (
+            "id" serial PRIMARY KEY NOT NULL,
+            "text" text NOT NULL,
+            "active" boolean DEFAULT true,
+            "created_at" timestamp DEFAULT now() NOT NULL
+          );
         `);
       } catch (e: any) {
         // Ignored if already configured
