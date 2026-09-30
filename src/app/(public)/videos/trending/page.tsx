@@ -1,10 +1,9 @@
 import React from "react";
-import Link from "next/link";
 import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { VideoCard } from "@/components/common/VideoCard";
-import { Flame } from "lucide-react";
+import { Video, VideoOff } from "lucide-react";
 
 export const revalidate = 30;
 
@@ -27,26 +26,31 @@ export default async function TrendingPage() {
     })
     .from(videos)
     .innerJoin(users, eq(videos.userId, users.id))
-    .orderBy(desc(videos.views))
+    .where(eq(videos.privacy, 0))
+    .orderBy(desc(videos.views), desc(videos.createdAt))
     .limit(24);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-sky-100 dark:bg-sky-950 text-[var(--primary)] flex items-center justify-center">
-            <Flame className="w-5 h-5 fill-current" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Trending Videos</h1>
-            <p className="text-xs text-neutral-500">The most popular and watched videos right now</p>
-          </div>
+    <div className="w-full">
+      {/* Title Header with Cyan Circle Icon */}
+      <div className="flex items-center gap-2.5 pb-3 mb-10 border-b border-neutral-200/80 dark:border-neutral-800">
+        <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
+          <Video className="w-4 h-4 stroke-[2.2]" />
         </div>
+        <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
+          Trending
+        </h1>
       </div>
 
+      {/* Empty State matching PlayTube Screenshot */}
       {trendingVideos.length === 0 ? (
-        <div className="p-12 text-center bg-white dark:bg-neutral-800 rounded-xl border border-[var(--border)]">
-          <p className="text-neutral-500 text-sm">No trending videos found.</p>
+        <div className="min-h-[55vh] flex flex-col items-center justify-center text-center px-4">
+          <div className="w-24 h-24 rounded-full bg-[#e6f6fd] dark:bg-[#04abf2]/15 flex items-center justify-center text-[#04abf2] mb-5">
+            <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.75]" />
+          </div>
+          <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+            No videos found for now!
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

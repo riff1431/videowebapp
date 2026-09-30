@@ -1,13 +1,38 @@
 import React from "react";
+import Link from "next/link";
 import { db } from "@/db";
 import { videos, users } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and, gte } from "drizzle-orm";
 import { VideoCard } from "@/components/common/VideoCard";
-import { Sparkles } from "lucide-react";
+import { Video, VideoOff, BarChart2, Calendar } from "lucide-react";
 
 export const revalidate = 30;
 
-export default async function TopVideosPage() {
+interface TopVideosPageProps {
+  searchParams?: Promise<{ type?: string }>;
+}
+
+export default async function TopVideosPage({ searchParams }: TopVideosPageProps) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const currentType = resolvedParams.type || "all";
+
+  const conditions = [eq(videos.privacy, 0)];
+  const now = new Date();
+
+  if (currentType === "today") {
+    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    conditions.push(gte(videos.createdAt, dayAgo));
+  } else if (currentType === "this_week") {
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    conditions.push(gte(videos.createdAt, weekAgo));
+  } else if (currentType === "this_month") {
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    conditions.push(gte(videos.createdAt, monthAgo));
+  } else if (currentType === "this_year") {
+    const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+    conditions.push(gte(videos.createdAt, yearAgo));
+  }
+
   const topVideos = await db
     .select({
       id: videos.id,
@@ -26,26 +51,69 @@ export default async function TopVideosPage() {
     })
     .from(videos)
     .innerJoin(users, eq(videos.userId, users.id))
-    .orderBy(desc(videos.views))
+    .where(and(...conditions))
+    .orderBy(desc(videos.views), desc(videos.createdAt))
     .limit(24);
 
+  const filterTabs = [
+    { type: "all", label: "All Time", icon: BarChart2 },
+    { type: "today", label: "Today", icon: Calendar },
+    { type: "this_week", label: "This week", icon: Calendar },
+    { type: "this_month", label: "This month", icon: Calendar },
+    { type: "this_year", label: "This year", icon: Calendar },
+  ];
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-sky-100 dark:bg-sky-950 text-[var(--primary)] flex items-center justify-center">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Top Rated Videos</h1>
-            <p className="text-xs text-neutral-500">Highest rated and most watched videos of all time</p>
-          </div>
+    <div className="w-full">
+      {/* Title Header with Cyan Circle Icon */}
+      <div className="flex items-center gap-2.5 pb-3 mb-6 border-b border-neutral-200/80 dark:border-neutral-800">
+        <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
+          <Video className="w-4 h-4 stroke-[2.2]" />
+        </div>
+        <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
+          Top videos
+        </h1>
+      </div>
+
+      {/* Centered Floating Time Filter Bar (PlayTube Screenshot Parity) */}
+      <div className="flex justify-center mb-10">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-neutral-200/90 dark:border-neutral-800 rounded-xl p-1.5 shadow-xs flex items-center gap-1.5">
+          {filterTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = currentType === tab.type;
+            const href = tab.type === "all" ? "/videos/top" : `/videos/top?type=${tab.type}`;
+
+            return (
+              <Link
+                key={tab.type}
+                href={href}
+                className={`min-w-[68px] sm:min-w-[76px] py-2 px-3 rounded-lg flex flex-col items-center gap-1.5 transition-all text-center ${
+                  isActive
+                    ? "bg-[#dff2fc] dark:bg-[#04abf2]/20 text-[#04abf2] font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                }`}
+              >
+                <Icon
+                  className={`w-4 h-4 ${
+                    isActive ? "text-[#04abf2] stroke-[2.5]" : "text-neutral-500 stroke-[1.75]"
+                  }`}
+                />
+                <span className="text-[11px] whitespace-nowrap leading-tight">{tab.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </div>
 
+      {/* Empty State matching PlayTube Screenshot */}
       {topVideos.length === 0 ? (
-        <div className="p-12 text-center bg-white dark:bg-neutral-800 rounded-xl border border-[var(--border)]">
-          <p className="text-neutral-500 text-sm">No videos found.</p>
+        <div className="min-h-[45vh] flex flex-col items-center justify-center text-center px-4">
+          <div className="w-24 h-24 rounded-full bg-[#e6f6fd] dark:bg-[#04abf2]/15 flex items-center justify-center text-[#04abf2] mb-5">
+            <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.75]" />
+          </div>
+          <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+            No videos found for now!
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
