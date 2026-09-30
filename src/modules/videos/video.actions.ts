@@ -331,10 +331,44 @@ export async function deleteVideoAction(videoId: number) {
   try {
     await db.delete(videos).where(eq(videos.id, videoId));
     revalidatePath("/manage-videos");
+    revalidatePath("/dashboard");
     revalidatePath("/");
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message || "Failed to delete video" };
   }
 }
+
+// ==========================================
+// 8. Delete Comment Action (Creator Studio)
+// ==========================================
+export async function deleteCommentAction(commentId: number) {
+  try {
+    const { auth } = await import("@/lib/auth/auth");
+    const { headers } = await import("next/headers");
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+    const userId = Number(session.user.id);
+    const [c] = await db
+      .select({ id: comments.id, userId: comments.userId, videoUserId: videos.userId })
+      .from(comments)
+      .innerJoin(videos, eq(comments.videoId, videos.id))
+      .where(eq(comments.id, commentId))
+      .limit(1);
+
+    if (!c || (c.userId !== userId && c.videoUserId !== userId)) {
+      return { success: false, error: "Permission denied." };
+    }
+
+    await db.delete(comments).where(eq(comments.id, commentId));
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to delete comment" };
+  }
+}
+
 
