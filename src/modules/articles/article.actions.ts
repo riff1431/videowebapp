@@ -118,3 +118,30 @@ export async function postArticleCommentAction(articleId: number, text: string) 
     return { success: false, error: err.message || "Failed to post comment" };
   }
 }
+
+export async function deleteArticleAction(articleId: number) {
+  try {
+    const { auth } = await import("@/lib/auth/auth");
+    const { headers } = await import("next/headers");
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      return { success: false, error: "Please log in to delete an article." };
+    }
+
+    const userId = Number(session.user.id);
+    await db
+      .delete(articles)
+      .where(and(eq(articles.id, articleId), eq(articles.userId, userId)));
+
+    revalidatePath("/my_articles");
+    revalidatePath("/my-articles");
+    revalidatePath("/articles");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to delete article" };
+  }
+}
+
