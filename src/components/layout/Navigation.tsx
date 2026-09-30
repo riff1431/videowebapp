@@ -345,7 +345,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       <span>Video Studio</span>
                     </Link>
                     <Link
-                      href="/settings"
+                      href="/settings/profile"
                       onClick={() => setUserMenuOpen(false)}
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
@@ -451,9 +451,9 @@ export function Sidebar({
     { href: "/", label: "Home", icon: Video },
     ...(isLoggedIn
       ? [
-          { href: "/history", label: "History", icon: History },
-          { href: "/paid-videos", label: "Purchases", icon: DollarSign },
-        ]
+        { href: "/history", label: "History", icon: History },
+        { href: "/paid-videos", label: "Purchases", icon: DollarSign },
+      ]
       : []),
     { href: "/articles", label: "Articles", icon: FileText },
     { href: "/videos/latest", label: "Latest videos", icon: Video },
@@ -483,8 +483,8 @@ export function Sidebar({
                   href={item.href}
                   title={item.label}
                   className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${active
-                      ? "bg-black/5 dark:bg-white/10 text-[#04abf2]"
-                      : "text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-neutral-900 dark:hover:text-white"
+                    ? "bg-black/5 dark:bg-white/10 text-[#04abf2]"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-neutral-900 dark:hover:text-white"
                     }`}
                 >
                   <Icon className={`w-5 h-5 ${active ? "text-[#04abf2]" : ""}`} />
@@ -508,8 +508,8 @@ export function Sidebar({
           <Link
             href="/"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/")
-                ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/") && (
@@ -524,8 +524,8 @@ export function Sidebar({
               <Link
                 href="/history"
                 className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/history")
-                    ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                    : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+                  ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                  : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
               >
                 {isCurrent("/history") && (
@@ -537,8 +537,8 @@ export function Sidebar({
               <Link
                 href="/paid-videos"
                 className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/paid-videos")
-                    ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                    : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+                  ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                  : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
               >
                 {isCurrent("/paid-videos") && (
@@ -553,8 +553,8 @@ export function Sidebar({
           <Link
             href="/articles"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/articles")
-                ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-neutral-900 dark:text-white bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/articles") && (
@@ -570,8 +570,8 @@ export function Sidebar({
           <Link
             href="/videos/latest"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/videos/latest")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/videos/latest") && (
@@ -583,8 +583,8 @@ export function Sidebar({
           <Link
             href="/videos/trending"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/videos/trending")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/videos/trending") && (
@@ -596,8 +596,8 @@ export function Sidebar({
           <Link
             href="/videos/top"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/videos/top")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/videos/top") && (
@@ -609,8 +609,8 @@ export function Sidebar({
           <Link
             href="/movies"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/movies")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/movies") && (
@@ -622,8 +622,8 @@ export function Sidebar({
           <Link
             href="/stock-videos"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/stock-videos")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/stock-videos") && (
@@ -635,8 +635,8 @@ export function Sidebar({
           <Link
             href="/popular-channels"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/popular-channels")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/popular-channels") && (
@@ -648,8 +648,8 @@ export function Sidebar({
           <Link
             href="/shorts"
             className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${isCurrent("/shorts")
-                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
           >
             {isCurrent("/shorts") && (
@@ -667,11 +667,10 @@ export function Sidebar({
           </p>
           <Link
             href="/contact-us"
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
-              isCurrent("/contact-us")
-                ? "bg-black/5 dark:bg-white/10 text-[#04abf2] font-semibold"
-                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
-            }`}
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isCurrent("/contact-us")
+              ? "bg-black/5 dark:bg-white/10 text-[#04abf2] font-semibold"
+              : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+              }`}
           >
             <HelpCircle className={`w-4 h-4 ${isCurrent("/contact-us") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Help</span>
