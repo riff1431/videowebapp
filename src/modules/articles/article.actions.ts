@@ -28,16 +28,28 @@ export async function createArticleAction(formData: FormData) {
 
     const parsed = createArticleSchema.parse(rawData);
 
-    // Find default author or admin
-    const [user] = await db.select().from(users).limit(1);
-    if (!user) {
-      return { success: false, error: "No user found to associate with article" };
+    let authorId = 1;
+    try {
+      const { auth } = await import("@/lib/auth/auth");
+      const { headers } = await import("next/headers");
+      const session = await auth.api.getSession({
+        headers: await headers(),
+      });
+      if (session?.user?.id) {
+        authorId = Number(session.user.id);
+      } else {
+        const [defaultUser] = await db.select().from(users).limit(1);
+        if (defaultUser) authorId = defaultUser.id;
+      }
+    } catch (e) {
+      const [defaultUser] = await db.select().from(users).limit(1);
+      if (defaultUser) authorId = defaultUser.id;
     }
 
     const [newArticle] = await db
       .insert(articles)
       .values({
-        userId: user.id,
+        userId: authorId,
         title: parsed.title,
         description: parsed.description,
         text: parsed.text,
