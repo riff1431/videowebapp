@@ -7,8 +7,10 @@ import { VideoComments } from "@/components/common/VideoComments";
 import { VideoActionButtons } from "@/components/common/VideoActionButtons";
 import { CheckCircle2 } from "lucide-react";
 import { db } from "@/db";
-import { comments, users, likesDislikes } from "@/db/schema";
+import { comments, users, likesDislikes, watchHistory } from "@/db/schema";
 import { eq, desc, count, and } from "drizzle-orm";
+import { auth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
 
 export interface WatchPageProps {
   params: Promise<{ videoId: string }>;
@@ -20,6 +22,26 @@ export default async function WatchPage({ params }: WatchPageProps) {
 
   if (!video) {
     notFound();
+  }
+
+  // Record watch history for logged-in viewer
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (session?.user?.id) {
+    const viewerId = Number(session.user.id);
+    db.delete(watchHistory)
+      .where(
+        and(eq(watchHistory.userId, viewerId), eq(watchHistory.videoId, video.id))
+      )
+      .then(() => {
+        return db.insert(watchHistory).values({
+          userId: viewerId,
+          videoId: video.id,
+          viewedAt: new Date(),
+        });
+      })
+      .catch(() => {});
   }
 
   const [relatedVideos, [likesCount], [dislikesCount], initialComments] = await Promise.all([

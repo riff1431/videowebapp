@@ -30,7 +30,7 @@ export default async function LikedVideosPage() {
     .limit(20);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-full mx-auto space-y-6">
       <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
         <div className="w-10 h-10 rounded-xl bg-sky-100 dark:bg-sky-950 text-[var(--primary)] flex items-center justify-center">
           <ThumbsUp className="w-5 h-5" />
@@ -50,7 +50,7 @@ export default async function LikedVideosPage() {
           You haven&apos;t liked any videos yet.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
           {likedVideos.map((v) => (
             <VideoCard
               key={v.id}

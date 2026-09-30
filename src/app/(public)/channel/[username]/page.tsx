@@ -269,11 +269,10 @@ export default async function ChannelPage({
               <Link
                 key={t.key}
                 href={t.href}
-                className={`pb-3 border-b-[3px] transition-colors whitespace-nowrap cursor-pointer ${
-                  isActive
+                className={`pb-3 border-b-[3px] transition-colors whitespace-nowrap cursor-pointer ${isActive
                     ? "border-[#04abf2] text-neutral-900 dark:text-white font-semibold"
                     : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 {t.label}
               </Link>
@@ -307,7 +306,7 @@ export default async function ChannelPage({
                 </p>
               </div>
             ) : (
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
                 {tabPlaylists.map((pl) => (
                   <div
                     key={pl.id}
@@ -353,7 +352,7 @@ export default async function ChannelPage({
                 </p>
               </div>
             ) : (
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                 {tabVideos.map((video) => (
                   <VideoCard
                     key={video.id}
@@ -433,7 +432,7 @@ export default async function ChannelPage({
                 </p>
               </div>
             ) : (
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                 {tabVideos.map((video) => (
                   <VideoCard
                     key={video.id}
@@ -547,28 +546,28 @@ export default async function ChannelPage({
                 </h2>
               </div>
 
-            <div>
-              <h3 className="text-xs uppercase font-semibold text-neutral-400 tracking-wider mb-2">
-                Description
-              </h3>
-              <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                {channelUser.about ||
-                  "Welcome to my official PlayTube channel! Subscribe for new releases, updates, and community activities."}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-neutral-100 dark:border-neutral-800 text-xs">
-              <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
-                <Calendar className="w-4 h-4 text-neutral-400" />
-                <span>Joined {new Date().getFullYear()}</span>
+              <div>
+                <h3 className="text-xs uppercase font-semibold text-neutral-400 tracking-wider mb-2">
+                  Description
+                </h3>
+                <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                  {channelUser.about ||
+                    "Welcome to my official PlayTube channel! Subscribe for new releases, updates, and community activities."}
+                </p>
               </div>
-              <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
-                <Eye className="w-4 h-4 text-neutral-400" />
-                <span>Verified Creator Channel</span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-neutral-100 dark:border-neutral-800 text-xs">
+                <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
+                  <Calendar className="w-4 h-4 text-neutral-400" />
+                  <span>Joined {new Date().getFullYear()}</span>
+                </div>
+                <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
+                  <Eye className="w-4 h-4 text-neutral-400" />
+                  <span>Verified Creator Channel</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         )}
       </div>
     </div>

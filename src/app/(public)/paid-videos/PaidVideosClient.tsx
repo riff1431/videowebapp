@@ -86,11 +86,10 @@ export function PaidVideosClient({
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`min-w-[84px] px-4 py-2.5 rounded-xl flex flex-col items-center gap-1.5 text-xs transition-all cursor-pointer ${
-                  isActive
+                className={`min-w-[84px] px-4 py-2.5 rounded-xl flex flex-col items-center gap-1.5 text-xs transition-all cursor-pointer ${isActive
                     ? "bg-[#e6f6fd] dark:bg-[#04abf2]/15 text-[#04abf2] font-semibold shadow-2xs"
                     : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 font-medium"
-                }`}
+                  }`}
               >
                 <Icon className={`w-5 h-5 ${isActive ? "text-[#04abf2]" : "text-neutral-500"}`} />
                 <span>{tab.label}</span>
@@ -111,7 +110,7 @@ export function PaidVideosClient({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
           {currentItems.map((video) => (
             <VideoCard
               key={video.id}

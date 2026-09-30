@@ -87,16 +87,14 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
               <Link
                 key={tab.type}
                 href={href}
-                className={`min-w-[68px] sm:min-w-[76px] py-2 px-3 rounded-lg flex flex-col items-center gap-1.5 transition-all text-center ${
-                  isActive
+                className={`min-w-[68px] sm:min-w-[76px] py-2 px-3 rounded-lg flex flex-col items-center gap-1.5 transition-all text-center ${isActive
                     ? "bg-[#dff2fc] dark:bg-[#04abf2]/20 text-[#04abf2] font-semibold"
                     : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                }`}
+                  }`}
               >
                 <Icon
-                  className={`w-4 h-4 ${
-                    isActive ? "text-[#04abf2] stroke-[2.5]" : "text-neutral-500 stroke-[1.75]"
-                  }`}
+                  className={`w-4 h-4 ${isActive ? "text-[#04abf2] stroke-[2.5]" : "text-neutral-500 stroke-[1.75]"
+                    }`}
                 />
                 <span className="text-[11px] whitespace-nowrap leading-tight">{tab.label}</span>
               </Link>
@@ -116,7 +114,7 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
           {topVideos.map((video) => (
             <VideoCard
               key={video.id}
