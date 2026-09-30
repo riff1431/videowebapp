@@ -28,7 +28,7 @@ export function AdsSettingsClient({ initialConfig }: AdsSettingsClientProps) {
   };
 
   return (
-    <div className="space-y-6 text-neutral-800 dark:text-[#adb5bd] w-full max-w-full font-sans antialiased">
+    <div className="space-y-6 text-neutral-800 dark:text-[#adb5bd] w-full font-sans antialiased">
       {/* Breadcrumb Header */}
       <div>
         <h3 className="text-[22px] font-semibold text-neutral-900 dark:text-white tracking-tight">
@@ -53,7 +53,7 @@ export function AdsSettingsClient({ initialConfig }: AdsSettingsClientProps) {
         <strong>Info:</strong> For more information on how advertisement system works, please visit our <a href="#" className="underline font-semibold">documentation</a> page.
       </div>
 
-      <div className="max-w-2xl">
+      <div className="w-full">
         <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-[#292d33] rounded-lg p-6 shadow-xs">
           <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white mb-6">
             Advertisement Settings
