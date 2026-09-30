@@ -1,7 +1,7 @@
 import React from "react";
 import { db } from "@/db";
-import { siteConfig, categories } from "@/db/schema";
-import { asc } from "drizzle-orm";
+import { siteConfig, categories, languages } from "@/db/schema";
+import { asc, eq } from "drizzle-orm";
 import { GeneralSettingsClient } from "@/components/admin/GeneralSettingsClient";
 
 export const dynamic = "force-dynamic";
@@ -32,18 +32,27 @@ export default async function AdminGeneralSettingsPage() {
         { key: "tech", name: "Science & Technology" },
       ];
 
-  const languages = [
-    { key: "english", name: "English" },
-    { key: "arabic", name: "Arabic" },
-    { key: "dutch", name: "Dutch" },
-    { key: "french", name: "French" },
-    { key: "german", name: "German" },
-    { key: "italian", name: "Italian" },
-    { key: "portuguese", name: "Portuguese" },
-    { key: "russian", name: "Russian" },
-    { key: "spanish", name: "Spanish" },
-    { key: "turkish", name: "Turkish" },
-  ];
+  // Fetch languages from PostgreSQL
+  const dbLanguages = await db
+    .select({ key: languages.iso, name: languages.name })
+    .from(languages)
+    .where(eq(languages.status, "active"))
+    .orderBy(asc(languages.name));
+
+  const availableLanguages = dbLanguages.length > 0
+    ? dbLanguages
+    : [
+        { key: "en", name: "English" },
+        { key: "ar", name: "Arabic" },
+        { key: "nl", name: "Dutch" },
+        { key: "fr", name: "French" },
+        { key: "de", name: "German" },
+        { key: "it", name: "Italian" },
+        { key: "pt", name: "Portuguese" },
+        { key: "ru", name: "Russian" },
+        { key: "es", name: "Spanish" },
+        { key: "tr", name: "Turkish" },
+      ];
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -51,7 +60,7 @@ export default async function AdminGeneralSettingsPage() {
     <GeneralSettingsClient
       initialConfig={configObj}
       categories={availableCategories}
-      languages={languages}
+      languages={availableLanguages}
       appUrl={appUrl}
     />
   );

@@ -448,6 +448,21 @@ export const currencies = pgTable("currencies", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const languages = pgTable("languages", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull().unique(), // e.g. "English", "Arabic", "russian"
+  iso: varchar("iso", { length: 20 }).notNull(), // e.g. "en", "ar", "ru"
+  status: varchar("status", { length: 20 }).default("active").notNull(), // "active" or "disabled"
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const languageKeys = pgTable("language_keys", {
+  id: serial("id").primaryKey(),
+  keyName: varchar("key_name", { length: 255 }).notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+
 
 
 

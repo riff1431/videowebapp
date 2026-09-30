@@ -87,7 +87,8 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Languages",
     icon: Globe,
     subItems: [
-      { title: "Manage Languages", href: "/admin/languages" },
+      { title: "Add New Language & Keys", href: "/admin/add-language" },
+      { title: "Manage Languages", href: "/admin/manage-languages" },
     ],
   },
   {
