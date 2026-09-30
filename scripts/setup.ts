@@ -35,6 +35,21 @@ async function setup() {
           console.warn("[WARN] Migration notice:", migErr.message || migErr);
         }
       }
+
+      // Ensure Better Auth parity columns and defaults exist
+      try {
+        await client.query(`
+          ALTER TABLE "accounts" 
+            ADD COLUMN IF NOT EXISTS "access_token_expires_at" timestamp,
+            ADD COLUMN IF NOT EXISTS "refresh_token_expires_at" timestamp,
+            ADD COLUMN IF NOT EXISTS "scope" text;
+          ALTER TABLE "accounts" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;
+          ALTER TABLE "sessions" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;
+          ALTER TABLE "verifications" ALTER COLUMN "id" SET DEFAULT gen_random_uuid()::text;
+        `);
+      } catch (e: any) {
+        // Ignored if already configured
+      }
     }
 
     client.release();

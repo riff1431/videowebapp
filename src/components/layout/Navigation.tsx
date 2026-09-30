@@ -421,18 +421,72 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   );
 }
 
-export function Sidebar({ isOpen }: { isOpen: boolean }) {
+export function Sidebar({
+  isOpen,
+  isCollapsed = false,
+}: {
+  isOpen: boolean;
+  isCollapsed?: boolean;
+}) {
   const pathname = usePathname();
 
   const isCurrent = (path: string) => pathname === path;
 
+  // Primary links used in mini sidebar mode
+  const miniLinks = [
+    { href: "/", label: "Home", icon: Video },
+    { href: "/history", label: "History", icon: Clock },
+    { href: "/wallet", label: "Purchases", icon: DollarSign },
+    { href: "/articles", label: "Articles", icon: FileText },
+    { href: "/videos/latest", label: "Latest videos", icon: Tv },
+    { href: "/videos/trending", label: "Trending", icon: TrendingUp },
+    { href: "/videos/top", label: "Top videos", icon: BarChart2 },
+    { href: "/movies", label: "Movies", icon: Clapperboard },
+    { href: "/stock-videos", label: "Stock Videos", icon: Video },
+    { href: "/popular-channels", label: "Popular Channels", icon: Users },
+    { href: "/shorts", label: "Shorts", icon: Sparkles },
+    { href: "/help", label: "Help", icon: HelpCircle },
+  ];
+
   return (
     <aside
-      className={`fixed lg:sticky top-14 left-0 z-30 w-60 h-[calc(100vh-3.5rem)] bg-[var(--sidebar-bg)] border-r border-[var(--border)] shrink-0 overflow-y-auto transition-transform duration-200 ease-in-out ${
+      className={`fixed lg:sticky top-14 left-0 z-30 h-[calc(100vh-3.5rem)] bg-[var(--sidebar-bg)] border-r border-[var(--border)] shrink-0 overflow-y-auto overflow-x-hidden transition-[width,transform] duration-200 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      }`}
+      } ${isCollapsed ? "lg:w-16 w-60" : "w-60"}`}
     >
-      <div className="p-3 space-y-6 text-xs">
+      {/* Mini Icon-Only Rail for Collapsed Desktop */}
+      {isCollapsed && (
+        <div className="hidden lg:flex flex-col items-center py-3 space-y-1.5 w-full">
+          {miniLinks.map((item) => {
+            const Icon = item.icon;
+            const active = isCurrent(item.href);
+            return (
+              <div key={item.href} className="relative group w-full flex justify-center">
+                <Link
+                  href={item.href}
+                  title={item.label}
+                  className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
+                    active
+                      ? "bg-black/5 dark:bg-white/10 text-[#04abf2]"
+                      : "text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-neutral-900 dark:hover:text-white"
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${active ? "text-[#04abf2]" : ""}`} />
+                </Link>
+
+                {/* Floating Tooltip */}
+                <div className="pointer-events-none absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-neutral-900 dark:bg-neutral-800 text-white text-[11px] font-medium rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap z-50">
+                  {item.label}
+                  <span className="absolute -left-1 top-1/2 -translate-y-1/2 border-4 border-transparent border-r-neutral-900 dark:border-r-neutral-800" />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Full Expanded Sidebar Menu */}
+      <div className={`${isCollapsed ? "lg:hidden" : "block"} p-3 space-y-6 text-xs w-60`}>
         {/* Top Group */}
         <div className="space-y-1">
           <Link

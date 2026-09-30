@@ -25,7 +25,10 @@ export const auth = betterAuth({
   ].filter(Boolean),
   advanced: {
     database: {
-      generateId: "serial",
+      generateId: ({ model }) => {
+        if (model === "user") return false;
+        return crypto.randomUUID();
+      },
     },
   },
   emailAndPassword: {
