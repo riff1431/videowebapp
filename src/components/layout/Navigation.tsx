@@ -608,23 +608,44 @@ export function Sidebar({
           </Link>
           <Link
             href="/stock-videos"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/stock-videos")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <Video className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/stock-videos") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <Video className={`w-4 h-4 ${isCurrent("/stock-videos") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Stock Videos</span>
           </Link>
           <Link
             href="/popular-channels"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/popular-channels")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <Users className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/popular-channels") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <Users className={`w-4 h-4 ${isCurrent("/popular-channels") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Popular Channels</span>
           </Link>
           <Link
             href="/shorts"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 rounded-md transition-colors"
+            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative ${
+              isCurrent("/shorts")
+                ? "font-semibold text-[#04abf2] bg-black/5 dark:bg-white/5"
+                : "text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5"
+            }`}
           >
-            <Sparkles className="w-4 h-4 text-neutral-500" />
+            {isCurrent("/shorts") && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
+            )}
+            <Sparkles className={`w-4 h-4 ${isCurrent("/shorts") ? "text-[#04abf2]" : "text-neutral-500"}`} />
             <span>Shorts</span>
           </Link>
         </div>

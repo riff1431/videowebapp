@@ -129,6 +129,7 @@ export const videos = pgTable("videos", {
   featured: boolean("featured").default(false),
   monetization: boolean("monetization").default(false),
   price: doublePrecision("price").default(0),
+  license: varchar("license", { length: 100 }).default("Royalty Free License (RF)"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [

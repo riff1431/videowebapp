@@ -64,6 +64,7 @@ async function setup() {
           );
           ALTER TABLE "articles" ALTER COLUMN "image" TYPE text;
           ALTER TABLE "articles" ALTER COLUMN "tags" TYPE text;
+          ALTER TABLE "videos" ADD COLUMN IF NOT EXISTS "license" varchar(100) DEFAULT 'Royalty Free License (RF)';
 
           CREATE TABLE IF NOT EXISTS "article_comments" (
             "id" serial PRIMARY KEY NOT NULL,
