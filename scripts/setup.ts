@@ -54,14 +54,16 @@ async function setup() {
             "description" text NOT NULL,
             "text" text NOT NULL,
             "category" varchar(100) DEFAULT 'general',
-            "image" varchar(500) DEFAULT '/upload/photos/d-cover.jpg',
-            "tags" varchar(500) DEFAULT '',
+            "image" text DEFAULT '/upload/photos/d-cover.jpg',
+            "tags" text DEFAULT '',
             "views" integer DEFAULT 0,
             "shared" integer DEFAULT 0,
             "active" boolean DEFAULT true,
             "created_at" timestamp DEFAULT now() NOT NULL,
             "updated_at" timestamp DEFAULT now() NOT NULL
           );
+          ALTER TABLE "articles" ALTER COLUMN "image" TYPE text;
+          ALTER TABLE "articles" ALTER COLUMN "tags" TYPE text;
 
           CREATE TABLE IF NOT EXISTS "article_comments" (
             "id" serial PRIMARY KEY NOT NULL,

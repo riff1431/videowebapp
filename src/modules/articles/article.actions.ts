@@ -46,6 +46,29 @@ export async function createArticleAction(formData: FormData) {
       if (defaultUser) authorId = defaultUser.id;
     }
 
+    let finalImageUrl = parsed.image || "/upload/photos/d-cover.jpg";
+    if (parsed.image && parsed.image.startsWith("data:image/")) {
+      try {
+        const { writeFileSync, existsSync, mkdirSync } = await import("fs");
+        const { join } = await import("path");
+        const matches = parsed.image.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+        if (matches) {
+          const ext = matches[1] === "jpeg" ? "jpg" : matches[1];
+          const buffer = Buffer.from(matches[2], "base64");
+          const uploadDir = join(process.cwd(), "public", "upload", "photos");
+          if (!existsSync(uploadDir)) {
+            mkdirSync(uploadDir, { recursive: true });
+          }
+          const filename = `article-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+          const filePath = join(uploadDir, filename);
+          writeFileSync(filePath, buffer);
+          finalImageUrl = `/upload/photos/${filename}`;
+        }
+      } catch (fsErr) {
+        console.warn("Failed to write image file to disk, using raw string:", fsErr);
+      }
+    }
+
     const [newArticle] = await db
       .insert(articles)
       .values({
@@ -54,7 +77,7 @@ export async function createArticleAction(formData: FormData) {
         description: parsed.description,
         text: parsed.text,
         category: parsed.category,
-        image: parsed.image || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1280&auto=format&fit=crop&q=80",
+        image: finalImageUrl,
         tags: parsed.tags,
         views: 0,
         shared: 0,
