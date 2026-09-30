@@ -361,7 +361,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       <span>Settings</span>
                     </Link>
                     <Link
-                      href="/advertising"
+                      href="/ads"
                       onClick={() => setUserMenuOpen(false)}
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
