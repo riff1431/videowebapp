@@ -106,11 +106,11 @@ Convert all user-facing content across the website from hardcoded strings to an 
 ---
 
 ## 6. Verification & Testing Checklist
-- [ ] Clicking **Edit** in `/admin/manage-languages` opens `/admin/edit-lang?id=[language]`.
-- [ ] `/admin/edit-lang` displays language keys and values with search and pagination matching screenshots.
-- [ ] Editing a language key value in `/admin/edit-lang` saves successfully to the database.
-- [ ] Modified language value immediately updates on the user-facing website for that language.
-- [ ] Language switching smoothly updates all visible text without full page breakages.
-- [ ] RTL layout correctly applies when Arabic or Hebrew is selected.
-- [ ] Missing key fallback safely displays the fallback text or key rather than crashing or showing blank text.
-- [ ] Zero TypeScript errors (`npm run typecheck`).
+- [x] Clicking **Edit** in `/admin/manage-languages` opens `/admin/edit-lang?id=[language]`.
+- [x] `/admin/edit-lang` displays language keys and values with search and pagination matching screenshots.
+- [x] Editing a language key value in `/admin/edit-lang` saves successfully to the database.
+- [x] Modified language value immediately updates on the user-facing website for that language.
+- [x] Language switching smoothly updates all visible text without full page breakages.
+- [x] RTL layout correctly applies when Arabic, Urdu, Persian, or Hebrew is selected.
+- [x] Missing key fallback safely displays the fallback text or key rather than crashing or showing blank text.
+- [x] Zero TypeScript errors (`npm run typecheck` / `npx tsc --noEmit`).
