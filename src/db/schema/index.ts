@@ -492,9 +492,13 @@ export const monetizationRequests = pgTable("monetization_requests", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-
-
-
-
-
-
+// ==========================================
+// Movies Categories Schema (PlayTube Parity)
+// ==========================================
+export const movieCategories = pgTable("movie_categories", {
+  id: serial("id").primaryKey(),
+  key: varchar("key", { length: 100 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  translations: text("translations").default("{}"), // JSON string of { en: "Action", ar: "...", ... }
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

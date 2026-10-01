@@ -3,6 +3,11 @@
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { bulkUserAction, deleteSingleUserAction } from "@/modules/admin/users.actions";
+import {
+  AdminDateRangePicker,
+  DateRangeOption,
+  filterByDateRange,
+} from "@/components/admin/AdminDateRangePicker";
 
 export interface AdminUserItem {
   id: number;
@@ -12,6 +17,7 @@ export interface AdminUserItem {
   active: boolean | null;
   isPro: boolean | null;
   ipAddress: string | null;
+  createdAt?: Date;
 }
 
 interface ManageUsersClientProps {
@@ -22,6 +28,8 @@ interface ManageUsersClientProps {
 export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClientProps) {
   const [usersList, setUsersList] = useState<AdminUserItem[]>(initialUsers);
   const [search, setSearch] = useState("");
+  const [dateRange, setDateRange] = useState<DateRangeOption>("All");
+  const [customRange, setCustomRange] = useState<{ start: Date; end: Date } | undefined>();
   const [memberFilter, setMemberFilter] = useState<"all" | "free" | "pro">("all");
   const [onlineFilter, setOnlineFilter] = useState<"all" | "online" | "offline">("all");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -29,7 +37,9 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
   const [, startTransition] = useTransition();
 
   // Filtered users
-  const filtered = usersList.filter((u) => {
+  const dateFiltered = filterByDateRange(usersList, dateRange, customRange);
+
+  const filtered = dateFiltered.filter((u) => {
     const matchesSearch =
       u.id.toString().includes(search.toLowerCase()) ||
       u.username.toLowerCase().includes(search.toLowerCase()) ||
@@ -133,21 +143,18 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
 
       {/* Main Card */}
       <div className="bg-white dark:bg-[#22252a] border border-neutral-200 dark:border-[#292d33] rounded-lg shadow-xs overflow-hidden">
-        {/* Card Header with All Button */}
+        {/* Card Header with All Date Range Button */}
         <div className="p-5 border-b border-neutral-200 dark:border-[#292d33] flex items-center justify-between">
           <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white">
             Manage & Edit Users ({onlineCount} Online Users)
           </h6>
-          <button
-            onClick={() => {
-              setSearch("");
-              setMemberFilter("all");
-              setOnlineFilter("all");
+          <AdminDateRangePicker
+            value={dateRange}
+            onChange={(val, custom) => {
+              setDateRange(val);
+              setCustomRange(custom);
             }}
-            className="px-6 py-1.5 border border-neutral-300 dark:border-[#2f343b] text-neutral-700 dark:text-neutral-300 text-xs font-semibold rounded hover:bg-neutral-50 dark:hover:bg-[#181a1d] transition-colors cursor-pointer"
-          >
-            All
-          </button>
+          />
         </div>
 
         {/* Filters and Search Bar matching Screenshot 1/2 */}

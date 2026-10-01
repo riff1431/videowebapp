@@ -129,6 +129,7 @@ const MENU_ITEMS: MenuItem[] = [
     icon: Film,
     subItems: [
       { title: "Manage Movies", href: "/admin/movies" },
+      { title: "Manage Categories", href: "/admin/movies-categories" },
     ],
   },
   {

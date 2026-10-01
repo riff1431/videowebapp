@@ -20,6 +20,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+import {
+  AdminDateRangePicker,
+  DateRangeOption,
+  filterByDateRange,
+} from "@/components/admin/AdminDateRangePicker";
+
 export interface AdminVideoItem {
   id: number;
   videoId: string;
@@ -51,6 +57,8 @@ export function ManageVideosClient({
 }: ManageVideosClientProps) {
   const [videosList, setVideosList] = useState<AdminVideoItem[]>(initialVideos);
   const [search, setSearch] = useState("");
+  const [dateRange, setDateRange] = useState<DateRangeOption>("All");
+  const [customRange, setCustomRange] = useState<{ start: Date; end: Date } | undefined>();
   const [sourceFilter, setSourceFilter] = useState("all");
   const [limitFilter, setLimitFilter] = useState("50");
   const [privacyFilter, setPrivacyFilter] = useState("all");
@@ -70,8 +78,10 @@ export function ManageVideosClient({
   // Single delete confirm state
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
-  // Filter videos
-  const filtered = videosList.filter((v) => {
+  // Filter videos by date range and criteria
+  const dateFiltered = filterByDateRange(videosList, dateRange, customRange);
+
+  const filtered = dateFiltered.filter((v) => {
     // Keyword, ID, Title
     const matchesKeyword =
       !search ||
@@ -256,20 +266,14 @@ export function ManageVideosClient({
           <h6 className="text-sm font-bold text-neutral-800 dark:text-white tracking-wide uppercase">
             Manage & Edit Videos
           </h6>
-          <button
-            onClick={() => {
-              setSearch("");
-              setSourceFilter("all");
-              setLimitFilter("50");
-              setPrivacyFilter("all");
-              setCategoryFilter("0");
-              setTypeFilter("all");
+          <AdminDateRangePicker
+            value={dateRange}
+            onChange={(val, custom) => {
+              setDateRange(val);
+              setCustomRange(custom);
               setCurrentPage(1);
             }}
-            className="px-6 py-1.5 border border-neutral-300 dark:border-[#2f343b] text-neutral-700 dark:text-neutral-300 text-xs font-semibold rounded hover:bg-neutral-50 dark:hover:bg-[#181a1d] transition-colors cursor-pointer"
-          >
-            All
-          </button>
+          />
         </div>
 
         {/* Filters and Search Bar matching Screenshot 1 */}

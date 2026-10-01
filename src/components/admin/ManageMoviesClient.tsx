@@ -2,68 +2,68 @@
 
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
-import {
-  deleteCommentAction,
-  bulkDeleteCommentsAction,
-} from "@/modules/admin/videos.actions";
-import { Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { deleteMovieAction, bulkDeleteMoviesAction } from "@/modules/admin/movies.actions";
+import { Edit, Trash2, Home, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
+
 import {
   AdminDateRangePicker,
   DateRangeOption,
   filterByDateRange,
 } from "@/components/admin/AdminDateRangePicker";
 
-export interface AdminCommentItem {
+export interface AdminMovieItem {
   id: number;
-  text: string;
+  videoId: string;
+  title: string;
+  movieRelease: string | null;
   createdAt: Date;
-  video: {
-    id: number;
-    videoId: string;
-    title: string;
-  } | null;
-  user: {
-    id: number;
-    username: string;
-    avatar: string | null;
-  } | null;
 }
 
-interface ManageCommentsClientProps {
-  initialComments: AdminCommentItem[];
+interface ManageMoviesClientProps {
+  initialMovies: AdminMovieItem[];
 }
 
-export function ManageCommentsClient({
-  initialComments,
-}: ManageCommentsClientProps) {
-  const [commentsList, setCommentsList] = useState<AdminCommentItem[]>(initialComments);
+export function ManageMoviesClient({ initialMovies }: ManageMoviesClientProps) {
+  const [moviesList, setMoviesList] = useState<AdminMovieItem[]>(initialMovies);
   const [search, setSearch] = useState("");
   const [dateRange, setDateRange] = useState<DateRangeOption>("All");
   const [customRange, setCustomRange] = useState<{ start: Date; end: Date } | undefined>();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [sortField, setSortField] = useState<"id" | "title">("id");
+  const [sortAsc, setSortAsc] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const limitPerPage = 50;
 
-  // Filter by date range and search query
-  const dateFiltered = filterByDateRange(commentsList, dateRange, customRange);
+  // Filter by Keyword and Date Range
+  const dateFiltered = filterByDateRange(moviesList, dateRange, customRange);
 
-  const filtered = dateFiltered.filter((c) => {
+  const filtered = dateFiltered.filter((m) => {
     if (!search.trim()) return true;
     const query = search.toLowerCase();
     return (
-      c.id.toString() === query ||
-      c.text.toLowerCase().includes(query) ||
-      c.video?.title.toLowerCase().includes(query) ||
-      c.video?.videoId.toLowerCase().includes(query) ||
-      c.user?.username.toLowerCase().includes(query)
+      m.id.toString() === query ||
+      m.title.toLowerCase().includes(query) ||
+      m.videoId.toLowerCase().includes(query) ||
+      (m.movieRelease && m.movieRelease.toLowerCase().includes(query))
     );
   });
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / limitPerPage));
-  const paginated = filtered.slice(
+  // Sort
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortField === "id") {
+      return sortAsc ? a.id - b.id : b.id - a.id;
+    } else {
+      return sortAsc
+        ? a.title.localeCompare(b.title)
+        : b.title.localeCompare(a.title);
+    }
+  });
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / limitPerPage));
+  const paginated = sorted.slice(
     (currentPage - 1) * limitPerPage,
     currentPage * limitPerPage
   );
@@ -72,7 +72,7 @@ export function ManageCommentsClient({
     if (selectedIds.length === paginated.length && paginated.length > 0) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(paginated.map((c) => c.id));
+      setSelectedIds(paginated.map((m) => m.id));
     }
   };
 
@@ -84,83 +84,77 @@ export function ManageCommentsClient({
 
   const handleBulkDelete = () => {
     if (selectedIds.length === 0) {
-      alert("Please select at least one comment");
+      alert("Please select at least one movie");
       return;
     }
 
     if (
       !confirm(
-        `Are you sure you want to delete ${selectedIds.length} selected comment(s)?`
+        `Are you sure that you want to remove the selected ${selectedIds.length} movie(s)?`
       )
     ) {
       return;
     }
 
     startTransition(async () => {
-      const res = await bulkDeleteCommentsAction(selectedIds);
+      const res = await bulkDeleteMoviesAction(selectedIds);
       if (res.success) {
-        setCommentsList((prev) => prev.filter((c) => !selectedIds.includes(c.id)));
+        setMoviesList((prev) => prev.filter((m) => !selectedIds.includes(m.id)));
         setSelectedIds([]);
       } else {
-        alert(res.error || "Failed to delete comments");
+        alert(res.error || "Failed to delete movies");
       }
     });
   };
 
   const handleSingleDelete = (id: number) => {
     startTransition(async () => {
-      const res = await deleteCommentAction(id);
+      const res = await deleteMovieAction(id);
       if (res.success) {
-        setCommentsList((prev) => prev.filter((c) => c.id !== id));
+        setMoviesList((prev) => prev.filter((m) => m.id !== id));
         setDeleteConfirmId(null);
       } else {
-        alert(res.error || "Failed to delete comment");
+        alert(res.error || "Failed to delete movie");
       }
     });
   };
 
-  const formatDate = (date: Date) => {
-    try {
-      const d = new Date(date);
-      const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-      ];
-      const month = months[d.getMonth()];
-      const day = String(d.getDate()).padStart(2, "0");
-      const year = d.getFullYear();
-      return `${month}-${day}-${year}`;
-    } catch {
-      return "N/A";
+  const toggleSort = (field: "id" | "title") => {
+    if (sortField === field) {
+      setSortAsc(!sortAsc);
+    } else {
+      setSortField(field);
+      setSortAsc(true);
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Header and Breadcrumbs */}
+      {/* Header and Breadcrumb matching Screenshot 2 */}
       <div>
         <h3 className="text-xl font-bold text-neutral-800 dark:text-white">
-          Manage Video Comments
+          Manage Movies
         </h3>
         <nav className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1.5 font-medium">
-          <Link href="/admin" className="text-[#04abf2] hover:underline">
-            Admin Panel
+          <Link href="/admin" className="text-[#04abf2] hover:underline flex items-center gap-1">
+            <Home className="w-3.5 h-3.5" />
+            <span>Admin Panel</span>
           </Link>
-          <span>/</span>
-          <span>Videos</span>
-          <span>/</span>
-          <span className="text-neutral-700 dark:text-neutral-200">
-            Manage Video Comments
+          <span>&gt;</span>
+          <span>Movies</span>
+          <span>&gt;</span>
+          <span className="text-neutral-700 dark:text-neutral-200 font-semibold">
+            Manage Movies
           </span>
         </nav>
       </div>
 
-      {/* Main Card */}
+      {/* Main Card matching Screenshot 2 */}
       <div className="bg-white dark:bg-[#1f2227] border border-neutral-200 dark:border-[#292d33] rounded-sm shadow-xs">
-        {/* Card Header matching screenshot */}
+        {/* Card Header */}
         <div className="p-4 border-b border-neutral-200 dark:border-[#292d33] flex items-center justify-between">
           <h6 className="text-sm font-bold text-neutral-800 dark:text-white tracking-wide uppercase">
-            Manage Video Comments
+            Manage Movies
           </h6>
           <AdminDateRangePicker
             value={dateRange}
@@ -172,15 +166,18 @@ export function ManageCommentsClient({
           />
         </div>
 
-        {/* Search Bar matching screenshot */}
+        {/* Search for Keyword */}
         <div className="p-5 pb-4 space-y-1">
+          <label className="text-xs text-neutral-600 dark:text-neutral-300 font-medium block">
+            Search for Keyword
+          </label>
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex-1 min-w-[240px]">
+            <div className="w-80 max-w-full">
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Keyword, ID, Title"
+                placeholder=""
                 className="w-full bg-white dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
               />
             </div>
@@ -193,7 +190,7 @@ export function ManageCommentsClient({
           </div>
         </div>
 
-        {/* Table matching screenshot */}
+        {/* Table matching Screenshot 2 */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
@@ -208,20 +205,30 @@ export function ManageCommentsClient({
                     className="rounded border-neutral-300 dark:border-neutral-700 text-[#04abf2] focus:ring-0 cursor-pointer"
                   />
                 </th>
-                <th className="py-3 px-4 w-16 border-r border-neutral-200 dark:border-[#292d33]">
-                  ID
+                <th
+                  onClick={() => toggleSort("id")}
+                  className="py-3 px-4 w-20 border-r border-neutral-200 dark:border-[#292d33] cursor-pointer select-none"
+                >
+                  <div className="flex items-center gap-1">
+                    <span>ID</span>
+                    {sortField === "id" && (
+                      sortAsc ? <ChevronUp className="w-3.5 h-3.5 text-neutral-800 dark:text-white" /> : <ChevronDown className="w-3.5 h-3.5 text-neutral-800 dark:text-white" />
+                    )}
+                  </div>
+                </th>
+                <th
+                  onClick={() => toggleSort("title")}
+                  className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33] cursor-pointer select-none"
+                >
+                  <div className="flex items-center gap-1">
+                    <span>NAME</span>
+                    {sortField === "title" && (
+                      sortAsc ? <ChevronUp className="w-3.5 h-3.5 text-neutral-800 dark:text-white" /> : <ChevronDown className="w-3.5 h-3.5 text-neutral-800 dark:text-white" />
+                    )}
+                  </div>
                 </th>
                 <th className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33]">
-                  TEXT
-                </th>
-                <th className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33]">
-                  VIDEO
-                </th>
-                <th className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33]">
-                  ARTICLES
-                </th>
-                <th className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33]">
-                  POSTED ON
+                  RELEASE
                 </th>
                 <th className="py-3 px-6 text-center">ACTION</th>
               </tr>
@@ -230,64 +237,60 @@ export function ManageCommentsClient({
               {paginated.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={5}
                     className="py-10 text-center text-neutral-500 dark:text-neutral-400 text-xs"
                   >
-                    No comments found
+                    No movies found
                   </td>
                 </tr>
               ) : (
-                paginated.map((c) => {
-                  const isChecked = selectedIds.includes(c.id);
+                paginated.map((m) => {
+                  const isChecked = selectedIds.includes(m.id);
 
                   return (
                     <tr
-                      key={c.id}
+                      key={m.id}
                       className="hover:bg-neutral-50 dark:hover:bg-[#181a1d] transition-colors"
                     >
                       <td className="py-3 px-4 text-center border-r border-neutral-200 dark:border-[#292d33]">
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={() => toggleSelectOne(c.id)}
+                          onChange={() => toggleSelectOne(m.id)}
                           className="rounded border-neutral-300 dark:border-neutral-700 text-[#04abf2] focus:ring-0 cursor-pointer"
                         />
                       </td>
                       <td className="py-3 px-4 font-mono text-neutral-600 dark:text-neutral-400 border-r border-neutral-200 dark:border-[#292d33]">
-                        {c.id}
-                      </td>
-                      <td className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33] max-w-xs">
-                        <p className="text-neutral-800 dark:text-neutral-200 line-clamp-2">
-                          {c.text}
-                        </p>
+                        {m.id}
                       </td>
                       <td className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33]">
-                        {c.video ? (
-                          <Link
-                            href={`/watch/${c.video.videoId}`}
-                            target="_blank"
-                            className="text-[#04abf2] hover:underline flex items-center gap-1 font-medium truncate max-w-[200px]"
-                            title={c.video.title}
-                          >
-                            {c.video.title || c.video.videoId}
-                          </Link>
-                        ) : (
-                          <span className="text-neutral-400">-</span>
-                        )}
+                        <Link
+                          href={`/watch/${m.videoId}`}
+                          target="_blank"
+                          className="text-[#04abf2] hover:underline font-medium"
+                        >
+                          {m.title}
+                        </Link>
                       </td>
-                      <td className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33] text-neutral-400">
-                        -
-                      </td>
-                      <td className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33] text-neutral-600 dark:text-neutral-400 font-mono text-[11px]">
-                        {formatDate(c.createdAt)}
+                      <td className="py-3 px-6 border-r border-neutral-200 dark:border-[#292d33] text-neutral-600 dark:text-neutral-400">
+                        {m.movieRelease || "N/A"}
                       </td>
                       <td className="py-3 px-6 text-center">
-                        <button
-                          onClick={() => setDeleteConfirmId(c.id)}
-                          className="px-2.5 py-1 bg-red-500 hover:bg-red-600 text-white text-[11px] font-semibold rounded inline-flex items-center gap-1 transition-colors cursor-pointer"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" /> Delete
-                        </button>
+                        <div className="flex items-center justify-center gap-1.5">
+                          <Link
+                            href={`/edit-video/${m.id}`}
+                            target="_blank"
+                            className="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-semibold rounded flex items-center gap-1 transition-colors"
+                          >
+                            <Edit className="w-3.5 h-3.5" /> Edit
+                          </Link>
+                          <button
+                            onClick={() => setDeleteConfirmId(m.id)}
+                            className="px-2.5 py-1 bg-red-500 hover:bg-red-600 text-white text-[11px] font-semibold rounded flex items-center gap-1 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" /> Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -297,11 +300,11 @@ export function ManageCommentsClient({
           </table>
         </div>
 
-        {/* Footer / Pagination & Bulk Delete matching screenshot */}
+        {/* Footer / Pagination & Bulk Delete */}
         <div className="p-4 border-t border-neutral-200 dark:border-[#292d33] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="text-xs text-neutral-500 dark:text-neutral-400">
             Showing {paginated.length > 0 ? (currentPage - 1) * limitPerPage + 1 : 0} to{" "}
-            {Math.min(currentPage * limitPerPage, filtered.length)} of {filtered.length} entries
+            {Math.min(currentPage * limitPerPage, sorted.length)} of {sorted.length} entries
           </div>
 
           <div className="flex items-center gap-1">
@@ -339,15 +342,14 @@ export function ManageCommentsClient({
           </div>
         </div>
 
-        {/* Bulk Delete Button matching screenshot */}
+        {/* Bulk Delete Button matching Screenshot */}
         <div className="p-4 bg-neutral-50/50 dark:bg-[#181a1d]/40 border-t border-neutral-200 dark:border-[#292d33]">
           <button
             onClick={handleBulkDelete}
             disabled={selectedIds.length === 0 || isPending}
-            className="px-5 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-xs font-semibold rounded transition-colors shadow-xs cursor-pointer flex items-center gap-1.5"
+            className="px-5 py-2 bg-[#04abf2] hover:bg-[#0396d5] disabled:opacity-50 text-white text-xs font-semibold rounded transition-colors shadow-xs cursor-pointer"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            Delete Selected {selectedIds.length > 0 && `(${selectedIds.length})`}
+            {isPending ? "Deleting..." : `Delete Selected ${selectedIds.length > 0 ? `(${selectedIds.length})` : ""}`}
           </button>
         </div>
       </div>
@@ -357,10 +359,10 @@ export function ManageCommentsClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white dark:bg-[#1f2227] border border-neutral-200 dark:border-[#292d33] rounded-lg max-w-sm w-full shadow-2xl overflow-hidden p-5 space-y-4">
             <h5 className="font-bold text-sm text-neutral-800 dark:text-white">
-              Delete Comment?
+              Delete Movie?
             </h5>
             <p className="text-xs text-neutral-600 dark:text-neutral-300">
-              Are you sure you want to delete this comment? This action cannot be undone.
+              Are you sure you want to delete this movie?
             </p>
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
