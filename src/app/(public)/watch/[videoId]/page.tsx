@@ -11,6 +11,7 @@ import { comments, users, likesDislikes, watchHistory } from "@/db/schema";
 import { eq, desc, count, and } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
+import { getServerTranslations } from "@/lib/translations/server";
 
 export interface WatchPageProps {
   params: Promise<{ videoId: string }>;
@@ -23,6 +24,8 @@ export default async function WatchPage({ params }: WatchPageProps) {
   if (!video) {
     notFound();
   }
+
+  const { t } = await getServerTranslations();
 
   // Record watch history for logged-in viewer
   const session = await auth.api.getSession({
@@ -120,7 +123,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
                 <span>{video.user.name || video.user.username}</span>
                 {video.user.verified && <CheckCircle2 className="w-4 h-4 text-blue-500" />}
               </Link>
-              <div className="text-xs text-neutral-500">Channel</div>
+              <div className="text-xs text-neutral-500">{t("channel", "Channel")}</div>
             </div>
           </div>
 
@@ -134,7 +137,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
           {/* Description & Metadata */}
           <div className="bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-3 text-xs space-y-1">
             <div className="font-semibold text-neutral-800 dark:text-neutral-200">
-              {(video.views || 0).toLocaleString()} views
+              {(video.views || 0).toLocaleString()} {t("views", "views")}
             </div>
             {video.description && (
               <p className="text-neutral-600 dark:text-neutral-400 whitespace-pre-line leading-relaxed">
@@ -154,7 +157,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
       {/* Related Videos Rail */}
       <div className="space-y-4">
         <h2 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
-          Up Next
+          {t("up_next", "Up Next")}
         </h2>
         <div className="space-y-3">
           {relatedVideos

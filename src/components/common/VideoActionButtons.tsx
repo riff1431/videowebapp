@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ThumbsUp, ThumbsDown, Share2, Bookmark, Bell, Check, Flag } from "lucide-react";
 import { toggleLikeVideoAction, toggleSubscribeAction } from "@/modules/videos/video.actions";
 import { reportVideoAction } from "@/modules/admin/reports.actions";
+import { useTranslation } from "@/providers/language-provider";
 
 interface VideoActionButtonsProps {
   videoDbId: number;
@@ -18,6 +19,7 @@ export function VideoActionButtons({
   initialLikes = 0,
   initialDislikes = 0,
 }: VideoActionButtonsProps) {
+  const { t } = useTranslation();
   const [likes, setLikes] = useState(initialLikes);
   const [dislikes, setDislikes] = useState(initialDislikes);
   const [userVote, setUserVote] = useState<1 | 2 | null>(null);
@@ -106,7 +108,11 @@ export function VideoActionButtons({
             }`}
           >
             <Bell className="w-3.5 h-3.5" />
-            <span>{isSubscribed ? "Subscribed" : "Subscribe"}</span>
+            <span>
+              {isSubscribed
+                ? t("subscribed", "Subscribed")
+                : t("subscribe", "Subscribe")}
+            </span>
           </button>
         </div>
 
@@ -144,7 +150,7 @@ export function VideoActionButtons({
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-[var(--border)] text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Share2 className="w-3.5 h-3.5" />}
-            <span>{copied ? "Copied" : "Share"}</span>
+            <span>{copied ? t("copied", "Copied") : t("share", "Share")}</span>
           </button>
 
           {/* Save / Watch Later Button */}
@@ -157,17 +163,17 @@ export function VideoActionButtons({
             }`}
           >
             <Bookmark className="w-3.5 h-3.5" />
-            <span>{isSaved ? "Saved" : "Save"}</span>
+            <span>{isSaved ? t("saved", "Saved") : t("save", "Save")}</span>
           </button>
 
           {/* Report Video / Copyright Button */}
           <button
             onClick={() => setReportModalOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-[var(--border)] text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-red-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
-            title="Report this video"
+            title={t("report", "Report this video")}
           >
             <Flag className="w-3.5 h-3.5" />
-            <span>Report</span>
+            <span>{t("report", "Report")}</span>
           </button>
         </div>
       </div>

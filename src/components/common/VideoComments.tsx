@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { MessageSquare, Send, CheckCircle2 } from "lucide-react";
 import { addCommentAction } from "@/modules/videos/video.actions";
+import { useTranslation } from "@/providers/language-provider";
 
 interface CommentItem {
   id: number;
@@ -21,6 +22,7 @@ interface VideoCommentsProps {
 }
 
 export function VideoComments({ videoId, initialComments = [] }: VideoCommentsProps) {
+  const { t } = useTranslation();
   const [commentList, setCommentList] = useState<CommentItem[]>(initialComments);
   const [inputVal, setInputVal] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,7 +61,7 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
       <div className="flex items-center gap-2">
         <MessageSquare className="w-5 h-5 text-[var(--primary)]" />
         <h3 className="text-base font-bold text-neutral-900 dark:text-white">
-          Comments ({commentList.length})
+          {t("comments", "Comments")} ({commentList.length})
         </h3>
       </div>
 
@@ -69,7 +71,7 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
           type="text"
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
-          placeholder="Add a public comment..."
+          placeholder={t("write_your_comment", "Write your comment..")}
           className="flex-1 text-xs bg-neutral-50 dark:bg-neutral-800 border border-[var(--border)] rounded-md px-4 py-2.5 focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
         />
         <button
@@ -78,7 +80,7 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
           className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-50 text-white font-medium text-xs px-4 py-2.5 rounded-md transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer shadow-xs"
         >
           <Send className="w-3.5 h-3.5" />
-          <span>Post</span>
+          <span>{t("publish", "Post")}</span>
         </button>
       </form>
 
@@ -86,7 +88,7 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
       <div className="space-y-4 pt-2">
         {commentList.length === 0 ? (
           <p className="text-xs text-neutral-400 py-4 text-center">
-            No comments yet. Be the first to start the conversation!
+            {t("no_comments_found", "No comments yet. Be the first to start the conversation!")}
           </p>
         ) : (
           commentList.map((c) => (
