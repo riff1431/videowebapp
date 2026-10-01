@@ -80,7 +80,10 @@ export default function ChangeSiteDesignPage() {
     startTransition(async () => {
       const res = await saveSiteDesignSettingsAction({ nightMode });
       if (res.success) {
-        setNotice({ type: "success", text: res.message || "Settings saved successfully!" });
+        setNotice({ type: "success", text: res.message || "Settings saved successfully! Reloading..." });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         setNotice({ type: "error", text: res.message || "Failed to save settings" });
       }

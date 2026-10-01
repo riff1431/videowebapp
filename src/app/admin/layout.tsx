@@ -231,7 +231,7 @@ const MENU_ITEMS: MenuItem[] = [
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, designSettings } = useTheme();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -419,13 +419,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           <Link href="/admin" className="flex items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src={designSettings?.logo || "/logo.png"}
               alt="playtube"
               className="h-7 w-auto block dark:hidden"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo-light.png"
+              src={designSettings?.lightLogo || "/logo-light.png"}
               alt="playtube"
               className="h-7 w-auto hidden dark:block"
             />

@@ -49,7 +49,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const createMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, designSettings, canToggle } = useTheme();
 
   // Better Auth live session hook
   const { data: session } = authClient.useSession();
@@ -75,6 +75,9 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
       window.location.href = `/search?keyword=${encodeURIComponent(keyword.trim())}`;
     }
   };
+
+  const logoSrc = designSettings?.logo || "/logo.png";
+  const lightLogoSrc = designSettings?.lightLogo || "/logo-light.png";
 
   return (
     <header className="sticky top-0 z-40 w-full h-14 bg-[var(--header-bg)] border-b border-[var(--border)] px-4 flex items-center justify-between transition-colors">
@@ -102,7 +105,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         <Link href="/" className="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
+            src={logoSrc}
             alt="playtube"
             className="h-7 w-auto dark:hidden"
             onError={(e) => {
@@ -111,7 +114,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo-light.png"
+            src={lightLogoSrc}
             alt="playtube"
             className="h-7 w-auto hidden dark:block"
             onError={(e) => {
@@ -266,14 +269,16 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                     </div>
                   </div>
 
-                  {/* Mode Switcher (Day / Night) */}
-                  <button
-                    onClick={toggleTheme}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
-                  >
-                    <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
-                    <span>Mode</span>
-                  </button>
+                  {/* Mode Switcher (Day / Night - only visible if toggleable) */}
+                  {canToggle && (
+                    <button
+                      onClick={toggleTheme}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
+                    >
+                      <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
+                      <span>Mode</span>
+                    </button>
+                  )}
 
                   {/* PlayTube User Actions */}
                   <div className="py-1">
@@ -400,13 +405,15 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
               ) : (
                 <>
                   {/* Logged Out Dropdown */}
-                  <button
-                    onClick={toggleTheme}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
-                  >
-                    <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
-                    <span>Mode</span>
-                  </button>
+                  {canToggle && (
+                    <button
+                      onClick={toggleTheme}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
+                    >
+                      <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
+                      <span>Mode</span>
+                    </button>
+                  )}
                   <Link
                     href="/login"
                     onClick={() => setUserMenuOpen(false)}
