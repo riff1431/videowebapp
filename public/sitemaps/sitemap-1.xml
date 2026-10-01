@@ -2,49 +2,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://localhost:3000</loc>
-    <lastmod>2026-10-01T07:41:57.945Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/explore</loc>
-    <lastmod>2026-10-01T07:41:57.946Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/trending</loc>
-    <lastmod>2026-10-01T07:41:57.946Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/articles</loc>
-    <lastmod>2026-10-01T07:41:57.946Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/popular_channels</loc>
-    <lastmod>2026-10-01T07:41:57.946Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/terms</loc>
-    <lastmod>2026-10-01T07:41:57.946Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/privacy</loc>
-    <lastmod>2026-10-01T07:41:57.946Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/contact-us</loc>
-    <lastmod>2026-10-01T07:41:57.946Z</lastmod>
+    <lastmod>2026-10-01T08:17:31.159Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

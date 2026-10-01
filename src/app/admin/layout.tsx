@@ -177,7 +177,10 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Pages",
     icon: FileCode,
     subItems: [
-      { title: "Manage Custom Pages", href: "/admin/pages" },
+      { title: "Manage Custom Pages", href: "/admin/manage-custom-pages" },
+      { title: "Manage Pages", href: "/admin/manage-pages" },
+      { title: "Manage FAQs", href: "/admin/manage-faqs" },
+      { title: "Manage Pages SEO", href: "/admin/seo" },
     ],
   },
   {
@@ -235,7 +238,12 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         item.subItems?.some(
           (sub) =>
             sub.href === pathname ||
-            sub.children?.some((child) => child.href === pathname)
+            sub.children?.some((child) => child.href === pathname) ||
+            (sub.href === "/admin/manage-custom-pages" &&
+              (pathname === "/admin/add-new-custom-page" ||
+                pathname === "/admin/edit-custom-page")) ||
+            (sub.href === "/admin/manage-pages" &&
+              pathname === "/admin/edit-terms-pages")
         )
       ) {
         setOpenSections((prev) => ({ ...prev, [item.title]: true }));
@@ -345,7 +353,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                     );
                   }
 
-                  const isSubActive = pathname === sub.href;
+                  const isSubActive =
+                    pathname === sub.href ||
+                    (sub.href === "/admin/manage-custom-pages" &&
+                      (pathname === "/admin/add-new-custom-page" ||
+                        pathname === "/admin/edit-custom-page")) ||
+                    (sub.href === "/admin/manage-pages" &&
+                      pathname === "/admin/edit-terms-pages");
                   return (
                     <Link
                       key={sub.title}

@@ -547,3 +547,30 @@ export const proPayments = pgTable("payments", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// ==========================================
+// Custom Pages, Terms Pages & FAQs Schema (PlayTube Parity)
+// ==========================================
+export const customPages = pgTable("custom_pages", {
+  id: serial("id").primaryKey(),
+  pageName: varchar("page_name", { length: 150 }).notNull().unique(),
+  pageTitle: varchar("page_title", { length: 255 }).notNull(),
+  pageContent: text("page_content").notNull(),
+  pageType: integer("page_type").default(1).notNull(), // 1: include background and header, 0: empty page
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const faqs = pgTable("faqs", {
+  id: serial("id").primaryKey(),
+  question: varchar("question", { length: 500 }).notNull(),
+  answer: text("answer").notNull(),
+  time: timestamp("time").defaultNow().notNull(),
+});
+
+export const termsPages = pgTable("terms_pages", {
+  id: serial("id").primaryKey(),
+  type: varchar("type", { length: 100 }).notNull().unique(), // terms_of_use_page, privacy_policy_page, about_page, refund_terms_page
+  enabled: integer("enabled").default(1).notNull(), // 1: enabled, 0: disabled
+  translations: text("translations").default("{}").notNull(), // JSON string map { english: "...", arabic: "...", ... }
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
