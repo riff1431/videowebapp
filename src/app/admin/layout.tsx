@@ -184,7 +184,7 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Sitemap",
     icon: Network,
     subItems: [
-      { title: "Generate Sitemap", href: "/admin/sitemap" },
+      { title: "Create Sitemap", href: "/admin/sitemap" },
     ],
   },
   {
@@ -331,7 +331,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                                     }
                                   }}
                                   className={`relative block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${isChildActive
-                                    ? "text-[#04abf2] font-semibold"
+                                    ? "text-[#04abf2] font-semibold after:content-[''] after:absolute after:right-[-9px] after:top-1/2 after:-translate-y-1/2 after:border-y-[8px] after:border-y-transparent after:border-r-[8px] after:border-r-[#f4f5fd] dark:after:border-r-[#1c1e22] z-10"
                                     : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
                                     }`}
                                 >
@@ -356,7 +356,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                         }
                       }}
                       className={`relative block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${isSubActive
-                        ? "text-[#04abf2] font-semibold"
+                        ? "text-[#04abf2] font-semibold after:content-[''] after:absolute after:right-[-9px] after:top-1/2 after:-translate-y-1/2 after:border-y-[8px] after:border-y-transparent after:border-r-[8px] after:border-r-[#f4f5fd] dark:after:border-r-[#1c1e22] z-10"
                         : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
                         }`}
                     >

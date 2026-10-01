@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://localhost:3000/articles/read/analog-warmth-in-digital-audio-tape-saturation-tubes-and-harmonics_5</loc>
+    <lastmod>2026-09-30T06:25:03.742Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/articles/read/real-time-volumetric-lighting-in-unreal-engine-5-lumen-vs-path-tracing_6</loc>
+    <lastmod>2026-09-30T06:25:03.850Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/articles/read/the-architecture-of-real-time-video-streaming-from-rtmp-to-webrtc-hls_2</loc>
+    <lastmod>2026-09-30T06:25:03.405Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/articles/read/open-source-in-hollywood-vfx-why-studios-are-adopting-blender-openusd_3</loc>
+    <lastmod>2026-09-30T06:25:03.510Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/articles/read/filming-the-aurora-borealis-cold-weather-camera-gear-exposure-techniques_4</loc>
+    <lastmod>2026-09-30T06:25:03.629Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
