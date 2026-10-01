@@ -44,7 +44,8 @@ async function main() {
         id, type, price, featured_videos, verified_badge, discount, image, night_image, color, description, status, time, time_count, max_upload, features
       ) VALUES (
         1, 'PRO', 10, 1, 1, 0, '', '', '#2216C5', 'Standard Pro Membership package with all features unlocked.', 1, 'month', 1, '96000000', '{"can_use_pro_google":"pro"}'
-      )
+      );
+    `);
   }
 
   // Ensure sequence is properly synchronized

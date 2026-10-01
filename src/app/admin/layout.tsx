@@ -38,7 +38,9 @@ import {
   User,
   X,
   Database,
-  DollarSign
+  DollarSign,
+  Cloud,
+  Info
 } from "lucide-react";
 
 interface SubMenuItem {
@@ -163,14 +165,7 @@ const MENU_ITEMS: MenuItem[] = [
       { title: "Themes", href: "/admin/themes" },
     ],
   },
-  {
-    title: "Tools",
-    icon: Wrench,
-    subItems: [
-      { title: "System Status", href: "/admin/system-status" },
-      { title: "Backup & Restore", href: "/admin/backup" },
-    ],
-  },
+
   {
     title: "Reports",
     icon: Flag,
@@ -201,10 +196,13 @@ const MENU_ITEMS: MenuItem[] = [
   },
   {
     title: "Backup",
-    icon: Database,
-    subItems: [
-      { title: "Backup Database", href: "/admin/backup" },
-    ],
+    icon: Cloud,
+    href: "/admin/backup",
+  },
+  {
+    title: "System Status",
+    icon: Info,
+    href: "/admin/system-status",
   },
 ];
 
@@ -275,7 +273,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 }
               }}
               className={`relative flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${isActive
-                ? "text-[#04abf2] bg-[var(--admin-bg)] font-semibold after:content-[''] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:border-y-[5px] after:border-y-transparent after:border-r-[6px] after:border-r-[#04abf2]"
+                ? "text-[#04abf2] bg-neutral-100 dark:bg-white/[0.08] font-semibold after:content-[''] after:absolute after:right-[-9px] after:top-1/2 after:-translate-y-1/2 after:border-y-[10px] after:border-y-transparent after:border-r-[10px] after:border-r-[#f4f5fd] dark:after:border-r-[#1c1e22] z-10"
                 : "text-[var(--admin-text-main)] hover:bg-[var(--admin-card-hover)]"
                 }`}
             >
