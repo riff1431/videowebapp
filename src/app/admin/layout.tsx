@@ -170,7 +170,8 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Reports",
     icon: Flag,
     subItems: [
-      { title: "Video Reports", href: "/admin/reports" },
+      { title: "Manage video reports", href: "/admin/manage-video-reports" },
+      { title: "Manage Copyright Reports", href: "/admin/copy_report" },
     ],
   },
   {

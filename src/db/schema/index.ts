@@ -574,3 +574,30 @@ export const termsPages = pgTable("terms_pages", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// ==========================================
+// Reports & Copyright Reports Schema (PlayTube Parity)
+// ==========================================
+export const reports = pgTable("reports", {
+  id: serial("id").primaryKey(),
+  videoId: integer("video_id").default(0).notNull(),
+  articleId: integer("article_id").default(0).notNull(),
+  adId: integer("ad_id").default(0).notNull(),
+  commentId: integer("comment_id").default(0).notNull(),
+  replyId: integer("reply_id").default(0).notNull(),
+  profileId: integer("profile_id").default(0).notNull(),
+  userId: integer("user_id").default(0).notNull(),
+  text: text("text"),
+  time: timestamp("time").defaultNow().notNull(),
+  seen: integer("seen").default(0).notNull(),
+  type: varchar("type", { length: 100 }).default("video").notNull(),
+});
+
+export const copyrightReports = pgTable("copyright_report", {
+  id: serial("id").primaryKey(),
+  videoId: integer("video_id").default(0).notNull(),
+  userId: integer("user_id").default(0).notNull(),
+  text: text("text"),
+  time: timestamp("time").defaultNow().notNull(),
+});
+
+
