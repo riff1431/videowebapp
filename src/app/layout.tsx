@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AppShell } from "@/components/layout/AppShell";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { CustomDesignInjector } from "@/components/theme/CustomDesignInjector";
 
 export const metadata: Metadata = {
   title: "PlayTube - Video Sharing Platform",
@@ -15,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      
+      <head>
+        <CustomDesignInjector />
+      </head>
       <body className="antialiased bg-[var(--background)] text-[var(--foreground)]">
         <ThemeProvider>
           <AppShell>{children}</AppShell>

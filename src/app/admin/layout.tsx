@@ -162,7 +162,9 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Design",
     icon: Palette,
     subItems: [
-      { title: "Themes", href: "/admin/themes" },
+      { title: "Themes", href: "/admin/manage-themes" },
+      { title: "Update Website Design", href: "/admin/change-site-desgin" },
+      { title: "Custom Design", href: "/admin/custom-design" },
     ],
   },
 
