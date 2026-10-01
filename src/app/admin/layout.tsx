@@ -152,7 +152,8 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Pro System",
     icon: Crown,
     subItems: [
-      { title: "Pro Settings", href: "/admin/pro-settings" },
+      { title: "Pro System Settings", href: "/admin/prosys-settings" },
+      { title: "Recent Payments", href: "/admin/payments" },
     ],
   },
   {

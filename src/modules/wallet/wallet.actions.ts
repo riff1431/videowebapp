@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { users, transactions } from "@/db/schema";
+import { users, transactions, proPayments } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth/auth";
@@ -324,9 +324,20 @@ export async function upgradeToProAction(planName: string, price: number) {
       description: `Upgraded to PlayTube ${planName} Membership`,
     });
 
+    const now = new Date();
+    const dateStr = `${now.getMonth() + 1}/${now.getFullYear()}`;
+    await db.insert(proPayments).values({
+      userId: user.id,
+      type: `pro_${planName.toLowerCase()}`,
+      amount: price,
+      date: dateStr,
+      expire: "month",
+    });
+
     revalidatePath("/go-pro");
     revalidatePath("/wallet");
     revalidatePath("/settings");
+    revalidatePath("/admin/payments");
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message || "Upgrade failed." };

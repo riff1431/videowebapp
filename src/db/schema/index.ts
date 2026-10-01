@@ -514,3 +514,36 @@ export const movieCategories = pgTable("movie_categories", {
   translations: text("translations").default("{}"), // JSON string of { en: "Action", ar: "...", ... }
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// ==========================================
+// Pro System & Packages Schema (PlayTube Parity)
+// ==========================================
+export const managePro = pgTable("manage_pro", {
+  id: serial("id").primaryKey(),
+  type: varchar("type", { length: 100 }).notNull().default(""), // Package name e.g. "Pro"
+  price: doublePrecision("price").default(0).notNull(),
+  featuredVideos: integer("featured_videos").default(0).notNull(), // 0 or 1
+  verifiedBadge: integer("verified_badge").default(0).notNull(), // 0 or 1
+  discount: integer("discount").default(0).notNull(), // Percentage discount
+  image: text("image").default(""), // Light mode icon
+  nightImage: text("night_image").default(""), // Dark mode icon
+  color: varchar("color", { length: 50 }).default("#2216C5").notNull(),
+  description: text("description").default(""),
+  status: integer("status").default(1).notNull(), // 1: enabled, 0: disabled
+  time: varchar("time", { length: 20 }).default("month").notNull(), // day, week, month, year, unlimited
+  timeCount: integer("time_count").default(1).notNull(),
+  maxUpload: varchar("max_upload", { length: 100 }).default("96000000").notNull(),
+  features: text("features").default("{}"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const proPayments = pgTable("payments", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").default(0).notNull(),
+  type: varchar("type", { length: 200 }).default("pro").notNull(),
+  amount: doublePrecision("amount").default(0).notNull(),
+  date: varchar("date", { length: 100 }).default("").notNull(), // e.g. "10/2026"
+  expire: varchar("expire", { length: 30 }).default("").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+

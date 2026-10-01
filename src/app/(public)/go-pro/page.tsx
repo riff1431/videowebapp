@@ -1,52 +1,60 @@
 import React from "react";
 import Link from "next/link";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users, managePro } from "@/db/schema";
 import { Check, Crown, Zap, Shield, Sparkles, UploadCloud, CheckCircle2 } from "lucide-react";
 import { upgradeToProAction } from "@/modules/wallet/wallet.actions";
+import { eq, asc } from "drizzle-orm";
 
 export const revalidate = 0; // Dynamic status
 
-const PRO_PACKAGES = [
-  {
-    id: "star",
-    name: "Star",
-    price: 19,
-    period: "Monthly",
-    color: "#04abf2",
-    featuredVideos: "5 Featured Videos",
-    maxUpload: "1 GB Max File Upload",
-    badge: true,
-    discount: null,
-  },
-  {
-    id: "hot",
-    name: "Hot",
-    price: 49,
-    period: "3 Months",
-    color: "#f59e0b",
-    featuredVideos: "15 Featured Videos",
-    maxUpload: "5 GB Max File Upload",
-    badge: true,
-    discount: "Save 15%",
-  },
-  {
-    id: "ultimate",
-    name: "Ultimate",
-    price: 99,
-    period: "Yearly",
-    color: "#8b5cf6",
-    featuredVideos: "Unlimited Featured Videos",
-    maxUpload: "Unlimited Max Upload",
-    badge: true,
-    discount: "Best Value (Save 40%)",
-  },
-];
-
 export default async function GoProPage() {
-  const [user] = await db.select().from(users).limit(1);
+  const [user, dbPackages] = await Promise.all([
+    db.select().from(users).limit(1).then((rows) => rows[0]),
+    db
+      .select()
+      .from(managePro)
+      .where(eq(managePro.status, 1))
+      .orderBy(asc(managePro.price)),
+  ]);
+
   const isPro = user?.isPro || false;
   const currentWallet = user?.wallet || 0;
+
+  const proPackages =
+    dbPackages.length > 0
+      ? dbPackages.map((p) => ({
+          id: p.id,
+          name: p.type,
+          price: p.price,
+          period: p.timeCount > 1 ? `${p.timeCount} ${p.time}s` : p.time,
+          color: p.color || "#04abf2",
+          featuredVideos:
+            p.featuredVideos > 0
+              ? `${p.featuredVideos} Featured Videos`
+              : "Standard Video Discovery",
+          maxUpload:
+            p.maxUpload === "1000000000000"
+              ? "Unlimited Max Upload"
+              : `${Math.round(parseInt(p.maxUpload || "96000000", 10) / 1000000)} MB Max Upload`,
+          badge: p.verifiedBadge === 1,
+          discount: p.discount > 0 ? `Save ${p.discount}%` : null,
+          description: p.description,
+        }))
+      : [
+          {
+            id: 1,
+            name: "Pro",
+            price: 10,
+            period: "month",
+            color: "#2216C5",
+            featuredVideos: "Featured Videos",
+            maxUpload: "96 MB Max Upload",
+            badge: true,
+            discount: null,
+            description: "Standard Pro Membership",
+          },
+        ];
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -73,7 +81,7 @@ export default async function GoProPage() {
 
       {/* Packages Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {PRO_PACKAGES.map((pkg) => {
+        {proPackages.map((pkg) => {
           async function handleUpgrade() {
             "use server";
             await upgradeToProAction(pkg.name, pkg.price);
@@ -83,7 +91,7 @@ export default async function GoProPage() {
             <div
               key={pkg.id}
               className={`bg-white dark:bg-neutral-900 border ${
-                pkg.id === "ultimate"
+                pkg.discount
                   ? "border-[var(--primary)] ring-2 ring-[var(--primary)]/20 shadow-xl"
                   : "border-[var(--border)] shadow-xs"
               } rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative group hover:shadow-lg transition-all`}
