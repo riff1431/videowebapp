@@ -41,11 +41,17 @@ import {
   DollarSign
 } from "lucide-react";
 
+interface SubMenuItem {
+  title: string;
+  href?: string;
+  children?: { title: string; href: string }[];
+}
+
 interface MenuItem {
   title: string;
   icon: React.ElementType;
   href?: string;
-  subItems?: { title: string; href: string }[];
+  subItems?: SubMenuItem[];
 }
 
 const MENU_ITEMS: MenuItem[] = [
@@ -106,7 +112,16 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Videos",
     icon: Video,
     subItems: [
-      { title: "Manage Videos", href: "/admin/videos" },
+      { title: "Manage Videos", href: "/admin/manage-videos" },
+      { title: "Manage Video Comments", href: "/admin/manage-comments" },
+      {
+        title: "Import Videos",
+        children: [
+          { title: "Import From YouTube", href: "/admin/import-from-youtube" },
+          { title: "Import From Dailymotion", href: "/admin/import-from-dailymotion" },
+          { title: "Import From Twitch", href: "/admin/import-from-twitch" },
+        ],
+      },
     ],
   },
   {
@@ -214,8 +229,21 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Auto expand the section containing current pathname
     for (const item of MENU_ITEMS) {
-      if (item.subItems?.some((sub) => sub.href === pathname)) {
+      if (
+        item.subItems?.some(
+          (sub) =>
+            sub.href === pathname ||
+            sub.children?.some((child) => child.href === pathname)
+        )
+      ) {
         setOpenSections((prev) => ({ ...prev, [item.title]: true }));
+        // Also open nested section if any
+        const nested = item.subItems.find((sub) =>
+          sub.children?.some((child) => child.href === pathname)
+        );
+        if (nested) {
+          setOpenSections((prev) => ({ ...prev, [nested.title]: true }));
+        }
       }
     }
   }, [pathname]);
@@ -242,8 +270,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                   setOpenMobile(false);
                 }
               }}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${isActive
-                ? "text-[#04abf2] bg-[var(--admin-bg)] font-semibold"
+              className={`relative flex items-center gap-3 px-3 py-2.5 rounded-md font-medium transition-colors ${isActive
+                ? "text-[#04abf2] bg-[var(--admin-bg)] font-semibold after:content-[''] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:border-y-[5px] after:border-y-transparent after:border-r-[6px] after:border-r-[#04abf2]"
                 : "text-[var(--admin-text-main)] hover:bg-[var(--admin-card-hover)]"
                 }`}
             >
@@ -273,23 +301,67 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
             {isOpen && (
               <div className="pl-9 pr-2 py-1 space-y-1">
-                {item.subItems.map((sub) => (
-                  <Link
-                    key={sub.title}
-                    href={sub.href}
-                    onClick={() => {
-                      if (isMobileSheet) {
-                        setOpenMobile(false);
-                      }
-                    }}
-                    className={`block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${pathname === sub.href
-                      ? "text-[#04abf2] font-semibold"
-                      : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
-                      }`}
-                  >
-                    {sub.title}
-                  </Link>
-                ))}
+                {item.subItems.map((sub) => {
+                  if (sub.children) {
+                    const isSubOpen = openSections[sub.title] ?? sub.children.some((c) => c.href === pathname);
+                    return (
+                      <div key={sub.title} className="space-y-1">
+                        <button
+                          onClick={() => toggleSection(sub.title)}
+                          className="w-full flex items-center justify-between py-1.5 px-2 rounded-sm text-[11px] text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)] transition-colors cursor-pointer"
+                        >
+                          <span>{sub.title}</span>
+                          <span className="text-[10px] font-bold">
+                            {isSubOpen ? "-" : "+"}
+                          </span>
+                        </button>
+                        {isSubOpen && (
+                          <div className="pl-3 border-l border-neutral-200 dark:border-neutral-800 space-y-1">
+                            {sub.children.map((child) => {
+                              const isChildActive = pathname === child.href;
+                              return (
+                                <Link
+                                  key={child.title}
+                                  href={child.href}
+                                  onClick={() => {
+                                    if (isMobileSheet) {
+                                      setOpenMobile(false);
+                                    }
+                                  }}
+                                  className={`relative block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${isChildActive
+                                    ? "text-[#04abf2] font-semibold"
+                                    : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
+                                    }`}
+                                >
+                                  {child.title}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  const isSubActive = pathname === sub.href;
+                  return (
+                    <Link
+                      key={sub.title}
+                      href={sub.href || "#"}
+                      onClick={() => {
+                        if (isMobileSheet) {
+                          setOpenMobile(false);
+                        }
+                      }}
+                      className={`relative block py-1.5 px-2 rounded-sm text-[11px] transition-colors ${isSubActive
+                        ? "text-[#04abf2] font-semibold"
+                        : "text-[var(--admin-text-muted)] hover:text-[var(--admin-text-main)]"
+                        }`}
+                    >
+                      {sub.title}
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
