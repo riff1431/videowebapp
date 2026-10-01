@@ -7,9 +7,12 @@ import { authClient } from "@/lib/auth/auth-client";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 
+import { getSwitchedAccountsAction } from "@/modules/auth/switch-account.actions";
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isAddAccount = searchParams.get("type") === "add_account";
   const redirectUrl = searchParams.get("redirect") || "/";
   const { t } = useTranslation();
 
@@ -42,6 +45,9 @@ function LoginForm() {
       if (res?.error) {
         setError(res.error.message || t("invalid_username_or_password", "Invalid username or password"));
       } else {
+        // Synchronize new account session into pt_switched_accounts
+        await getSwitchedAccountsAction();
+
         router.push(redirectUrl);
         router.refresh();
       }
