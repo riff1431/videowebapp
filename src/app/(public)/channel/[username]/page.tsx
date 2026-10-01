@@ -31,6 +31,7 @@ import {
   Heart,
   MessageCircle,
 } from "lucide-react";
+import { ChannelSubscribeButton } from "@/components/channels/ChannelSubscribeButton";
 
 interface ChannelPageProps {
   params: Promise<{
@@ -76,6 +77,21 @@ export default async function ChannelPage({
     .select({ value: count() })
     .from(subscriptions)
     .where(eq(subscriptions.channelId, channelUser.id));
+
+  // Check if current user is subscribed to this channel
+  const [existingSub] = currentUserId
+    ? await db
+      .select()
+      .from(subscriptions)
+      .where(
+        and(
+          eq(subscriptions.subscriberId, currentUserId),
+          eq(subscriptions.channelId, channelUser.id)
+        )
+      )
+      .limit(1)
+    : [];
+  const isSubscribed = Boolean(existingSub);
 
   const displayName = channelUser.name || channelUser.username;
 
@@ -250,12 +266,10 @@ export default async function ChannelPage({
                 {t("manage", "MANAGE")}
               </Link>
             ) : (
-              <button
-                type="button"
-                className="bg-[#04abf2] hover:bg-[#0399d8] text-white text-xs font-semibold uppercase px-5 py-2 rounded-md shadow-xs transition-colors cursor-pointer"
-              >
-                {t("subscribe", "Subscribe")}
-              </button>
+              <ChannelSubscribeButton
+                channelUserId={channelUser.id}
+                initialSubscribed={isSubscribed}
+              />
             )}
           </div>
         </div>

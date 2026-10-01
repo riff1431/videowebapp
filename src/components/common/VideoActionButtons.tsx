@@ -1,16 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ThumbsUp, ThumbsDown, Share2, Bookmark, Bell, Check, Flag } from "lucide-react";
-import { toggleLikeVideoAction, toggleSubscribeAction } from "@/modules/videos/video.actions";
+import {
+  toggleLikeVideoAction,
+  toggleSubscribeAction,
+  toggleWatchLaterAction,
+} from "@/modules/videos/video.actions";
 import { reportVideoAction } from "@/modules/admin/reports.actions";
 import { useTranslation } from "@/providers/language-provider";
+import { authClient } from "@/lib/auth/auth-client";
 
 interface VideoActionButtonsProps {
   videoDbId: number;
   channelUserId: number;
   initialLikes?: number;
   initialDislikes?: number;
+  initialVote?: 1 | 2 | null;
+  initialSubscribed?: boolean;
+  initialSaved?: boolean;
 }
 
 export function VideoActionButtons({
@@ -18,21 +27,41 @@ export function VideoActionButtons({
   channelUserId,
   initialLikes = 0,
   initialDislikes = 0,
+  initialVote = null,
+  initialSubscribed = false,
+  initialSaved = false,
 }: VideoActionButtonsProps) {
+  const router = useRouter();
   const { t } = useTranslation();
+  const { data: session } = authClient.useSession();
+  const isLoggedIn = !!session?.user;
+
   const [likes, setLikes] = useState(initialLikes);
   const [dislikes, setDislikes] = useState(initialDislikes);
-  const [userVote, setUserVote] = useState<1 | 2 | null>(null);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const [userVote, setUserVote] = useState<1 | 2 | null>(initialVote);
+  const [isSubscribed, setIsSubscribed] = useState(initialSubscribed);
+  const [isSaved, setIsSaved] = useState(initialSaved);
   const [copied, setCopied] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [saving, setSaving] = useState(false);
+
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [reportType, setReportType] = useState<"video" | "copyright">("video");
   const [reportText, setReportText] = useState("");
   const [reportSubmitting, setReportSubmitting] = useState(false);
   const [reportSuccess, setReportSuccess] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
 
   async function handleVote(type: 1 | 2) {
+    if (!isLoggedIn) {
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
+    const previousVote = userVote;
+    const prevLikes = likes;
+    const prevDislikes = dislikes;
+
     if (userVote === type) {
       setUserVote(null);
       if (type === 1) setLikes((l) => Math.max(0, l - 1));
@@ -48,12 +77,65 @@ export function VideoActionButtons({
       setUserVote(type);
     }
 
-    await toggleLikeVideoAction({ videoDbId, type });
+    try {
+      const res = await toggleLikeVideoAction({ videoDbId, type });
+      if (!res.success) {
+        // Rollback
+        setUserVote(previousVote);
+        setLikes(prevLikes);
+        setDislikes(prevDislikes);
+      }
+    } catch {
+      setUserVote(previousVote);
+      setLikes(prevLikes);
+      setDislikes(prevDislikes);
+    }
   }
 
   async function handleSubscribe() {
-    setIsSubscribed(!isSubscribed);
-    await toggleSubscribeAction({ channelUserId });
+    if (!isLoggedIn) {
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+    if (subscribing) return;
+
+    setSubscribing(true);
+    const nextSub = !isSubscribed;
+    setIsSubscribed(nextSub);
+
+    try {
+      const res = await toggleSubscribeAction({ channelUserId });
+      if (!res.success) {
+        setIsSubscribed(!nextSub);
+      }
+    } catch {
+      setIsSubscribed(!nextSub);
+    } finally {
+      setSubscribing(false);
+    }
+  }
+
+  async function handleToggleSave() {
+    if (!isLoggedIn) {
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+    if (saving) return;
+
+    setSaving(true);
+    const nextSaved = !isSaved;
+    setIsSaved(nextSaved);
+
+    try {
+      const res = await toggleWatchLaterAction({ videoId: videoDbId });
+      if (!res.success) {
+        setIsSaved(!nextSaved);
+      }
+    } catch {
+      setIsSaved(!nextSaved);
+    } finally {
+      setSaving(false);
+    }
   }
 
   function handleShare() {
@@ -155,14 +237,15 @@ export function VideoActionButtons({
 
           {/* Save / Watch Later Button */}
           <button
-            onClick={() => setIsSaved(!isSaved)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[var(--border)] text-xs font-semibold transition-colors cursor-pointer ${
+            onClick={handleToggleSave}
+            disabled={saving}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[var(--border)] text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60 ${
               isSaved
-                ? "bg-sky-50 text-[var(--primary)] border-[var(--primary)]"
+                ? "bg-sky-50 dark:bg-sky-950/40 text-[var(--primary)] border-[var(--primary)]"
                 : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
             }`}
           >
-            <Bookmark className="w-3.5 h-3.5" />
+            <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-current" : ""}`} />
             <span>{isSaved ? t("saved", "Saved") : t("save", "Save")}</span>
           </button>
 

@@ -7,7 +7,7 @@ import { VideoComments } from "@/components/common/VideoComments";
 import { VideoActionButtons } from "@/components/common/VideoActionButtons";
 import { CheckCircle2 } from "lucide-react";
 import { db } from "@/db";
-import { comments, users, likesDislikes, watchHistory } from "@/db/schema";
+import { comments, users, likesDislikes, watchHistory, subscriptions, watchLater } from "@/db/schema";
 import { eq, desc, count, and } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
@@ -31,8 +31,9 @@ export default async function WatchPage({ params }: WatchPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (session?.user?.id) {
-    const viewerId = Number(session.user.id);
+  const viewerId = session?.user?.id ? Number(session.user.id) : null;
+
+  if (viewerId) {
     db.delete(watchHistory)
       .where(
         and(eq(watchHistory.userId, viewerId), eq(watchHistory.videoId, video.id))
@@ -47,7 +48,15 @@ export default async function WatchPage({ params }: WatchPageProps) {
       .catch(() => {});
   }
 
-  const [relatedVideos, [likesCount], [dislikesCount], initialComments] = await Promise.all([
+  const [
+    relatedVideos,
+    [likesCount],
+    [dislikesCount],
+    initialComments,
+    [existingVote],
+    [existingSub],
+    [existingSaved],
+  ] = await Promise.all([
     getFeaturedVideos(8),
     db
       .select({ value: count() })
@@ -72,6 +81,27 @@ export default async function WatchPage({ params }: WatchPageProps) {
       .innerJoin(users, eq(comments.userId, users.id))
       .where(eq(comments.videoId, video.id))
       .orderBy(desc(comments.createdAt)),
+    viewerId
+      ? db
+          .select({ type: likesDislikes.type })
+          .from(likesDislikes)
+          .where(and(eq(likesDislikes.userId, viewerId), eq(likesDislikes.videoId, video.id)))
+          .limit(1)
+      : Promise.resolve([]),
+    viewerId
+      ? db
+          .select({ id: subscriptions.id })
+          .from(subscriptions)
+          .where(and(eq(subscriptions.subscriberId, viewerId), eq(subscriptions.channelId, video.user.id)))
+          .limit(1)
+      : Promise.resolve([]),
+    viewerId
+      ? db
+          .select({ id: watchLater.id })
+          .from(watchLater)
+          .where(and(eq(watchLater.userId, viewerId), eq(watchLater.videoId, video.id)))
+          .limit(1)
+      : Promise.resolve([]),
   ]);
 
   return (
@@ -132,6 +162,9 @@ export default async function WatchPage({ params }: WatchPageProps) {
             channelUserId={video.user.id}
             initialLikes={likesCount?.value || 0}
             initialDislikes={dislikesCount?.value || 0}
+            initialVote={(existingVote?.type as 1 | 2) || null}
+            initialSubscribed={Boolean(existingSub?.id)}
+            initialSaved={Boolean(existingSaved?.id)}
           />
 
           {/* Description & Metadata */}

@@ -150,6 +150,16 @@ export async function importVideoAction(formData: FormData) {
   }
 }
 
+// Helper to get authenticated user in Server Actions
+async function getAuthUserId(): Promise<number | null> {
+  const { auth } = await import("@/lib/auth/auth");
+  const { headers } = await import("next/headers");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return session?.user?.id ? Number(session.user.id) : null;
+}
+
 // ==========================================
 // 3. Video Like / Dislike Toggle Action
 // ==========================================
@@ -161,15 +171,15 @@ export async function toggleLikeVideoAction({
   type: 1 | 2; // 1: like, 2: dislike
 }) {
   try {
-    const [user] = await db.select().from(users).limit(1);
-    if (!user) return { success: false, error: "Unauthorized" };
+    const currentUserId = await getAuthUserId();
+    if (!currentUserId) return { success: false, error: "Please log in to like or dislike videos" };
 
     const [existing] = await db
       .select()
       .from(likesDislikes)
       .where(
         and(
-          eq(likesDislikes.userId, user.id),
+          eq(likesDislikes.userId, currentUserId),
           eq(likesDislikes.videoId, videoDbId)
         )
       );
@@ -180,24 +190,27 @@ export async function toggleLikeVideoAction({
         await db
           .delete(likesDislikes)
           .where(eq(likesDislikes.id, existing.id));
+        revalidatePath("/watch/[videoId]", "page");
+        return { success: true, removed: true, currentVote: null };
       } else {
         // Change vote
         await db
           .update(likesDislikes)
           .set({ type })
           .where(eq(likesDislikes.id, existing.id));
+        revalidatePath("/watch/[videoId]", "page");
+        return { success: true, removed: false, currentVote: type };
       }
     } else {
       // New vote
       await db.insert(likesDislikes).values({
-        userId: user.id,
+        userId: currentUserId,
         videoId: videoDbId,
         type,
       });
+      revalidatePath("/watch/[videoId]", "page");
+      return { success: true, removed: false, currentVote: type };
     }
-
-    revalidatePath("/watch/[videoId]", "page");
-    return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
   }
@@ -218,13 +231,13 @@ export async function addCommentAction({
       return { success: false, error: "Comment text cannot be empty" };
     }
 
-    const [user] = await db.select().from(users).limit(1);
-    if (!user) return { success: false, error: "Unauthorized" };
+    const currentUserId = await getAuthUserId();
+    if (!currentUserId) return { success: false, error: "Please log in to comment" };
 
     const [newComment] = await db
       .insert(comments)
       .values({
-        userId: user.id,
+        userId: currentUserId,
         videoId: videoDbId,
         text: text.trim(),
       })
@@ -246,10 +259,10 @@ export async function toggleSubscribeAction({
   channelUserId: number;
 }) {
   try {
-    const [currentUser] = await db.select().from(users).limit(1);
-    if (!currentUser) return { success: false, error: "Unauthorized" };
+    const currentUserId = await getAuthUserId();
+    if (!currentUserId) return { success: false, error: "Please log in to subscribe" };
 
-    if (currentUser.id === channelUserId) {
+    if (currentUserId === channelUserId) {
       return { success: false, error: "Cannot subscribe to your own channel" };
     }
 
@@ -258,7 +271,7 @@ export async function toggleSubscribeAction({
       .from(subscriptions)
       .where(
         and(
-          eq(subscriptions.subscriberId, currentUser.id),
+          eq(subscriptions.subscriberId, currentUserId),
           eq(subscriptions.channelId, channelUserId)
         )
       );
@@ -267,16 +280,59 @@ export async function toggleSubscribeAction({
       await db
         .delete(subscriptions)
         .where(eq(subscriptions.id, existing.id));
+      revalidatePath("/subscriptions");
       return { success: true, subscribed: false };
     } else {
       await db.insert(subscriptions).values({
-        subscriberId: currentUser.id,
+        subscriberId: currentUserId,
         channelId: channelUserId,
       });
+      revalidatePath("/subscriptions");
       return { success: true, subscribed: true };
     }
   } catch (err: any) {
     return { success: false, error: err.message };
+  }
+}
+
+// ==========================================
+// 5b. Toggle Save / Watch Later Action
+// ==========================================
+export async function toggleWatchLaterAction({
+  videoId,
+}: {
+  videoId: number;
+}) {
+  try {
+    const currentUserId = await getAuthUserId();
+    if (!currentUserId) return { success: false, error: "Please log in to save videos" };
+
+    const [existing] = await db
+      .select()
+      .from(watchLater)
+      .where(
+        and(
+          eq(watchLater.userId, currentUserId),
+          eq(watchLater.videoId, videoId)
+        )
+      );
+
+    if (existing) {
+      await db
+        .delete(watchLater)
+        .where(eq(watchLater.id, existing.id));
+      revalidatePath("/saved");
+      return { success: true, saved: false };
+    } else {
+      await db.insert(watchLater).values({
+        userId: currentUserId,
+        videoId,
+      });
+      revalidatePath("/saved");
+      return { success: true, saved: true };
+    }
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to update saved video" };
   }
 }
 

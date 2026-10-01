@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Eye, Users, Video, CheckCircle2, UserPlus, UserCheck } from "lucide-react";
 import { toggleSubscribeAction } from "@/modules/videos/video.actions";
+import { authClient } from "@/lib/auth/auth-client";
 
 export interface ChannelItem {
   id: number;
@@ -20,6 +22,8 @@ export interface ChannelItem {
 }
 
 export function ChannelCard({ channel }: { channel: ChannelItem }) {
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
   const [subscribed, setSubscribed] = useState(Boolean(channel.isSubscribed));
   const [subCount, setSubCount] = useState(channel.subscriberCount);
   const [loading, setLoading] = useState(false);
@@ -28,6 +32,11 @@ export function ChannelCard({ channel }: { channel: ChannelItem }) {
     e.preventDefault();
     e.stopPropagation();
     if (loading) return;
+
+    if (!session?.user) {
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
 
     setLoading(true);
     // Optimistic update

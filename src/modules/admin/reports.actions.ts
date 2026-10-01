@@ -391,9 +391,25 @@ export async function reportVideoAction(data: {
       return { success: false, error: "Please provide a reason for reporting" };
     }
 
+    let reportUserId = data.userId || 0;
+    if (!reportUserId) {
+      try {
+        const { auth } = await import("@/lib/auth/auth");
+        const { headers } = await import("next/headers");
+        const session = await auth.api.getSession({
+          headers: await headers(),
+        });
+        if (session?.user?.id) {
+          reportUserId = Number(session.user.id);
+        }
+      } catch (e) {
+        // Fallback to anonymous
+      }
+    }
+
     await db.insert(reports).values({
       videoId: data.videoId,
-      userId: data.userId || 0,
+      userId: reportUserId,
       text,
       type: "video",
     });
@@ -416,9 +432,25 @@ export async function reportCopyrightAction(data: {
       return { success: false, error: "Please provide copyright report details" };
     }
 
+    let reportUserId = data.userId || 0;
+    if (!reportUserId) {
+      try {
+        const { auth } = await import("@/lib/auth/auth");
+        const { headers } = await import("next/headers");
+        const session = await auth.api.getSession({
+          headers: await headers(),
+        });
+        if (session?.user?.id) {
+          reportUserId = Number(session.user.id);
+        }
+      } catch (e) {
+        // Fallback to anonymous
+      }
+    }
+
     await db.insert(copyrightReports).values({
       videoId: data.videoId,
-      userId: data.userId || 0,
+      userId: reportUserId,
       text,
     });
 
