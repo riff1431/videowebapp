@@ -8,6 +8,7 @@ import {
   timestamp,
   doublePrecision,
   index,
+  uniqueIndex,
   primaryKey,
 } from "drizzle-orm/pg-core";
 
@@ -462,9 +463,12 @@ export const currencies = pgTable("currencies", {
 
 export const languages = pgTable("languages", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 100 }).notNull().unique(), // e.g. "English", "Arabic", "russian"
+  name: varchar("name", { length: 100 }).notNull().unique(), // lowercase internal key e.g. "english", "arabic"
+  displayName: varchar("display_name", { length: 100 }), // display label e.g. "English", "Arabic"
   iso: varchar("iso", { length: 20 }).notNull(), // e.g. "en", "ar", "ru"
+  direction: varchar("direction", { length: 10 }).default("ltr").notNull(), // "ltr" or "rtl"
   status: varchar("status", { length: 20 }).default("active").notNull(), // "active" or "disabled"
+  isDefault: boolean("is_default").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -473,6 +477,21 @@ export const languageKeys = pgTable("language_keys", {
   keyName: varchar("key_name", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const languageTranslations = pgTable(
+  "language_translations",
+  {
+    id: serial("id").primaryKey(),
+    key: varchar("key", { length: 255 }).notNull(),
+    lang: varchar("lang", { length: 50 }).notNull(), // lowercase e.g. "english"
+    value: text("value").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("lang_translations_key_lang_idx").on(table.key, table.lang),
+    index("lang_translations_lang_idx").on(table.lang),
+  ]
+);
 
 export const customProfileFields = pgTable("custom_profile_fields", {
   id: serial("id").primaryKey(),
