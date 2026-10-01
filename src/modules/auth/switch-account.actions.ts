@@ -6,6 +6,7 @@ import { users, sessions } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
 import { revalidatePath } from "next/cache";
+import { makeSignature } from "better-auth/crypto";
 
 export interface SwitchedAccountItem {
   userId: number;
@@ -20,17 +21,28 @@ export interface SwitchedAccountItem {
 const SWITCHED_ACCOUNTS_COOKIE = "pt_switched_accounts";
 const MAX_ACCOUNTS = 3;
 
-// Helper to determine the session cookie name used by Better Auth
-function getSessionCookieName(): string {
-  // Better Auth uses "better-auth.session_token" or "__Secure-better-auth.session_token" in HTTPS
-  return process.env.NODE_ENV === "production"
-    ? "__Secure-better-auth.session_token"
-    : "better-auth.session_token";
+/**
+ * Signs a raw session token using Better Auth's HMAC secret so that
+ * Better Auth can authenticate the session cookie seamlessly.
+ */
+async function createSignedSessionCookie(rawToken: string): Promise<string> {
+  const secret = process.env.BETTER_AUTH_SECRET || "playtube-better-auth-secret-development-key-32-chars-long";
+  const signature = await makeSignature(rawToken, secret);
+  return `${rawToken}.${signature}`;
 }
 
 /**
- * Reads and validates the list of switched accounts stored in the cookie.
- * Also synchronizes the currently logged-in account into the list.
+ * Extracts the raw session token from a cookie value (which may be `rawToken.signature` or just `rawToken`).
+ */
+function extractRawToken(cookieValue: string): string {
+  if (!cookieValue) return "";
+  const dotIndex = cookieValue.indexOf(".");
+  return dotIndex !== -1 ? cookieValue.slice(0, dotIndex) : cookieValue;
+}
+
+/**
+ * READ-ONLY Action: Returns the current list of saved accounts and current user.
+ * Safe to call from Server Components (RSC) without "Cookies can only be modified..." errors.
  */
 export async function getSwitchedAccountsAction(): Promise<{
   success: boolean;
@@ -49,13 +61,96 @@ export async function getSwitchedAccountsAction(): Promise<{
       ? Number(currentSession.user.id)
       : null;
 
-    // Get current session token from cookie
-    const primaryCookieName = "better-auth.session_token";
-    const secureCookieName = "__Secure-better-auth.session_token";
-    const currentToken =
-      cookieStore.get(primaryCookieName)?.value ||
-      cookieStore.get(secureCookieName)?.value ||
-      "";
+    let storedList: SwitchedAccountItem[] = [];
+    const cookieVal = cookieStore.get(SWITCHED_ACCOUNTS_COOKIE)?.value;
+    if (cookieVal) {
+      try {
+        storedList = JSON.parse(decodeURIComponent(cookieVal));
+      } catch (e) {
+        storedList = [];
+      }
+    }
+
+    // Filter to only tokens that actually exist and haven't expired in the DB
+    if (storedList.length > 0) {
+      const tokens = storedList.map((a) => a.sessionToken).filter(Boolean);
+      const validSessions = await db
+        .select({
+          token: sessions.token,
+          userId: sessions.userId,
+        })
+        .from(sessions)
+        .where(inArray(sessions.token, tokens));
+
+      const validTokenSet = new Set(validSessions.map((s) => s.token));
+      storedList = storedList.filter((a) => validTokenSet.has(a.sessionToken));
+    }
+
+    // If current user is logged in but not yet in storedList, include them dynamically for display
+    if (currentUserId && currentSession?.user) {
+      const exists = storedList.some((a) => a.userId === currentUserId);
+      if (!exists) {
+        const userAvatar =
+          (currentSession.user as any).avatar ||
+          currentSession.user.image ||
+          "/upload/photos/d-avatar.jpg";
+        storedList.unshift({
+          userId: currentUserId,
+          name: currentSession.user.name || (currentSession.user as any).username || "User",
+          username: (currentSession.user as any).username || currentSession.user.name || "user",
+          email: currentSession.user.email || "",
+          avatar: userAvatar,
+          sessionToken: "",
+          isActive: true,
+        });
+      }
+    }
+
+    const accountsWithActive = storedList.map((acc) => ({
+      ...acc,
+      isActive: acc.userId === currentUserId,
+    }));
+
+    return {
+      success: true,
+      accounts: accountsWithActive,
+      currentUserId,
+      canAddMore: accountsWithActive.length < MAX_ACCOUNTS,
+    };
+  } catch (error: any) {
+    console.error("Error in getSwitchedAccountsAction:", error);
+    return {
+      success: false,
+      accounts: [],
+      currentUserId: null,
+      canAddMore: true,
+    };
+  }
+}
+
+/**
+ * MUTATION Action: Adds / updates the current active session in the switched accounts cookie.
+ * Must be called in a Server Action context (e.g., when adding an account or after logging in).
+ */
+export async function syncCurrentAccountAction(): Promise<{
+  success: boolean;
+  count?: number;
+}> {
+  try {
+    const cookieStore = await cookies();
+    const reqHeaders = await headers();
+    const currentSession = await auth.api.getSession({
+      headers: reqHeaders,
+    });
+
+    if (!currentSession?.user?.id) {
+      return { success: false };
+    }
+
+    const currentUserId = Number(currentSession.user.id);
+    const primaryCookie = cookieStore.get("better-auth.session_token")?.value;
+    const secureCookie = cookieStore.get("__Secure-better-auth.session_token")?.value;
+    const rawToken = extractRawToken(primaryCookie || secureCookie || "");
 
     let storedList: SwitchedAccountItem[] = [];
     const cookieVal = cookieStore.get(SWITCHED_ACCOUNTS_COOKIE)?.value;
@@ -67,22 +162,36 @@ export async function getSwitchedAccountsAction(): Promise<{
       }
     }
 
-    // If currently logged in, ensure current user is in the list
-    if (currentUserId && currentSession?.user && currentToken) {
-      const existingIdx = storedList.findIndex((a) => a.userId === currentUserId);
+    // Verify token exists in database
+    let validToken = rawToken;
+    if (!validToken) {
+      const [latestSession] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.userId, currentUserId))
+        .orderBy(sessions.createdAt)
+        .limit(1);
+      if (latestSession) {
+        validToken = latestSession.token;
+      }
+    }
+
+    if (validToken) {
       const userAvatar =
         (currentSession.user as any).avatar ||
         currentSession.user.image ||
         "/upload/photos/d-avatar.jpg";
+
       const item: SwitchedAccountItem = {
         userId: currentUserId,
         name: currentSession.user.name || (currentSession.user as any).username || "User",
         username: (currentSession.user as any).username || currentSession.user.name || "user",
         email: currentSession.user.email || "",
         avatar: userAvatar,
-        sessionToken: currentToken,
+        sessionToken: validToken,
       };
 
+      const existingIdx = storedList.findIndex((a) => a.userId === currentUserId);
       if (existingIdx >= 0) {
         storedList[existingIdx] = item;
       } else {
@@ -90,7 +199,7 @@ export async function getSwitchedAccountsAction(): Promise<{
       }
     }
 
-    // Validate that stored session tokens still exist in DB
+    // Validate tokens in database
     if (storedList.length > 0) {
       const tokens = storedList.map((a) => a.sessionToken).filter(Boolean);
       const validSessions = await db
@@ -120,25 +229,10 @@ export async function getSwitchedAccountsAction(): Promise<{
       }
     );
 
-    const accountsWithActive = storedList.map((acc) => ({
-      ...acc,
-      isActive: acc.userId === currentUserId,
-    }));
-
-    return {
-      success: true,
-      accounts: accountsWithActive,
-      currentUserId,
-      canAddMore: storedList.length < MAX_ACCOUNTS,
-    };
-  } catch (error: any) {
-    console.error("Error in getSwitchedAccountsAction:", error);
-    return {
-      success: false,
-      accounts: [],
-      currentUserId: null,
-      canAddMore: true,
-    };
+    return { success: true, count: storedList.length };
+  } catch (err: any) {
+    console.error("Error in syncCurrentAccountAction:", err);
+    return { success: false };
   }
 }
 
@@ -179,7 +273,9 @@ export async function switchAccountAction(targetUserId: number): Promise<{
       };
     }
 
-    // Update Better Auth session cookies
+    // Generate signed session cookie for Better Auth
+    const signedCookieValue = await createSignedSessionCookie(targetAccount.sessionToken);
+
     const cookieOptions = {
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -187,11 +283,11 @@ export async function switchAccountAction(targetUserId: number): Promise<{
       sameSite: "lax" as const,
     };
 
-    cookieStore.set("better-auth.session_token", targetAccount.sessionToken, cookieOptions);
+    cookieStore.set("better-auth.session_token", signedCookieValue, cookieOptions);
     if (process.env.NODE_ENV === "production") {
       cookieStore.set(
         "__Secure-better-auth.session_token",
-        targetAccount.sessionToken,
+        signedCookieValue,
         { ...cookieOptions, secure: true }
       );
     }
@@ -250,7 +346,7 @@ export async function prepareAddAccountAction(): Promise<{
   error?: string;
 }> {
   try {
-    const result = await getSwitchedAccountsAction();
+    const result = await syncCurrentAccountAction();
     return { success: result.success };
   } catch (error: any) {
     return { success: false, error: error?.message };

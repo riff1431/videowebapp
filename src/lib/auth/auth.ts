@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { username } from "better-auth/plugins";
+import { username, multiSession } from "better-auth/plugins";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
 
@@ -16,6 +16,9 @@ export const auth = betterAuth({
   }),
   plugins: [
     username(), // Enable native username plugin so users can sign in with username or email
+    multiSession({
+      maximumSessions: 3, // PlayTube allows up to 3 accounts
+    }),
   ],
   trustedOrigins: [
     "http://localhost:3000",
