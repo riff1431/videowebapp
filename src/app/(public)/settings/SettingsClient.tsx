@@ -124,24 +124,8 @@ export function SettingsClient({
     { id: "delete", label: "Delete account", href: "/settings/delete", icon: Trash2 },
   ];
 
-  // Default Categories if not supplied
-  const effectiveCategories =
-    categories.length > 0
-      ? categories
-      : [
-          { id: 1, key: "film", name: "Film & Animation" },
-          { id: 2, key: "music", name: "Music" },
-          { id: 3, key: "pets", name: "Pets & Animals" },
-          { id: 4, key: "sports", name: "Sports" },
-          { id: 5, key: "travel", name: "Travel & Events" },
-          { id: 6, key: "gaming", name: "Gaming" },
-          { id: 7, key: "people", name: "People & Blogs" },
-          { id: 8, key: "comedy", name: "Comedy" },
-          { id: 9, key: "entertainment", name: "Entertainment" },
-          { id: 10, key: "news", name: "News & Politics" },
-          { id: 11, key: "howto", name: "How-to & Style" },
-          { id: 12, key: "activism", name: "Non-profits & Activism" },
-        ];
+  // Categories from database
+  const effectiveCategories = categories;
 
   // Global feedback message
   const [loading, setLoading] = useState(false);

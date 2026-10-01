@@ -29,30 +29,17 @@ import {
 } from "lucide-react";
 import { createArticleAction } from "@/modules/articles/article.actions";
 
-const CATEGORIES = [
-  "Category",
-  "Film & Animation",
-  "Music",
-  "Pets & Animals",
-  "Sports",
-  "Travel & Events",
-  "Gaming",
-  "People & Blogs",
-  "Comedy",
-  "Entertainment",
-  "News & Politics",
-  "How-to & Style",
-  "Non-profits & Activism",
-  "Other",
-];
+interface CreateArticleClientProps {
+  categoriesList?: Array<{ id: number; key: string; name: string }>;
+}
 
-export default function CreateArticlePage() {
+export default function CreateArticlePage({ categoriesList = [] }: CreateArticleClientProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [contentHtml, setContentHtml] = useState("");
   const [wordCount, setWordCount] = useState(0);
-  const [category, setCategory] = useState("Film & Animation");
+  const [category, setCategory] = useState(categoriesList[0]?.name || "Film & Animation");
   const [categoryOpen, setCategoryOpen] = useState(false);
 
   // Tags pill state
@@ -651,13 +638,13 @@ export default function CreateArticlePage() {
 
             {categoryOpen && (
               <div className="absolute top-full left-0 right-0 mt-1 max-h-72 overflow-y-auto bg-white dark:bg-[#1a1a1a] border border-[#04abf2] rounded-md shadow-xl z-50 py-1 text-sm">
-                {CATEGORIES.map((cat) => {
-                  const isSelected = category === cat;
+                {categoriesList.map((cat) => {
+                  const isSelected = category === cat.name;
                   return (
                     <div
-                      key={cat}
+                      key={cat.id}
                       onClick={() => {
-                        setCategory(cat);
+                        setCategory(cat.name);
                         setCategoryOpen(false);
                       }}
                       className={`px-3.5 py-2 cursor-pointer transition-colors ${
@@ -666,7 +653,7 @@ export default function CreateArticlePage() {
                           : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       }`}
                     >
-                      {cat}
+                      {cat.name}
                     </div>
                   );
                 })}

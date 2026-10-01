@@ -2,8 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { db } from "@/db";
-import { videos } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { videos, categories } from "@/db/schema";
+import { eq, asc } from "drizzle-orm";
 import { Film, Edit3, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { updateVideoAction } from "@/modules/videos/video.actions";
 import { requireAuth } from "@/lib/auth/require-auth";
@@ -32,6 +32,11 @@ export default async function EditVideoPage({ params }: EditVideoPageProps) {
   if (!video) {
     notFound();
   }
+
+  const allCategories = await db
+    .select()
+    .from(categories)
+    .orderBy(asc(categories.sortOrder));
 
   async function handleUpdate(formData: FormData) {
     "use server";
@@ -105,16 +110,14 @@ export default async function EditVideoPage({ params }: EditVideoPageProps) {
               </label>
               <select
                 name="categoryId"
-                defaultValue={video.categoryId || "other"}
+                defaultValue={video.categoryId || (allCategories[0]?.key || "other")}
                 className="w-full px-3.5 py-2.5 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-neutral-100"
               >
-                <option value="film">Film & Animation</option>
-                <option value="music">Music</option>
-                <option value="tech">Science & Technology</option>
-                <option value="gaming">Gaming</option>
-                <option value="news">News & Politics</option>
-                <option value="entertainment">Entertainment</option>
-                <option value="other">Other</option>
+                {allCategories.map((cat) => (
+                  <option key={cat.id} value={cat.key}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
 

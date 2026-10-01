@@ -94,7 +94,19 @@ export const categories = pgTable("categories", {
   name: varchar("name", { length: 255 }).notNull(),
   icon: varchar("icon", { length: 255 }),
   sortOrder: integer("sort_order").default(0),
+  translations: text("translations").default("{}"), // JSON string of { english: "...", arabic: "...", ... }
 });
+
+export const subCategories = pgTable("sub_categories", {
+  id: serial("id").primaryKey(),
+  categoryKey: varchar("category_key", { length: 100 }).notNull(), // e.g. "film_animation", "music"
+  key: varchar("key", { length: 100 }).notNull(), // unique slug/key
+  name: varchar("name", { length: 255 }).notNull(), // English name
+  translations: text("translations").default("{}"), // JSON string of { english: "...", arabic: "...", ... }
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("sub_cat_parent_idx").on(table.categoryKey),
+]);
 
 export const videos = pgTable("videos", {
   id: serial("id").primaryKey(),

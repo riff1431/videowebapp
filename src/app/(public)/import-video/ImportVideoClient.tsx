@@ -5,11 +5,15 @@ import Link from "next/link";
 import { Video, CheckCircle2, AlertCircle, ArrowRight, DownloadCloud, Sparkles } from "lucide-react";
 import { importVideoAction } from "@/modules/videos/video.actions";
 
-export default function ImportVideoPage() {
+interface ImportVideoClientProps {
+  categoriesList?: Array<{ id: number; key: string; name: string }>;
+}
+
+export default function ImportVideoClient({ categoriesList = [] }: ImportVideoClientProps) {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("entertainment");
+  const [category, setCategory] = useState(categoriesList[0]?.key || "entertainment");
   const [thumbnail, setThumbnail] = useState("");
   const [importing, setImporting] = useState(false);
   const [createdVideoId, setCreatedVideoId] = useState<string | null>(null);
@@ -195,13 +199,11 @@ export default function ImportVideoPage() {
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full h-10 px-3 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-md focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
                   >
-                    <option value="entertainment">Entertainment</option>
-                    <option value="music">Music</option>
-                    <option value="gaming">Gaming</option>
-                    <option value="tech">Science & Technology</option>
-                    <option value="education">Education</option>
-                    <option value="news">News & Politics</option>
-                    <option value="other">Other</option>
+                    {categoriesList.map((cat) => (
+                      <option key={cat.id} value={cat.key}>
+                        {cat.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

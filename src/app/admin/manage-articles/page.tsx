@@ -26,16 +26,7 @@ export default async function ManageArticlesPage() {
     db.select({ key: categories.key, name: categories.name }).from(categories).orderBy(asc(categories.sortOrder)),
   ]);
 
-  const categoryMap: Record<string, string> = {
-    film_animation: "Film & Animation",
-    music: "Music",
-    gaming: "Gaming",
-    entertainment: "Entertainment",
-    news_politics: "News & Politics",
-    education: "Education",
-    technology: "Technology",
-    other: "Other",
-  };
+  const categoryMap: Record<string, string> = {};
 
   rawCategories.forEach((c) => {
     categoryMap[c.key] = c.name;

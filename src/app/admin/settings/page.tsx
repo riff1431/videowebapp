@@ -14,23 +14,11 @@ export default async function AdminGeneralSettingsPage() {
     configObj[c.name] = c.value;
   });
 
-  // Fetch categories for Favourite category selection
-  const dbCategories = await db
+  // Fetch categories for Favourite category selection from database
+  const availableCategories = await db
     .select({ key: categories.key, name: categories.name })
     .from(categories)
     .orderBy(asc(categories.sortOrder));
-
-  const availableCategories = dbCategories.length > 0
-    ? dbCategories
-    : [
-        { key: "film", name: "Film & Animation" },
-        { key: "music", name: "Music" },
-        { key: "gaming", name: "Gaming" },
-        { key: "entertainment", name: "Entertainment" },
-        { key: "news", name: "News & Politics" },
-        { key: "education", name: "Education" },
-        { key: "tech", name: "Science & Technology" },
-      ];
 
   // Fetch languages from PostgreSQL
   const dbLanguages = await db

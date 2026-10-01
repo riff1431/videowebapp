@@ -24,25 +24,7 @@ export default async function SettingsTabPage({ params }: SettingsTabProps) {
       .from(categories)
       .orderBy(asc(categories.sortOrder), asc(categories.name));
   } catch (e) {
-    // fallback if table query issues
-  }
-
-  // If db has few categories or not seeded yet, ensure standard PlayTube categories list
-  if (!categoryList || categoryList.length === 0) {
-    categoryList = [
-      { id: 1, key: "film", name: "Film & Animation" },
-      { id: 2, key: "music", name: "Music" },
-      { id: 3, key: "pets", name: "Pets & Animals" },
-      { id: 4, key: "sports", name: "Sports" },
-      { id: 5, key: "travel", name: "Travel & Events" },
-      { id: 6, key: "gaming", name: "Gaming" },
-      { id: 7, key: "people", name: "People & Blogs" },
-      { id: 8, key: "comedy", name: "Comedy" },
-      { id: 9, key: "entertainment", name: "Entertainment" },
-      { id: 10, key: "news", name: "News & Politics" },
-      { id: 11, key: "howto", name: "How-to & Style" },
-      { id: 12, key: "activism", name: "Non-profits & Activism" },
-    ];
+    console.error("Failed to query categories in settings tab:", e);
   }
 
   try {

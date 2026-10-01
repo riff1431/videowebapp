@@ -16,19 +16,5 @@ export default async function CreateArticlePage() {
     .from(categories)
     .orderBy(asc(categories.sortOrder));
 
-  // Fallback categories if empty in database
-  const defaultCats = [
-    { id: 1, key: "film_animation", name: "Film & Animation" },
-    { id: 2, key: "music", name: "Music" },
-    { id: 3, key: "gaming", name: "Gaming" },
-    { id: 4, key: "entertainment", name: "Entertainment" },
-    { id: 5, key: "news_politics", name: "News & Politics" },
-    { id: 6, key: "education", name: "Education" },
-    { id: 7, key: "technology", name: "Technology" },
-    { id: 8, key: "other", name: "Other" },
-  ];
-
-  const availableCategories = categoriesList.length > 0 ? categoriesList : defaultCats;
-
-  return <CreateArticleClient categories={availableCategories} />;
+  return <CreateArticleClient categories={categoriesList} />;
 }

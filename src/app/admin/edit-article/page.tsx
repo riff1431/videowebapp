@@ -30,18 +30,7 @@ export default async function EditArticlePage({ searchParams }: EditArticlePageP
 
   const currentArticle = article[0];
 
-  const defaultCats = [
-    { id: 1, key: "film_animation", name: "Film & Animation" },
-    { id: 2, key: "music", name: "Music" },
-    { id: 3, key: "gaming", name: "Gaming" },
-    { id: 4, key: "entertainment", name: "Entertainment" },
-    { id: 5, key: "news_politics", name: "News & Politics" },
-    { id: 6, key: "education", name: "Education" },
-    { id: 7, key: "technology", name: "Technology" },
-    { id: 8, key: "other", name: "Other" },
-  ];
-
-  const availableCategories = rawCategories.length > 0 ? rawCategories : defaultCats;
+  const availableCategories = rawCategories;
 
   return (
     <EditArticleClient

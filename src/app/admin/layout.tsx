@@ -144,7 +144,8 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Categories",
     icon: FolderTree,
     subItems: [
-      { title: "Manage Categories", href: "/admin/categories" },
+      { title: "Manage Categories", href: "/admin/manage_categories" },
+      { title: "Manage Sub Categories", href: "/admin/manage_sub_categories" },
     ],
   },
   {

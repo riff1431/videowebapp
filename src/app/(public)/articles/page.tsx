@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { db } from "@/db";
-import { articles, users } from "@/db/schema";
-import { eq, desc, and, ilike } from "drizzle-orm";
+import { articles, users, categories } from "@/db/schema";
+import { eq, desc, and, ilike, asc } from "drizzle-orm";
 import { Newspaper, Search, BookOpen } from "lucide-react";
 
 interface ArticlesPageProps {
@@ -14,26 +14,24 @@ interface ArticlesPageProps {
 
 export const revalidate = 30;
 
-const ARTICLE_CATEGORIES = [
-  { id: "all", name: "Film & Animation" },
-  { id: "music", name: "Music" },
-  { id: "pets", name: "Pets & Animals" },
-  { id: "sports", name: "Sports" },
-  { id: "travel", name: "Travel & Events" },
-  { id: "gaming", name: "Gaming" },
-  { id: "people", name: "People & Blogs" },
-  { id: "comedy", name: "Comedy" },
-  { id: "entertainment", name: "Entertainment" },
-  { id: "news", name: "News & Politics" },
-  { id: "howto", name: "How-to & Style" },
-  { id: "nonprofit", name: "Non-profits & Activism" },
-  { id: "other", name: "Other" },
-];
-
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const resolvedParams = await searchParams;
   const query = resolvedParams.q || "";
   const activeCategory = resolvedParams.category || "all";
+
+  const dbCategories = await db
+    .select({
+      id: categories.id,
+      key: categories.key,
+      name: categories.name,
+    })
+    .from(categories)
+    .orderBy(asc(categories.sortOrder));
+
+  const articleCategories = [
+    { id: "all", name: "All Categories" },
+    ...dbCategories.map((c) => ({ id: c.key, name: c.name })),
+  ];
 
   // Build conditions
   const conditions = [eq(articles.active, true)];
@@ -156,7 +154,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
               Categories
             </h3>
             <div className="flex flex-wrap gap-1.5">
-              {ARTICLE_CATEGORIES.map((cat) => {
+              {articleCategories.map((cat) => {
                 const isActive = activeCategory === cat.id;
                 return (
                   <Link
