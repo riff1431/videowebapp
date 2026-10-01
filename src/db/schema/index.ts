@@ -600,4 +600,28 @@ export const copyrightReports = pgTable("copyright_report", {
   time: timestamp("time").defaultNow().notNull(),
 });
 
+// ==========================================
+// Tools Tables (PlayTube Parity)
+// ==========================================
+export const bannedIps = pgTable("banned", {
+  id: serial("id").primaryKey(),
+  ipAddress: varchar("ip_address", { length: 100 }).notNull(),
+  time: timestamp("time").defaultNow().notNull(),
+});
+
+export const adminInvitations = pgTable("admininvitations", {
+  id: serial("id").primaryKey(),
+  code: varchar("code", { length: 300 }).notNull().unique(),
+  posted: timestamp("posted").defaultNow().notNull(),
+  status: integer("status").default(0).notNull(), // 0: Pending, 1: Used
+});
+
+export const invitationLinks = pgTable("invitation_links", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  code: varchar("code", { length: 300 }).notNull().unique(),
+  time: timestamp("time").defaultNow().notNull(),
+  invitedId: integer("invited_id").default(0).notNull(),
+});
+
 

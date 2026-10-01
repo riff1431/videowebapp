@@ -167,6 +167,22 @@ const MENU_ITEMS: MenuItem[] = [
   },
 
   {
+    title: "Tools",
+    icon: Wrench,
+    subItems: [
+      { title: "Manage Announcements", href: "/admin/manage-announcements" },
+      { title: "Ban Users", href: "/admin/ban-users" },
+      { title: "Manage Activities", href: "/admin/manage-activities" },
+      { title: "Mass Notifications", href: "/admin/mass-notifications" },
+      { title: "Manage Invitation Keys", href: "/admin/manage-invitation-keys" },
+      { title: "Users Invitation", href: "/admin/manage-invitation" },
+      { title: "Auto Subscribe", href: "/admin/auto_subscribe" },
+      { title: "Auto Delete Videos", href: "/admin/auto-delete" },
+      { title: "Clean Dead Videos", href: "/admin/clean-videos" },
+      { title: "Newsletter", href: "/admin/newsletters" },
+    ],
+  },
+  {
     title: "Reports",
     icon: Flag,
     subItems: [

@@ -270,8 +270,8 @@ export default async function ChannelPage({
                 key={t.key}
                 href={t.href}
                 className={`pb-3 border-b-[3px] transition-colors whitespace-nowrap cursor-pointer ${isActive
-                    ? "border-[#04abf2] text-neutral-900 dark:text-white font-semibold"
-                    : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+                  ? "border-[#04abf2] text-neutral-900 dark:text-white font-semibold"
+                  : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
                   }`}
               >
                 {t.label}
@@ -376,7 +376,6 @@ export default async function ChannelPage({
         {activeTab === "shorts" && (
           <div className="w-full">
             <div className="flex items-center gap-2 pb-3 mb-8 border-b border-neutral-200/80 dark:border-neutral-800">
-              <Sparkles className="w-4 h-4 text-[#04abf2]" />
               <h2 className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
                 Shorts
               </h2>
