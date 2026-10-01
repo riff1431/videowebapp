@@ -50,6 +50,8 @@ import {
   deleteAccountAction,
 } from "@/modules/settings/settings.actions";
 
+import { useTranslation } from "@/providers/language-provider";
+
 interface CategoryItem {
   id: number;
   key: string;
@@ -97,6 +99,7 @@ export function SettingsClient({
   categories = [],
 }: SettingsClientProps) {
   const router = useRouter();
+  const { t } = useTranslation();
 
   // Normalize tab
   let activeTab = currentTab.toLowerCase();
@@ -108,20 +111,20 @@ export function SettingsClient({
 
   // Sidebar items
   const sidebarItems = [
-    { id: "general", label: "General", href: "/settings/general", icon: Settings },
-    { id: "profile", label: "Profile", href: "/settings/profile", icon: User },
-    { id: "privacy", label: "Privacy", href: "/settings/privacy", icon: Shield },
-    { id: "monetization", label: "Monetization", href: "/settings/monetization", icon: DollarSign },
-    { id: "password", label: "Password", href: "/settings/password", icon: Key },
-    { id: "balance", label: "Balance", href: "/settings/balance", icon: CreditCard },
-    { id: "avatar", label: "Avatar & Cover", href: "/settings/avatar", icon: ImageIcon },
-    { id: "verification", label: "Verification", href: "/settings/verification", icon: CheckCircle },
-    { id: "points", label: "Points", href: "/settings/points", icon: Star },
-    { id: "two_factor", label: "Two-factor authentication", href: "/settings/two_factor", icon: CheckSquare },
-    { id: "blocked_users", label: "Blocked Users", href: "/settings/blocked_users", icon: Lock },
-    { id: "manage_sessions", label: "Manage Sessions", href: "/settings/manage_sessions", icon: Fingerprint },
-    { id: "my_info", label: "My Information", href: "/settings/my_info", icon: FileText },
-    { id: "delete", label: "Delete account", href: "/settings/delete", icon: Trash2 },
+    { id: "general", label: t("general", "General"), href: "/settings/general", icon: Settings },
+    { id: "profile", label: t("profile", "Profile"), href: "/settings/profile", icon: User },
+    { id: "privacy", label: t("privacy", "Privacy"), href: "/settings/privacy", icon: Shield },
+    { id: "monetization", label: t("monetization", "Monetization"), href: "/settings/monetization", icon: DollarSign },
+    { id: "password", label: t("password", "Password"), href: "/settings/password", icon: Key },
+    { id: "balance", label: t("balance", "Balance"), href: "/settings/balance", icon: CreditCard },
+    { id: "avatar", label: t("avatar_and_cover", "Avatar & Cover"), href: "/settings/avatar", icon: ImageIcon },
+    { id: "verification", label: t("verification", "Verification"), href: "/settings/verification", icon: CheckCircle },
+    { id: "points", label: t("points", "Points"), href: "/settings/points", icon: Star },
+    { id: "two_factor", label: t("two_factor_authentication", "Two-factor authentication"), href: "/settings/two_factor", icon: CheckSquare },
+    { id: "blocked_users", label: t("blocked_users", "Blocked Users"), href: "/settings/blocked_users", icon: Lock },
+    { id: "manage_sessions", label: t("manage_sessions", "Manage Sessions"), href: "/settings/manage_sessions", icon: Fingerprint },
+    { id: "my_info", label: t("my_information", "My Information"), href: "/settings/my_info", icon: FileText },
+    { id: "delete", label: t("delete_account", "Delete account"), href: "/settings/delete", icon: Trash2 },
   ];
 
   // Categories from database
