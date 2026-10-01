@@ -40,7 +40,9 @@ import {
   Lightbulb,
   History,
   Star,
+  Globe,
 } from "lucide-react";
+import { useTranslation } from "@/providers/language-provider";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const router = useRouter();
@@ -50,6 +52,9 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const createMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme, designSettings, canToggle } = useTheme();
+  const { t, currentLang, languages, setLanguage } = useTranslation();
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement>(null);
 
   // Better Auth live session hook
   const { data: session } = authClient.useSession();
@@ -63,6 +68,9 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
       }
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false);
+      }
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+        setLangMenuOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -131,12 +139,12 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Search for videos"
+            placeholder={t("search_keyword", "Search for videos")}
             className="w-full h-full pl-4 pr-3 text-xs bg-transparent focus:outline-none text-neutral-900 dark:text-neutral-100 placeholder-neutral-500"
           />
           <button
             type="submit"
-            aria-label="Search"
+            aria-label={t("search", "Search")}
             className="h-full px-5 bg-[#04abf2] hover:bg-[#039be5] text-white flex items-center justify-center cursor-pointer transition-colors"
           >
             <Search className="w-3.5 h-3.5" />
@@ -146,6 +154,49 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 
       {/* Right Action Icons */}
       <div className="flex items-center gap-3">
+        {/* Language Switcher Dropdown */}
+        <div className="relative" ref={langMenuRef}>
+          <button
+            type="button"
+            onClick={() => setLangMenuOpen(!langMenuOpen)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors cursor-pointer"
+            title={t("language", "Language")}
+          >
+            <Globe className="w-3.5 h-3.5 text-[#04abf2]" />
+            <span className="hidden md:inline uppercase text-[11px] font-semibold tracking-wider">
+              {currentLang.slice(0, 2)}
+            </span>
+          </button>
+
+          {langMenuOpen && (
+            <div className="absolute right-0 mt-2 w-48 max-h-72 overflow-y-auto bg-[var(--card-bg)] text-[var(--foreground)] rounded-lg shadow-2xl border border-[var(--border)] py-1.5 z-50 text-xs">
+              <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-400 uppercase tracking-wider border-b border-[var(--border)]">
+                {t("language", "Language")}
+              </div>
+              {languages.map((l) => (
+                <button
+                  key={l.name}
+                  type="button"
+                  onClick={async () => {
+                    setLangMenuOpen(false);
+                    await setLanguage(l.name);
+                  }}
+                  className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer ${
+                    currentLang === l.name
+                      ? "text-[#04abf2] font-semibold bg-black/5 dark:bg-white/5"
+                      : "text-neutral-700 dark:text-neutral-300"
+                  }`}
+                >
+                  <span>{l.displayName || l.name}</span>
+                  {currentLang === l.name && (
+                    <span className="text-[10px] text-[#04abf2]">✓</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Create Button */}
         <div className="relative" ref={createMenuRef}>
           <button
@@ -159,7 +210,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-neutral-700 dark:text-neutral-200 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors cursor-pointer"
           >
             <Video className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-            <span className="hidden sm:inline">Create</span>
+            <span className="hidden sm:inline">{t("upload", "Create")}</span>
           </button>
 
           {isLoggedIn && createMenuOpen && (
@@ -170,7 +221,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
                 <Video className="w-4 h-4 text-[#04abf2]" />
-                <span>Upload Video</span>
+                <span>{t("upload_new_video", "Upload Video")}</span>
               </Link>
               <Link
                 href="/import-video"
@@ -178,7 +229,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
                 <Layers className="w-4 h-4 text-emerald-500" />
-                <span>Import Video</span>
+                <span>{t("import", "Import Video")}</span>
               </Link>
               <Link
                 href="/shorts"
@@ -186,7 +237,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
                 <Sparkles className="w-4 h-4 text-purple-500" />
-                <span>PlayTube Shorts</span>
+                <span>{t("shorts", "PlayTube Shorts")}</span>
               </Link>
               <Link
                 href="/create-article"
@@ -194,7 +245,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
                 <Newspaper className="w-4 h-4 text-amber-500" />
-                <span>Create Article</span>
+                <span>{t("create_article", "Create Article")}</span>
               </Link>
             </div>
           )}
@@ -276,7 +327,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
                     >
                       <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
-                      <span>Mode</span>
+                      <span>{t("night_mode", "Mode")}</span>
                     </button>
                   )}
 
@@ -288,7 +339,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Users className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Switch Account</span>
+                      <span>{t("switch_account", "Switch Account")}</span>
                     </Link>
                     <Link
                       href="/subscriptions"
@@ -296,7 +347,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <User className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Subscriptions</span>
+                      <span>{t("subscriptions", "Subscriptions")}</span>
                     </Link>
                     <Link
                       href="/wallet"
@@ -304,7 +355,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Wallet className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Wallet</span>
+                      <span>{t("wallet", "Wallet")}</span>
                     </Link>
                     <Link
                       href="/saved-videos"
@@ -312,7 +363,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Bookmark className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>PlayLists</span>
+                      <span>{t("playlists", "PlayLists")}</span>
                     </Link>
                     <Link
                       href="/history"
@@ -320,7 +371,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Clock className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>History</span>
+                      <span>{t("history", "History")}</span>
                     </Link>
                   </div>
 
@@ -331,7 +382,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <ThumbsUp className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Liked videos</span>
+                      <span>{t("liked_videos", "Liked videos")}</span>
                     </Link>
                     <Link
                       href="/my_articles?page_id=1"
@@ -339,7 +390,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <FileText className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>My articles</span>
+                      <span>{t("my_articles", "My articles")}</span>
                     </Link>
                     <Link
                       href="/dashboard"
@@ -347,7 +398,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Video className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Video Studio</span>
+                      <span>{t("video_studio", "Video Studio")}</span>
                     </Link>
                     <Link
                       href="/settings/profile"
@@ -355,7 +406,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Settings className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Edit</span>
+                      <span>{t("edit", "Edit")}</span>
                     </Link>
                     <Link
                       href="/settings"
@@ -363,7 +414,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Settings className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Settings</span>
+                      <span>{t("settings", "Settings")}</span>
                     </Link>
                     <Link
                       href="/ads"
@@ -371,7 +422,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     >
                       <Layers className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                      <span>Advertising</span>
+                      <span>{t("advertising", "Advertising")}</span>
                     </Link>
                     {(user?.role === "admin" || user?.isAdmin) && (
                       <Link
@@ -380,7 +431,9 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                         className="flex items-center gap-3 px-4 py-2 text-[#04abf2] hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-t border-[var(--border)]"
                       >
                         <ShieldAlert className="w-4 h-4 text-[#04abf2]" />
-                        <span className="font-medium text-[#04abf2]">Admin Panel</span>
+                        <span className="font-medium text-[#04abf2]">
+                          {t("admin_panel", "Admin Panel")}
+                        </span>
                       </Link>
                     )}
                     <button
@@ -398,7 +451,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="w-full flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors text-left cursor-pointer"
                     >
                       <LogOut className="w-4 h-4 text-red-500" />
-                      <span>Log out</span>
+                      <span>{t("log_out", "Log out")}</span>
                     </button>
                   </div>
                 </>
@@ -411,7 +464,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-[#fad657] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium border-b border-[var(--border)] cursor-pointer"
                     >
                       <Lightbulb className="w-4 h-4 text-[#fad657] fill-[#fad657]" />
-                      <span>Mode</span>
+                      <span>{t("night_mode", "Mode")}</span>
                     </button>
                   )}
                   <Link
@@ -420,7 +473,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                     className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   >
                     <LogIn className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                    <span>Login</span>
+                    <span>{t("login", "Login")}</span>
                   </Link>
                   <Link
                     href="/register"
@@ -428,7 +481,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                     className="flex items-center gap-3 px-4 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   >
                     <UserPlus className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                    <span>Register</span>
+                    <span>{t("register", "Register")}</span>
                   </Link>
                 </>
               )}
@@ -448,6 +501,7 @@ export function Sidebar({
   isCollapsed?: boolean;
 }) {
   const pathname = usePathname();
+  const { t } = useTranslation();
   const { data: session } = authClient.useSession();
   const isLoggedIn = !!session?.user;
 
@@ -455,22 +509,22 @@ export function Sidebar({
 
   // Primary links used in mini sidebar mode
   const miniLinks = [
-    { href: "/", label: "Home", icon: Video },
+    { href: "/", label: t("home", "Home"), icon: Video },
     ...(isLoggedIn
       ? [
-        { href: "/history", label: "History", icon: History },
-        { href: "/paid-videos", label: "Purchases", icon: DollarSign },
+        { href: "/history", label: t("history", "History"), icon: History },
+        { href: "/paid-videos", label: t("purchases", "Purchases"), icon: DollarSign },
       ]
       : []),
-    { href: "/articles", label: "Articles", icon: FileText },
-    { href: "/videos/latest", label: "Latest videos", icon: Video },
-    { href: "/videos/trending", label: "Trending", icon: TrendingUp },
-    { href: "/videos/top", label: "Top videos", icon: BarChart2 },
-    { href: "/movies", label: "Movies", icon: Clapperboard },
-    { href: "/stock-videos", label: "Stock Videos", icon: Video },
-    { href: "/popular-channels", label: "Popular Channels", icon: Star },
-    { href: "/shorts", label: "Shorts", icon: ShortsIcon },
-    { href: "/contact-us", label: "Help", icon: HelpCircle },
+    { href: "/articles", label: t("articles", "Articles"), icon: FileText },
+    { href: "/videos/latest", label: t("latest_videos", "Latest videos"), icon: Video },
+    { href: "/videos/trending", label: t("trending", "Trending"), icon: TrendingUp },
+    { href: "/videos/top", label: t("top_videos", "Top videos"), icon: BarChart2 },
+    { href: "/movies", label: t("movies", "Movies"), icon: Clapperboard },
+    { href: "/stock-videos", label: t("stock_videos", "Stock Videos"), icon: Video },
+    { href: "/popular-channels", label: t("popular_channels", "Popular Channels"), icon: Star },
+    { href: "/shorts", label: t("shorts", "Shorts"), icon: ShortsIcon },
+    { href: "/contact-us", label: t("help", "Help"), icon: HelpCircle },
   ];
 
   return (
@@ -523,7 +577,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <Video className={`w-4 h-4 ${isCurrent("/") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Home</span>
+            <span>{t("home", "Home")}</span>
           </Link>
 
           {isLoggedIn && (
@@ -539,7 +593,7 @@ export function Sidebar({
                   <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
                 )}
                 <History className={`w-4 h-4 ${isCurrent("/history") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-                <span>History</span>
+                <span>{t("history", "History")}</span>
               </Link>
               <Link
                 href="/paid-videos"
@@ -552,7 +606,7 @@ export function Sidebar({
                   <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
                 )}
                 <DollarSign className={`w-4 h-4 ${isCurrent("/paid-videos") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-                <span>Purchases</span>
+                <span>{t("purchases", "Purchases")}</span>
               </Link>
             </>
           )}
@@ -568,7 +622,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <FileText className={`w-4 h-4 ${isCurrent("/articles") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Articles</span>
+            <span>{t("articles", "Articles")}</span>
           </Link>
         </div>
 
@@ -585,7 +639,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <Video className={`w-4 h-4 ${isCurrent("/videos/latest") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Latest videos</span>
+            <span>{t("latest_videos", "Latest videos")}</span>
           </Link>
           <Link
             href="/videos/trending"
@@ -598,7 +652,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <TrendingUp className={`w-4 h-4 ${isCurrent("/videos/trending") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Trending</span>
+            <span>{t("trending", "Trending")}</span>
           </Link>
           <Link
             href="/videos/top"
@@ -611,7 +665,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <BarChart2 className={`w-4 h-4 ${isCurrent("/videos/top") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Top videos</span>
+            <span>{t("top_videos", "Top videos")}</span>
           </Link>
           <Link
             href="/movies"
@@ -624,7 +678,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <Clapperboard className={`w-4 h-4 ${isCurrent("/movies") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Movies</span>
+            <span>{t("movies", "Movies")}</span>
           </Link>
           <Link
             href="/stock-videos"
@@ -637,7 +691,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <Video className={`w-4 h-4 ${isCurrent("/stock-videos") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Stock Videos</span>
+            <span>{t("stock_videos", "Stock Videos")}</span>
           </Link>
           <Link
             href="/popular-channels"
@@ -650,7 +704,7 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <Star className={`w-4 h-4 ${isCurrent("/popular-channels") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Popular Channels</span>
+            <span>{t("popular_channels", "Popular Channels")}</span>
           </Link>
           <Link
             href="/shorts"
@@ -663,14 +717,14 @@ export function Sidebar({
               <span className="w-1.5 h-1.5 rounded-full bg-[#04abf2] absolute left-1" />
             )}
             <ShortsIcon className={`w-4 h-4 ${isCurrent("/shorts") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Shorts</span>
+            <span>{t("shorts", "Shorts")}</span>
           </Link>
         </div>
 
         {/* Explore More Group */}
         <div className="pt-2 border-t border-[var(--border)] space-y-1">
           <p className="px-3 text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1">
-            EXPLORE MORE
+            {t("explore_more", "EXPLORE MORE")}
           </p>
           <Link
             href="/contact-us"
@@ -680,31 +734,31 @@ export function Sidebar({
               }`}
           >
             <HelpCircle className={`w-4 h-4 ${isCurrent("/contact-us") ? "text-[#04abf2]" : "text-neutral-500"}`} />
-            <span>Help</span>
+            <span>{t("help", "Help")}</span>
           </Link>
         </div>
 
         {/* Footer Links & Copyright */}
         <div className="pt-4 border-t border-[var(--border)] px-3 text-[11px] text-neutral-500 space-y-2">
           <div className="flex flex-wrap gap-x-2 gap-y-1">
-            <Link href="/terms/refund" className="hover:underline">Refund Policy</Link>
+            <Link href="/terms/refund" className="hover:underline">{t("refund", "Refund Policy")}</Link>
             <span>•</span>
-            <Link href="/faqs" className="hover:underline">FAQs</Link>
+            <Link href="/faqs" className="hover:underline">{t("faqs", "FAQs")}</Link>
             <span>•</span>
-            <Link href="/terms/terms" className="hover:underline">Terms of use</Link>
+            <Link href="/terms/terms" className="hover:underline">{t("terms_of_use", "Terms of use")}</Link>
             <span>•</span>
-            <Link href="/terms/privacy" className="hover:underline">Privacy Policy</Link>
+            <Link href="/terms/privacy" className="hover:underline">{t("privacy_policy", "Privacy Policy")}</Link>
             <span>•</span>
-            <Link href="/terms/about" className="hover:underline">About us</Link>
+            <Link href="/terms/about" className="hover:underline">{t("about_us", "About us")}</Link>
             <span>•</span>
-            <Link href="/contact-us" className="hover:underline">Contact us</Link>
+            <Link href="/contact-us" className="hover:underline">{t("contact_us", "Contact us")}</Link>
             <span>•</span>
-            <Link href="/developers" className="hover:underline">Developers</Link>
+            <Link href="/developers" className="hover:underline">{t("developers", "Developers")}</Link>
             <span>•</span>
-            <Link href="/language" className="hover:underline">Language</Link>
+            <Link href="/language" className="hover:underline">{t("language", "Language")}</Link>
           </div>
           <p className="text-[10px] text-neutral-500 dark:text-neutral-400 pt-2">
-            Copyright © 2026 PlayTube. All rights reserved.
+            {t("copyright", "Copyright © 2026 PlayTube. All rights reserved.")}
           </p>
         </div>
       </div>
