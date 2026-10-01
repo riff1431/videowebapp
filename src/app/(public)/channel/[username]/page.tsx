@@ -15,6 +15,7 @@ import { eq, desc, and, count } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { VideoCard } from "@/components/common/VideoCard";
+import { getServerTranslations } from "@/lib/translations/server";
 import {
   Video as VideoIcon,
   List,
@@ -44,6 +45,7 @@ export default async function ChannelPage({
   params,
   searchParams,
 }: ChannelPageProps) {
+  const { t } = await getServerTranslations();
   const { username } = await params;
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const activeTab = resolvedSearchParams.page || "videos";
@@ -183,12 +185,12 @@ export default async function ChannelPage({
   }
 
   const tabs = [
-    { key: "videos", label: "Videos", href: `/@${channelUser.username}?page=videos` },
-    { key: "play-list", label: "PlayLists", href: `/@${channelUser.username}?page=play-list` },
-    { key: "shorts", label: "Shorts", href: `/@${channelUser.username}?page=shorts` },
-    { key: "liked-videos", label: "Liked videos", href: `/@${channelUser.username}?page=liked-videos` },
-    { key: "activities", label: "Activities", href: `/@${channelUser.username}?page=activities` },
-    { key: "about", label: "About", href: `/@${channelUser.username}?page=about` },
+    { key: "videos", label: t("videos", "Videos"), href: `/@${channelUser.username}?page=videos` },
+    { key: "play-list", label: t("playlists", "PlayLists"), href: `/@${channelUser.username}?page=play-list` },
+    { key: "shorts", label: t("shorts", "Shorts"), href: `/@${channelUser.username}?page=shorts` },
+    { key: "liked-videos", label: t("liked_videos", "Liked videos"), href: `/@${channelUser.username}?page=liked-videos` },
+    { key: "activities", label: t("activities", "Activities"), href: `/@${channelUser.username}?page=activities` },
+    { key: "about", label: t("about", "About"), href: `/@${channelUser.username}?page=about` },
   ];
 
   const coverUrl = channelUser.cover
@@ -233,7 +235,7 @@ export default async function ChannelPage({
                 {displayName}
               </h1>
               <span className="text-xs text-neutral-500 font-normal">
-                | &nbsp;{subsCount?.value || 0} Subscribers
+                | &nbsp;{subsCount?.value || 0} {t("subscribers", "Subscribers")}
               </span>
             </div>
           </div>
@@ -245,14 +247,14 @@ export default async function ChannelPage({
                 href="/manage-videos"
                 className="bg-[#555555] hover:bg-[#444444] active:bg-[#333333] text-white text-xs font-semibold uppercase px-5 py-2 rounded-md shadow-xs transition-colors"
               >
-                MANAGE
+                {t("manage", "MANAGE")}
               </Link>
             ) : (
               <button
                 type="button"
                 className="bg-[#04abf2] hover:bg-[#0399d8] text-white text-xs font-semibold uppercase px-5 py-2 rounded-md shadow-xs transition-colors cursor-pointer"
               >
-                Subscribe
+                {t("subscribe", "Subscribe")}
               </button>
             )}
           </div>
@@ -292,7 +294,7 @@ export default async function ChannelPage({
             <div className="flex items-center gap-2 pb-3 mb-8 border-b border-neutral-200/80 dark:border-neutral-800">
               <List className="w-4 h-4 text-[#04abf2]" />
               <h2 className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
-                PlayLists
+                {t("playlists", "PlayLists")}
               </h2>
             </div>
 
@@ -302,7 +304,7 @@ export default async function ChannelPage({
                   <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.5]" />
                 </div>
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                  No videos found for now!
+                  {t("no_videos_found_for_now", "No videos found for now!")}
                 </p>
               </div>
             ) : (
@@ -338,7 +340,7 @@ export default async function ChannelPage({
                 ▶
               </div>
               <h2 className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
-                Latest videos
+                {t("latest_videos", "Latest videos")}
               </h2>
             </div>
 
@@ -348,7 +350,7 @@ export default async function ChannelPage({
                   <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.5]" />
                 </div>
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                  No videos found for now!
+                  {t("no_videos_found_for_now", "No videos found for now!")}
                 </p>
               </div>
             ) : (
@@ -377,7 +379,7 @@ export default async function ChannelPage({
           <div className="w-full">
             <div className="flex items-center gap-2 pb-3 mb-8 border-b border-neutral-200/80 dark:border-neutral-800">
               <h2 className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
-                Shorts
+                {t("shorts", "Shorts")}
               </h2>
             </div>
 
@@ -387,7 +389,7 @@ export default async function ChannelPage({
                   <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.5]" />
                 </div>
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                  No videos found for now!
+                  {t("no_videos_found_for_now", "No videos found for now!")}
                 </p>
               </div>
             ) : (
@@ -417,7 +419,7 @@ export default async function ChannelPage({
             <div className="flex items-center gap-2 pb-3 mb-8 border-b border-neutral-200/80 dark:border-neutral-800">
               <ThumbsUp className="w-4 h-4 text-[#04abf2]" />
               <h2 className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
-                Liked videos
+                {t("liked_videos", "Liked videos")}
               </h2>
             </div>
 
@@ -427,7 +429,7 @@ export default async function ChannelPage({
                   <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.5]" />
                 </div>
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                  No videos found for now!
+                  {t("no_videos_found_for_now", "No videos found for now!")}
                 </p>
               </div>
             ) : (
@@ -458,7 +460,7 @@ export default async function ChannelPage({
               <div className="flex items-center gap-2">
                 <Megaphone className="w-4 h-4 text-[#04abf2]" />
                 <h2 className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
-                  Most recent activities
+                  {t("most_recent_activities", "Most recent activities")}
                 </h2>
               </div>
               {isOwner && (
@@ -466,7 +468,7 @@ export default async function ChannelPage({
                   href="/create_post"
                   className="bg-[#04abf2] hover:bg-[#0399d8] active:bg-[#028ec8] text-white text-xs font-semibold px-4 py-2 rounded-md transition-colors shadow-xs"
                 >
-                  Create Post
+                  {t("create_post", "Create Post")}
                 </Link>
               )}
             </div>
@@ -477,7 +479,7 @@ export default async function ChannelPage({
                   <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.5]" />
                 </div>
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                  No activities found for now.
+                  {t("no_activities_found_for_now", "No activities found for now.")}
                 </p>
               </div>
             ) : (
@@ -541,13 +543,13 @@ export default async function ChannelPage({
               <div className="flex items-center gap-2 pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
                 <Info className="w-4 h-4 text-[#04abf2]" />
                 <h2 className="text-sm sm:text-base font-semibold text-neutral-800 dark:text-white">
-                  About {displayName}
+                  {t("about", "About")} {displayName}
                 </h2>
               </div>
 
               <div>
                 <h3 className="text-xs uppercase font-semibold text-neutral-400 tracking-wider mb-2">
-                  Description
+                  {t("description", "Description")}
                 </h3>
                 <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
                   {channelUser.about ||
@@ -558,11 +560,11 @@ export default async function ChannelPage({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-neutral-100 dark:border-neutral-800 text-xs">
                 <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
                   <Calendar className="w-4 h-4 text-neutral-400" />
-                  <span>Joined {new Date().getFullYear()}</span>
+                  <span>{t("joined", "Joined")} {new Date().getFullYear()}</span>
                 </div>
                 <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
                   <Eye className="w-4 h-4 text-neutral-400" />
-                  <span>Verified Creator Channel</span>
+                  <span>{t("verified_creator_channel", "Verified Creator Channel")}</span>
                 </div>
               </div>
             </div>

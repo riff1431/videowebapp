@@ -3,11 +3,13 @@ import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { VideoCard } from "@/components/common/VideoCard";
+import { getServerTranslations } from "@/lib/translations/server";
 import { Video, VideoOff } from "lucide-react";
 
 export const revalidate = 30;
 
 export default async function TrendingPage() {
+  const { t } = await getServerTranslations();
   const trendingVideos = await db
     .select({
       id: videos.id,
@@ -38,7 +40,7 @@ export default async function TrendingPage() {
           <Video className="w-4 h-4 stroke-[2.2]" />
         </div>
         <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-          Trending
+          {t("trending", "Trending")}
         </h1>
       </div>
 
@@ -49,7 +51,7 @@ export default async function TrendingPage() {
             <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.75]" />
           </div>
           <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-            No videos found for now!
+            {t("no_videos_found_for_now", "No videos found for now!")}
           </p>
         </div>
       ) : (

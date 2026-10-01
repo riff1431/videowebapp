@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslation } from "@/providers/language-provider";
 
 export interface VideoCardProps {
   id?: number;
@@ -28,6 +29,7 @@ export interface VideoCardProps {
 }
 
 export function VideoCard(props: VideoCardProps) {
+  const { t } = useTranslation();
   // Support both flattened and nested props (e.g. video={v} or { ...v })
   const v = props.video || props;
   const videoId = v.videoId || props.videoId || "";
@@ -91,7 +93,7 @@ export function VideoCard(props: VideoCardProps) {
           </Link>
 
           <div className="flex items-center text-[11px] text-neutral-400 mt-0.5">
-            <span>{(views ?? 0).toLocaleString()} views</span>
+            <span>{(views ?? 0).toLocaleString()} {t("views", "views")}</span>
           </div>
         </div>
       </div>

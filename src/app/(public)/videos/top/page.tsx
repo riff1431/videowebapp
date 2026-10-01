@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { desc, eq, and, gte } from "drizzle-orm";
 import { VideoCard } from "@/components/common/VideoCard";
+import { getServerTranslations } from "@/lib/translations/server";
 import { Video, VideoOff, BarChart2, Calendar } from "lucide-react";
 
 export const revalidate = 30;
@@ -13,6 +14,7 @@ interface TopVideosPageProps {
 }
 
 export default async function TopVideosPage({ searchParams }: TopVideosPageProps) {
+  const { t } = await getServerTranslations();
   const resolvedParams = searchParams ? await searchParams : {};
   const currentType = resolvedParams.type || "all";
 
@@ -56,11 +58,11 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
     .limit(24);
 
   const filterTabs = [
-    { type: "all", label: "All Time", icon: BarChart2 },
-    { type: "today", label: "Today", icon: Calendar },
-    { type: "this_week", label: "This week", icon: Calendar },
-    { type: "this_month", label: "This month", icon: Calendar },
-    { type: "this_year", label: "This year", icon: Calendar },
+    { type: "all", label: t("all_time", "All Time"), icon: BarChart2 },
+    { type: "today", label: t("today", "Today"), icon: Calendar },
+    { type: "this_week", label: t("this_week", "This week"), icon: Calendar },
+    { type: "this_month", label: t("this_month", "This month"), icon: Calendar },
+    { type: "this_year", label: t("this_year", "This year"), icon: Calendar },
   ];
 
   return (
@@ -71,7 +73,7 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
           <Video className="w-4 h-4 stroke-[2.2]" />
         </div>
         <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-          Top videos
+          {t("top_videos", "Top videos")}
         </h1>
       </div>
 
@@ -110,7 +112,7 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
             <VideoOff className="w-10 h-10 text-[#04abf2] stroke-[1.75]" />
           </div>
           <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-            No videos found for now!
+            {t("no_videos_found_for_now", "No videos found for now!")}
           </p>
         </div>
       ) : (
