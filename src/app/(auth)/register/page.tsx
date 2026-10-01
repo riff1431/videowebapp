@@ -5,9 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 import { AlertCircle } from "lucide-react";
+import { useTranslation } from "@/providers/language-provider";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,12 +24,12 @@ export default function RegisterPage() {
     setError("");
 
     if (!acceptTerms) {
-      setError("Please accept the terms of use and privacy policy");
+      setError(t("terms_error", "Please accept the terms of use and privacy policy"));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("password_not_match", "Passwords do not match"));
       return;
     }
 
@@ -43,13 +45,13 @@ export default function RegisterPage() {
       } as any);
 
       if (res.error) {
-        setError(res.error.message || "Failed to register account");
+        setError(res.error.message || t("invalid_request", "Failed to register account"));
       } else {
         router.push("/");
         router.refresh();
       }
     } catch (err: any) {
-      setError(err?.message || "An unexpected error occurred. Please try again.");
+      setError(err?.message || t("invalid_request", "An unexpected error occurred. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -79,7 +81,7 @@ export default function RegisterPage() {
             }}
           />
           <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Sign Up
+            {t("register", "Sign Up")}
           </h2>
         </div>
 
@@ -93,71 +95,71 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Username
+              {t("username", "Username")}
             </label>
             <input
               type="text"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Username"
+              placeholder={t("username", "Username")}
               className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              E-mail address
+              {t("email_address", "E-mail address")}
             </label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="E-mail address"
+              placeholder={t("email_address", "E-mail address")}
               className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Password
+              {t("password", "Password")}
             </label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder={t("password", "Password")}
               className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Confirm Password
+              {t("confirm_password", "Confirm Password")}
             </label>
             <input
               type="password"
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm password"
+              placeholder={t("confirm_password", "Confirm password")}
               className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Gender
+              {t("gender", "Gender")}
             </label>
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
               className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
             >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="male">{t("male", "Male")}</option>
+              <option value="female">{t("female", "Female")}</option>
             </select>
           </div>
 
@@ -170,13 +172,13 @@ export default function RegisterPage() {
               className="rounded accent-[#04abf2]"
             />
             <label htmlFor="terms">
-              By creating your account, you agree to our{" "}
+              {t("terms_agreement", "By creating your account, you agree to our")}{" "}
               <Link href="/terms/terms" className="text-[#04abf2] hover:underline">
-                Terms of use
+                {t("terms_of_use", "Terms of use")}
               </Link>{" "}
               &{" "}
               <Link href="/terms/privacy" className="text-[#04abf2] hover:underline">
-                Privacy policy
+                {t("privacy_policy", "Privacy policy")}
               </Link>
             </label>
           </div>
@@ -186,14 +188,14 @@ export default function RegisterPage() {
             disabled={loading}
             className="w-full h-10 mt-2 bg-[#04abf2] hover:bg-[#039be5] text-white font-semibold text-xs rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
           >
-            {loading ? "Creating account..." : "Sign Up"}
+            {loading ? t("please_wait", "Creating account...") : t("register", "Sign Up")}
           </button>
         </form>
 
         <div className="mt-6 pt-6 border-t border-[var(--border)] text-center text-xs text-neutral-500 dark:text-neutral-400">
-          Already have an account?{" "}
+          {t("already_have_account", "Already have an account?")}{" "}
           <Link href="/login" className="font-semibold text-[#04abf2] hover:underline">
-            Login
+            {t("login", "Login")}
           </Link>
         </div>
       </div>

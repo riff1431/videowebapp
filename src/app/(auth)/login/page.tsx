@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 import { AlertCircle, Loader2 } from "lucide-react";
+import { useTranslation } from "@/providers/language-provider";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
+  const { t } = useTranslation();
 
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,13 +40,13 @@ function LoginForm() {
       }
 
       if (res?.error) {
-        setError(res.error.message || "Invalid username/email or password");
+        setError(res.error.message || t("invalid_username_or_password", "Invalid username or password"));
       } else {
         router.push(redirectUrl);
         router.refresh();
       }
     } catch (err: any) {
-      setError(err?.message || "An unexpected error occurred. Please try again.");
+      setError(err?.message || t("invalid_request", "An unexpected error occurred. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,7 @@ function LoginForm() {
       {/* PlayTube Standard Login Card */}
       <div className="w-full max-w-[410px] bg-white dark:bg-[#1a1a1a] text-neutral-800 dark:text-neutral-100 rounded-xl shadow-lg border border-neutral-100 dark:border-neutral-800 p-8 sm:p-9">
         <h1 className="text-xl font-bold text-neutral-800 dark:text-white mb-6 text-left">
-          Log In
+          {t("login", "Log In")}
         </h1>
 
         {error && (
@@ -72,7 +74,7 @@ function LoginForm() {
               required
               value={usernameOrEmail}
               onChange={(e) => setUsernameOrEmail(e.target.value)}
-              placeholder="Username"
+              placeholder={t("username", "Username")}
               className="w-full h-11 px-4 text-xs sm:text-sm bg-[#ececec] dark:bg-neutral-800/90 rounded-md border-0 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#04abf2] transition-all"
             />
           </div>
@@ -83,7 +85,7 @@ function LoginForm() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder={t("password", "Password")}
               className="w-full h-11 px-4 text-xs sm:text-sm bg-[#ececec] dark:bg-neutral-800/90 rounded-md border-0 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#04abf2] transition-all"
             />
           </div>
@@ -93,7 +95,7 @@ function LoginForm() {
               href="/forgot-password"
               className="text-xs text-neutral-500 dark:text-neutral-400 hover:text-[#04abf2] dark:hover:text-[#04abf2] transition-colors"
             >
-              Forgot your password?
+              {t("forgot_your_password", "Forgot your password?")}
             </Link>
           </div>
 
@@ -105,10 +107,10 @@ function LoginForm() {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Logging in...</span>
+                <span>{t("please_wait", "Please wait...")}</span>
               </>
             ) : (
-              <span>Log In</span>
+              <span>{t("login", "Log In")}</span>
             )}
           </button>
 
@@ -124,7 +126,7 @@ function LoginForm() {
                   <span className="w-1.5 h-1.5 rounded-full bg-[#0092d6]" />
                 )}
               </span>
-              <span>Remember this device</span>
+              <span>{t("remember_device", "Remember this device")}</span>
             </button>
           </div>
         </form>
@@ -132,12 +134,12 @@ function LoginForm() {
         <div className="border-t border-neutral-100 dark:border-neutral-800/80 my-5" />
 
         <div className="text-xs text-neutral-600 dark:text-neutral-400">
-          New here?{" "}
+          {t("new_here", "New here?")}{" "}
           <Link
             href="/register"
             className="font-semibold text-neutral-900 dark:text-white hover:text-[#04abf2] dark:hover:text-[#04abf2] transition-colors ml-1"
           >
-            Register
+            {t("register", "Register")}
           </Link>
         </div>
       </div>
