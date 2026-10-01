@@ -136,7 +136,8 @@ const MENU_ITEMS: MenuItem[] = [
     title: "Articles",
     icon: FileText,
     subItems: [
-      { title: "Manage Articles", href: "/admin/articles" },
+      { title: "Create New Article", href: "/admin/create-article" },
+      { title: "Manage Articles", href: "/admin/manage-articles" },
     ],
   },
   {
