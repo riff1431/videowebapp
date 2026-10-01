@@ -90,3 +90,54 @@ export async function deleteLanguagesAction(ids: number[]) {
     return { success: false, error: err.message || "Failed to delete language(s)" };
   }
 }
+
+export async function updateLanguageIsoAction(langName: string, iso: string) {
+  try {
+    const cleanIso = iso.trim().toLowerCase();
+    if (!cleanIso) {
+      return { success: false, error: "ISO code cannot be empty" };
+    }
+
+    await db
+      .update(languages)
+      .set({ iso: cleanIso })
+      .where(eq(languages.name, langName.toLowerCase()));
+
+    revalidatePath("/admin/manage-languages");
+    revalidatePath("/admin/edit-lang");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to update ISO" };
+  }
+}
+
+export async function updateLanguageTranslationAction(
+  key: string,
+  lang: string,
+  value: string
+) {
+  try {
+    const cleanKey = key.trim();
+    const cleanLang = lang.trim().toLowerCase();
+
+    const { languageTranslations } = await import("@/db/schema");
+
+    await db
+      .insert(languageTranslations)
+      .values({
+        key: cleanKey,
+        lang: cleanLang,
+        value: value,
+      })
+      .onConflictDoUpdate({
+        target: [languageTranslations.key, languageTranslations.lang],
+        set: { value: value },
+      });
+
+    revalidatePath("/admin/edit-lang");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to update translation" };
+  }
+}
+

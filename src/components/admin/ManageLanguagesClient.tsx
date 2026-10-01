@@ -155,7 +155,7 @@ export function ManageLanguagesClient({ initialLanguages }: ManageLanguagesClien
                         <div className="flex items-center justify-center gap-2 text-xs">
                           {/* Edit button */}
                           <Link
-                            href={`/admin/add-language`}
+                            href={`/admin/edit-lang?id=${encodeURIComponent(lang.name)}`}
                             className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 rounded text-[11px] font-medium transition-colors cursor-pointer"
                           >
                             <span className="text-[10px]">🖊</span>
