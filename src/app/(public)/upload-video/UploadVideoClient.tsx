@@ -99,7 +99,7 @@ function UploadVideoContent() {
 
     try {
       let finalVideoUrl =
-        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+        "https://vjs.zencdn.net/v/oceans.mp4";
       let finalThumbnailUrl =
         thumbnailPreviewUrl ||
         "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=720&auto=format&fit=crop&q=80";
