@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/generate-theme-manifest.ts",
+    "prebuild": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/generate-theme-manifest.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "theme:new": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/theme-new.ts",
     "seed": "node --env-file=.env node_modules/tsx/dist/cli.mjs src/db/seed/seed.ts",
     "db:reset": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/reset-db.ts",
     "setup": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/setup.ts",
