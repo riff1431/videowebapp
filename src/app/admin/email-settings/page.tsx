@@ -4,6 +4,7 @@ import { siteConfig } from "@/db/schema";
 import { inArray } from "drizzle-orm";
 import { updateAdminSettingsAction } from "@/modules/admin/admin.actions";
 import { Mail, Save } from "lucide-react";
+import { TestEmailBox } from "./TestEmailBox";
 
 export const dynamic = "force-dynamic";
 
@@ -135,6 +136,8 @@ export default async function AdminEmailSettingsPage() {
           </button>
         </div>
       </form>
+
+      <TestEmailBox />
     </div>
   );
 }

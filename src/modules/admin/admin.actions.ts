@@ -5,7 +5,7 @@ import { assertAdmin } from "@/lib/auth/assert-admin";
 import { db } from "@/db";
 import { siteConfig, videos, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function updateAdminSettingsAction(formData: FormData) {
   await assertAdmin();
@@ -21,6 +21,10 @@ export async function updateAdminSettingsAction(formData: FormData) {
           });
       }
     }
+
+    try {
+      revalidateTag("site-config");
+    } catch {}
 
     revalidatePath("/admin/settings");
     revalidatePath("/admin/ads");
