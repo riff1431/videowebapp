@@ -16,7 +16,7 @@ describe("Phase 0.6: Banned IPs and Inactive User Enforcement", () => {
     await db.delete(bannedIps).where(eq(bannedIps.ipAddress, TEST_BANNED_IP));
     await db.insert(bannedIps).values({
       ipAddress: TEST_BANNED_IP,
-      createdAt: new Date(),
+      time: new Date(),
     });
   });
 

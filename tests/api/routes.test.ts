@@ -247,7 +247,7 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
 
     it("fails validation when adding a comment without valid text", async () => {
       const result = await addCommentAction({
-        videoId: seed.videos.publicVideo.id,
+        videoDbId: seed.videos.publicVideo.id,
         text: "   ",
       });
       expect(result.success).toBe(false);

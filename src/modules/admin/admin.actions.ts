@@ -23,7 +23,7 @@ export async function updateAdminSettingsAction(formData: FormData) {
     }
 
     try {
-      revalidateTag("site-config");
+      revalidateTag("site-config", "default");
     } catch {}
 
     revalidatePath("/admin/settings");

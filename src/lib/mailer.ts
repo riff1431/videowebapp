@@ -74,3 +74,5 @@ export async function sendEmail({ to, subject, html, text }: MailOptions): Promi
     return { success: false, error: err.message || "Failed to dispatch email." };
   }
 }
+
+export const sendMail = sendEmail;

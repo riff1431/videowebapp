@@ -30,9 +30,9 @@ export default function ForgotPasswordPage() {
 
       const res = await requestPasswordResetAction(formData);
       if (res.success) {
-        setSuccessMsg(res.message || "Reset link dispatched.");
+        setSuccessMsg((res as any).message || "Reset link dispatched.");
       } else {
-        setError(res.error || "Failed to submit request.");
+        setError((res as any).error || "Failed to submit request.");
       }
     } catch {
       setError("An unexpected error occurred. Please try again.");

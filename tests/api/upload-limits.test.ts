@@ -65,7 +65,7 @@ describe("Phase 1.2: Video Upload Limits and Permissions Policy", () => {
       .insert(managePro)
       .values({
         type: "pro_yearly",
-        price: "99",
+        price: 99,
         status: 1,
         maxUpload: "500MB",
       })

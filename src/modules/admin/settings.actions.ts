@@ -19,7 +19,7 @@ export async function saveSingleSettingAction(key: string, value: string) {
       });
 
     try {
-      revalidateTag("site-config");
+      revalidateTag("site-config", "default");
     } catch {}
 
     revalidatePath("/admin/settings");
@@ -46,7 +46,7 @@ export async function saveMultipleSettingsAction(settings: Record<string, string
     }
 
     try {
-      revalidateTag("site-config");
+      revalidateTag("site-config", "default");
     } catch {}
 
     revalidatePath("/admin/settings");

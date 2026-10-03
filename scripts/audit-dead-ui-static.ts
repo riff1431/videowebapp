@@ -57,7 +57,7 @@ function inspectFile(filePath: string) {
 
         for (const prop of node.attributes.properties) {
           if (ts.isJsxAttribute(prop)) {
-            const attrName = prop.name.text;
+            const attrName = ("text" in prop.name ? (prop.name as any).text : "");
             if (attrName === "onClick") {
               hasOnClick = true;
               onClickText = prop.initializer?.getText(sourceFile) || "";
@@ -119,7 +119,7 @@ function inspectFile(filePath: string) {
       if (tagName === "a" || tagName === "Link") {
         for (const prop of node.attributes.properties) {
           if (ts.isJsxAttribute(prop)) {
-            const attrName = prop.name.text;
+            const attrName = ("text" in prop.name ? (prop.name as any).text : "");
             if (attrName === "href" && prop.initializer) {
               const hrefVal = prop.initializer.getText(sourceFile).replace(/['"{}]/g, "");
               if (
@@ -147,7 +147,7 @@ function inspectFile(filePath: string) {
         let hasActionOrSubmit = false;
         for (const prop of node.attributes.properties) {
           if (ts.isJsxAttribute(prop)) {
-            const attrName = prop.name.text;
+            const attrName = ("text" in prop.name ? (prop.name as any).text : "");
             if (attrName === "onSubmit" || attrName === "action") {
               hasActionOrSubmit = true;
             }

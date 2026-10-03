@@ -145,7 +145,7 @@ test.describe("Phase 4: Admin <-> User Round-Trip Integration Tests", () => {
     // Call admin action from client runtime of non-admin user
     const res = await page.evaluate(async () => {
       try {
-        const mod = await import("/src/modules/admin/settings.actions.ts");
+        const mod = await import("@/modules/admin/settings.actions");
         const actionRes = await mod.saveSingleSettingAction("unauth_security_probe", "probe_val");
         return { attempted: true, result: actionRes };
       } catch (err: any) {

@@ -19,7 +19,7 @@ describe("0.2 Security: Password Reset Flow Suite", () => {
     const existingRes = await requestPasswordResetAction(existingFormData);
 
     expect(existingRes.success).toBe(true);
-    expect(existingRes.message).toBe(
+    expect((existingRes as any).message).toBe(
       "If an account with that email exists, password reset instructions have been sent."
     );
 
@@ -29,7 +29,7 @@ describe("0.2 Security: Password Reset Flow Suite", () => {
     const nonExistingRes = await requestPasswordResetAction(nonExistingFormData);
 
     expect(nonExistingRes.success).toBe(true);
-    expect(nonExistingRes.message).toBe(
+    expect((nonExistingRes as any).message).toBe(
       "If an account with that email exists, password reset instructions have been sent."
     );
 

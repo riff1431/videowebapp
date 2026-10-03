@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { Check, X, Trash2, ExternalLink } from "lucide-react";
 import {
@@ -33,6 +33,8 @@ export function BankReceiptsClient({
   disapprovedCount,
 }: BankReceiptsClientProps) {
   const [, startTransition] = useTransition();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 10;
 
   const handleApprove = (id: number) => {
     startTransition(async () => {

@@ -108,7 +108,7 @@ function processSourceFile(sourceFile: ts.SourceFile, relativePath: string) {
 
     // 2. JSX Attributes: placeholder, title, alt, aria-label, label, value
     if (ts.isJsxAttribute(node)) {
-      const attrName = node.name.text;
+      const attrName = ("text" in node.name ? (node.name as any).text : "");
       const targetAttrs = ["placeholder", "title", "alt", "aria-label", "label", "value"];
       if (targetAttrs.includes(attrName) && node.initializer) {
         if (ts.isStringLiteral(node.initializer)) {
