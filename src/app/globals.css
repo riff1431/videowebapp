@@ -110,14 +110,16 @@ h6 {
 }
 
 /* Theme Switching Styles: Default (Classic PlayTube) vs YouPlay (Modern PlayTube) */
-html[data-theme="default"], body.theme-default {
+html[data-theme="default"],
+body.theme-default {
   --primary: #c4302b;
   --primary-hover: #b32520;
   --primary-rgb: 196, 48, 43;
   --radius: 2px;
 }
 
-html[data-theme="youplay"], body.theme-youplay {
+html[data-theme="youplay"],
+body.theme-youplay {
   --primary: #04abf2;
   --primary-hover: #039be5;
   --primary-rgb: 4, 171, 242;
