@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { paymentRequests } from "@/db/schema";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { createNotification } from "@/services/notification.service";
 
 export async function processPaymentRequestsAction(ids: number[], action: "Paid" | "Declined" | "Delete") {
   await assertAdmin();
@@ -13,10 +14,20 @@ export async function processPaymentRequestsAction(ids: number[], action: "Paid"
     if (ids.length === 0) return { success: true };
 
     if (action === "Paid") {
+      const pReqs = await db.select().from(paymentRequests).where(inArray(paymentRequests.id, ids));
       await db
         .update(paymentRequests)
         .set({ status: 1, reviewedAt: new Date() })
         .where(inArray(paymentRequests.id, ids));
+
+      for (const pr of pReqs) {
+        await createNotification({
+          userId: pr.userId,
+          type: "payout_decision",
+          text: `Your withdrawal payout request for ${pr.amount} has been marked as Paid.`,
+          url: "/settings",
+        });
+      }
     } else if (action === "Declined") {
       await db
         .update(paymentRequests)

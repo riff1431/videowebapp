@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { users, customProfileFields, verificationRequests, monetizationRequests, siteConfig } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { createNotification } from "@/services/notification.service";
 
 // ========================
 // 1. Manage Users Actions
@@ -131,6 +132,14 @@ export async function bulkVerificationRequestAction(requestIds: number[], action
       const userIds = reqs.map((r) => r.userId);
       if (userIds.length > 0) {
         await db.update(users).set({ verified: true }).where(inArray(users.id, userIds));
+        for (const uid of userIds) {
+          await createNotification({
+            userId: uid,
+            type: "verification_decision",
+            text: "Congratulations! Your verification request has been approved.",
+            url: "/settings",
+          });
+        }
       }
       await db.update(verificationRequests).set({ status: "verified" }).where(inArray(verificationRequests.id, requestIds));
     } else if (action === "delete") {
@@ -154,7 +163,16 @@ export async function bulkMonetizationRequestAction(requestIds: number[], action
     if (!requestIds || requestIds.length === 0) return { success: false, error: "No items selected" };
 
     if (action === "verify") {
+      const mReqs = await db.select().from(monetizationRequests).where(inArray(monetizationRequests.id, requestIds));
       await db.update(monetizationRequests).set({ status: "verified" }).where(inArray(monetizationRequests.id, requestIds));
+      for (const mr of mReqs) {
+        await createNotification({
+          userId: mr.userId,
+          type: "monetization_decision",
+          text: "Congratulations! Your channel monetization request has been approved.",
+          url: "/settings",
+        });
+      }
     } else if (action === "delete") {
       await db.delete(monetizationRequests).where(inArray(monetizationRequests.id, requestIds));
     }

@@ -643,4 +643,17 @@ export const invitationLinks = pgTable("invitation_links", {
   invitedId: integer("invited_id").default(0).notNull(),
 });
 
+// ==========================================
+// Notifications Schema (Phase 1.6)
+// ==========================================
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  type: varchar("type", { length: 100 }).notNull().default("system"),
+  text: text("text").notNull(),
+  url: text("url").default("/").notNull(),
+  seen: integer("seen").default(0).notNull(), // 0: unread, 1: read
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 

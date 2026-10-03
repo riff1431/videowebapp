@@ -13,6 +13,7 @@ import {
   videos,
   siteConfig,
   categories,
+  notifications,
 } from "@/db/schema";
 import { eq, inArray, ilike, or, desc, asc, and, gte, lte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -449,6 +450,20 @@ export async function sendMassNotificationAction(data: {
         .where(eq(users.active, true))
         .limit(2000);
       targetUserIds = allActive.map((u) => u.id);
+    }
+
+    // Insert notification rows per user (Phase 1.6)
+    if (targetUserIds.length > 0) {
+      const notificationRows = targetUserIds.map((uid) => ({
+        userId: uid,
+        type: "mass_notification",
+        text: data.description.trim(),
+        url: data.url.trim() || "/",
+        seen: 0,
+      }));
+      for (let i = 0; i < notificationRows.length; i += 500) {
+        await db.insert(notifications).values(notificationRows.slice(i, i + 500));
+      }
     }
 
     // Also record activity for audit

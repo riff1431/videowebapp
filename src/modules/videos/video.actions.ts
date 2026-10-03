@@ -18,6 +18,7 @@ import { sanitizePlainText } from "@/lib/security/sanitize";
 import { getUserUploadLimit } from "@/lib/config/upload-policy";
 import { censorText } from "@/lib/security/censor";
 import { getSiteConfig } from "@/lib/config";
+import { createNotification } from "@/services/notification.service";
 
 // ==========================================
 // 1. Video Upload Server Action
@@ -304,6 +305,17 @@ export async function addCommentAction({
       })
       .returning();
 
+    // Trigger notification to video owner if different
+    const [targetVid] = await db.select({ userId: videos.userId, videoId: videos.videoId }).from(videos).where(eq(videos.id, videoDbId)).limit(1);
+    if (targetVid && targetVid.userId !== currentUserId) {
+      await createNotification({
+        userId: targetVid.userId,
+        type: "comment",
+        text: "Someone commented on your video.",
+        url: `/watch/${targetVid.videoId}`,
+      });
+    }
+
     revalidatePath("/watch/[videoId]", "page");
     return { success: true, comment: newComment };
   } catch (err: any) {
@@ -350,6 +362,18 @@ export async function addCommentReplyAction({
         text: censoredReply,
       })
       .returning();
+
+    // Trigger notification to original comment author if different
+    const [targetComm] = await db.select({ userId: comments.userId }).from(comments).where(eq(comments.id, commentId)).limit(1);
+    const [parentVid] = await db.select({ videoId: videos.videoId }).from(videos).where(eq(videos.id, videoDbId)).limit(1);
+    if (targetComm && targetComm.userId !== currentUserId) {
+      await createNotification({
+        userId: targetComm.userId,
+        type: "reply",
+        text: "Someone replied to your comment.",
+        url: parentVid ? `/watch/${parentVid.videoId}` : "/watch",
+      });
+    }
 
     revalidatePath("/watch/[videoId]", "page");
     return { success: true, reply: newReply };
@@ -436,6 +460,16 @@ export async function toggleSubscribeAction({
         subscriberId: currentUserId,
         channelId: channelUserId,
       });
+
+      // Trigger new subscriber notification
+      const [subscriberUser] = await db.select({ username: users.username }).from(users).where(eq(users.id, currentUserId)).limit(1);
+      await createNotification({
+        userId: channelUserId,
+        type: "subscriber",
+        text: `@${subscriberUser?.username || "A user"} subscribed to your channel.`,
+        url: `/channel/${subscriberUser?.username || ""}`,
+      });
+
       revalidatePath("/subscriptions");
       return { success: true, subscribed: true };
     }

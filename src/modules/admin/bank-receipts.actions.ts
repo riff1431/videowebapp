@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { bankReceipts, users, transactions } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { createNotification } from "@/services/notification.service";
 
 export async function approveBankReceiptAction(receiptId: number) {
   await assertAdmin();
@@ -47,6 +48,13 @@ export async function approveBankReceiptAction(receiptId: number) {
         amount: Number(receipt.price || 0),
         status: "completed",
         description: `Bank transfer approved (Receipt #${receiptId})`,
+      });
+
+      await createNotification({
+        userId: user.id,
+        type: "bank_receipt_decision",
+        text: `Your bank deposit receipt (#${receiptId}) has been approved and credited.`,
+        url: "/wallet",
       });
     }
 

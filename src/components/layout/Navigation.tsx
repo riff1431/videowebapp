@@ -43,6 +43,7 @@ import {
   Globe,
 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
+import { NotificationBell } from "./NotificationBell";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const router = useRouter();
@@ -263,12 +264,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             </Link>
 
             {/* Notification Bell */}
-            <button
-              className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors relative"
-              title="Notifications"
-            >
-              <Bell className="w-4 h-4" />
-            </button>
+            <NotificationBell />
           </>
         )}
 
