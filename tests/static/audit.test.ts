@@ -47,32 +47,54 @@ describe("Static Audit & Non-API Code Detector", () => {
     ).toEqual([]);
   });
 
-  it("detects and records hardcoded production secrets or Supabase project keys in source code", () => {
+  it("fails if repo contains a remote Supabase project URL other than localhost/127.0.0.1", () => {
+    const remoteUrlViolations: { file: string; line: number; match: string }[] = [];
+
+    for (const file of allFiles) {
+      const content = fs.readFileSync(file, "utf-8");
+      const lines = content.split("\n");
+      lines.forEach((line, idx) => {
+        const match = line.match(/https?:\/\/[a-z0-9-]+\.supabase\.co/i);
+        if (match) {
+          const rel = path.relative(process.cwd(), file).replace(/\\/g, "/");
+          remoteUrlViolations.push({
+            file: rel,
+            line: idx + 1,
+            match: match[0],
+          });
+        }
+      });
+    }
+
+    expect(
+      remoteUrlViolations,
+      `Hardcoded remote Supabase project URLs found in code: ${JSON.stringify(remoteUrlViolations, null, 2)}`
+    ).toEqual([]);
+  });
+
+  it("fails if repo contains hardcoded JWT token patterns outside .env files", () => {
     const hardcodedSecrets: { file: string; line: number; snippet: string }[] = [];
 
     for (const file of allFiles) {
       const content = fs.readFileSync(file, "utf-8");
       const lines = content.split("\n");
       lines.forEach((line, idx) => {
-        // Detect hardcoded production JWT anon tokens
-        if (/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/.test(line)) {
+        // Detect hardcoded JWT tokens ("eyJ...")
+        if (/eyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}/.test(line)) {
           const rel = path.relative(process.cwd(), file).replace(/\\/g, "/");
           hardcodedSecrets.push({
             file: rel,
             line: idx + 1,
-            snippet: line.trim().substring(0, 50) + "...",
+            snippet: line.trim().substring(0, 40) + "...",
           });
         }
       });
     }
 
-    // Record findings for test report (known bug / finding in src/lib/storage/supabase.ts)
-    if (hardcodedSecrets.length > 0) {
-      console.warn(
-        `[STATIC AUDIT WARNING] Hardcoded Supabase JWT keys found in:`,
-        hardcodedSecrets
-      );
-    }
+    expect(
+      hardcodedSecrets,
+      `Hardcoded JWT token patterns found outside .env files: ${JSON.stringify(hardcodedSecrets, null, 2)}`
+    ).toEqual([]);
   });
 
   it("detects leftover PHP script references (.php) in source code", () => {

@@ -1,14 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.SUPABASE_URL ||
-  "https://olhrhkbhfpwcsqxturko.supabase.co";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9saHJoa2JoZnB3Y3NxeHR1cmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxMzgyNjQsImV4cCI6MjEwNTcxNDI2NH0.Bit0OS_Q2ND8FJ9xzsWuKY5HzvKnXlEq8ZvGPeTUDQo";
+if (!supabaseUrl) {
+  throw new Error("Missing environment variable: NEXT_PUBLIC_SUPABASE_URL is required.");
+}
+if (!supabaseAnonKey) {
+  throw new Error("Missing environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY is required.");
+}
 
 /**
  * Public client for client components and public storage/reads
