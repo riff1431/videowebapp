@@ -143,7 +143,10 @@ export function ManageVideoAdsClient({ initialAds }: ManageVideoAdsClientProps) 
               className="flex-1 bg-white dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
             />
             <button
-              onClick={() => {}}
+              type="button"
+              onClick={() => {
+                // Search filter is reactive via `search` state
+              }}
               className="px-5 py-2 bg-[#04abf2] hover:bg-[#0396d5] text-white text-xs font-semibold rounded transition-colors cursor-pointer"
             >
               Search

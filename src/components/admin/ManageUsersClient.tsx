@@ -34,6 +34,8 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
   const [onlineFilter, setOnlineFilter] = useState<"all" | "online" | "offline">("all");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkAction, setBulkAction] = useState<"activate" | "deactivate" | "delete">("activate");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [, startTransition] = useTransition();
 
   // Filtered users
@@ -59,6 +61,9 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
 
     return matchesSearch && matchesMember && matchesOnline;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const paginatedUsers = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const toggleSelectAll = () => {
     if (selectedIds.length === filtered.length) {
@@ -192,7 +197,7 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
             </select>
 
             <button
-              onClick={() => {}}
+              onClick={() => setCurrentPage(1)}
               className="px-6 py-2 bg-[#04abf2] hover:bg-[#0396d5] text-white text-xs font-semibold rounded transition-colors shadow-xs cursor-pointer"
             >
               Search
@@ -246,14 +251,14 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-[#292d33]">
-              {filtered.length === 0 ? (
+              {paginatedUsers.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
                     No users found matching query.
                   </td>
                 </tr>
               ) : (
-                filtered.map((user) => {
+                paginatedUsers.map((user) => {
                   const isSelected = selectedIds.includes(user.id);
                   const isActive = user.active !== false;
 
@@ -328,7 +333,8 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-2">
           <div className="text-xs text-neutral-700 dark:text-[#ced4da]">
-            Showing {filtered.length} out of {usersList.length}
+            Showing {filtered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1} to{" "}
+            {Math.min(currentPage * pageSize, filtered.length)} of {filtered.length} entries
           </div>
           <div className="space-y-1">
             <span className="text-xs text-neutral-700 dark:text-[#ced4da] block">Action</span>
@@ -355,14 +361,24 @@ export function ManageUsersClient({ initialUsers, onlineCount }: ManageUsersClie
 
         {/* Pagination buttons */}
         <div className="flex items-center gap-1 self-start sm:self-center">
-          <button className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] cursor-pointer">
-            |&lt;
+          <button
+            type="button"
+            disabled={currentPage <= 1}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+          >
+            Previous
           </button>
-          <button className="w-7 h-7 bg-[#04abf2] text-white rounded-full text-xs font-bold flex items-center justify-center">
-            1
-          </button>
-          <button className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] cursor-pointer">
-            &gt;|
+          <span className="w-7 h-7 bg-[#04abf2] text-white rounded-full text-xs font-bold flex items-center justify-center">
+            {currentPage}
+          </span>
+          <button
+            type="button"
+            disabled={currentPage >= totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+          >
+            Next
           </button>
         </div>
       </div>

@@ -329,23 +329,13 @@ export default function ManageUsersInvitationPage() {
           </div>
 
           {/* Simple pagination */}
-          <div className="flex items-center gap-1">
-            <button
-              disabled
-              className="p-1.5 rounded text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-40"
-            >
-              <ChevronsLeft className="w-4 h-4" />
-            </button>
-            <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#00adef] text-white text-xs font-bold">
-              1
-            </span>
-            <button
-              disabled
-              className="p-1.5 rounded text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-40"
-            >
-              <ChevronsRight className="w-4 h-4" />
-            </button>
-          </div>
+          {invitations.length > 0 && (
+            <div className="flex items-center gap-1">
+              <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#00adef] text-white text-xs font-bold">
+                1
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

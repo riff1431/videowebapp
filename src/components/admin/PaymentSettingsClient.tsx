@@ -49,7 +49,7 @@ export function PaymentSettingsClient({ initialConfig }: PaymentSettingsClientPr
 
       {/* Info notice matching screenshot */}
       <div className="w-full bg-[#d9edf7] dark:bg-[#1a384c] border border-[#bce8f1] dark:border-[#22506d] text-[#31708f] dark:text-[#8ac9eb] px-4 py-3 rounded-md text-xs">
-        <strong>Info:</strong> For more information on how to setup payment gateways, please visit our <a href="#" className="underline font-semibold">documentation</a> page.
+        <strong>Info:</strong> For more information on how to setup payment gateways, please visit our <a href="https://docs.playtubescript.com" target="_blank" rel="noreferrer" className="underline font-semibold">documentation</a> page.
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">

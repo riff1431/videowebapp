@@ -26,6 +26,8 @@ interface ManageUserAdsClientProps {
 export function ManageUserAdsClient({ initialAds }: ManageUserAdsClientProps) {
   const [ads, setAds] = useState<UserAdRow[]>(initialAds);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [, startTransition] = useTransition();
 
@@ -105,7 +107,7 @@ export function ManageUserAdsClient({ initialAds }: ManageUserAdsClientProps) {
               className="flex-1 bg-white dark:bg-[#181a1d] border border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
             />
             <button
-              onClick={() => {}}
+              onClick={() => setCurrentPage(1)}
               className="px-5 py-2 bg-[#04abf2] hover:bg-[#0396d5] text-white text-xs font-semibold rounded transition-colors cursor-pointer"
             >
               Search
@@ -158,7 +160,7 @@ export function ManageUserAdsClient({ initialAds }: ManageUserAdsClientProps) {
                   </td>
                 </tr>
               ) : (
-                filtered.map((ad) => (
+                filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((ad) => (
                   <tr key={ad.id} className="hover:bg-neutral-50 dark:hover:bg-[#181a1d] transition-colors">
                     <td className="py-3.5 px-5">
                       <input
@@ -242,14 +244,14 @@ export function ManageUserAdsClient({ initialAds }: ManageUserAdsClientProps) {
           </button>
 
           <div className="flex items-center gap-1 text-xs text-neutral-500 dark:text-[#8c96a3]">
-            <span>Showing 1 out of 1</span>
-            <button className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d] ml-2">
+            <span>Showing {filtered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, filtered.length)} of {filtered.length}</span>
+            <button disabled={currentPage <= 1} onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d] ml-2 disabled:opacity-40 disabled:cursor-not-allowed">
               &lsaquo;
             </button>
-            <button className="px-2.5 py-1 rounded bg-[#04abf2] text-white font-semibold">
-              1
-            </button>
-            <button className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d]">
+            <span className="px-2.5 py-1 rounded bg-[#04abf2] text-white font-semibold">
+              {currentPage} / {Math.max(1, Math.ceil(filtered.length / pageSize))}
+            </span>
+            <button disabled={currentPage >= Math.ceil(filtered.length / pageSize)} onClick={() => setCurrentPage((p) => p + 1)} className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d] disabled:opacity-40 disabled:cursor-not-allowed">
               &rsaquo;
             </button>
           </div>

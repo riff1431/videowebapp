@@ -174,20 +174,11 @@ export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
           <span>
             Showing {filteredAds.length > 0 ? "1" : "0"} to {filteredAds.length} of {filteredAds.length} entries
           </span>
+          {filteredAds.length > 10 && (
           <div className="flex items-center gap-1">
-            <button
-              disabled
-              className="px-3 py-1 rounded border border-neutral-200 dark:border-neutral-700 opacity-60 text-neutral-400 cursor-not-allowed"
-            >
-              Previous
-            </button>
-            <button
-              disabled
-              className="px-3 py-1 rounded border border-neutral-200 dark:border-neutral-700 opacity-60 text-neutral-400 cursor-not-allowed"
-            >
-              Next
-            </button>
+            <span className="text-xs text-neutral-500">1 of 1</span>
           </div>
+        )}
         </div>
       </div>
     </div>

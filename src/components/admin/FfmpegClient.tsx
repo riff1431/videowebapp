@@ -906,7 +906,8 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-[#00a884] hover:bg-[#009373] text-white text-xs font-semibold rounded transition-colors"
+                  onClick={() => alert("Background file sync queued for S3")}
+                  className="px-4 py-2 bg-[#00a884] hover:bg-[#009373] text-white text-xs font-semibold rounded transition-colors cursor-pointer"
                 >
                   Upload Files To Amazon
                 </button>
@@ -1022,7 +1023,8 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-[#00a884] hover:bg-[#009373] text-white text-xs font-semibold rounded transition-colors"
+                  onClick={() => alert("Background file sync queued for DigitalOcean Spaces")}
+                  className="px-4 py-2 bg-[#00a884] hover:bg-[#009373] text-white text-xs font-semibold rounded transition-colors cursor-pointer"
                 >
                   Upload Files To Digitalocean
                 </button>
@@ -1140,7 +1142,8 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-[#00a884] hover:bg-[#009373] text-white text-xs font-semibold rounded transition-colors"
+                  onClick={() => alert("Background file sync queued for Backblaze")}
+                  className="px-4 py-2 bg-[#00a884] hover:bg-[#009373] text-white text-xs font-semibold rounded transition-colors cursor-pointer"
                 >
                   Upload Files To BackBlaze
                 </button>

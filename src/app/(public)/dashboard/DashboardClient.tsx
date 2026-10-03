@@ -1235,15 +1235,7 @@ export function DashboardClient({
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
-                <span>Showing 0 to 0 of 0 entries</span>
-                <div className="flex items-center gap-2">
-                  <button className="px-3 py-1 rounded border border-neutral-200 dark:border-neutral-700 text-neutral-400 cursor-not-allowed">
-                    Previous
-                  </button>
-                  <button className="px-3 py-1 rounded border border-neutral-200 dark:border-neutral-700 text-neutral-400 cursor-not-allowed">
-                    Next
-                  </button>
-                </div>
+                <span>No analytics table entries to display</span>
               </div>
             </div>
           </div>

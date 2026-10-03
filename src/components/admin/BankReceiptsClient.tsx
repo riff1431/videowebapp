@@ -132,7 +132,7 @@ export function BankReceiptsClient({
                   </td>
                 </tr>
               ) : (
-                receipts.map((r) => (
+                receipts.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((r) => (
                   <tr key={r.id} className="hover:bg-neutral-50 dark:hover:bg-[#181a1d] transition-colors">
                     <td className="py-3.5 px-5 flex items-center gap-2">
                       <img
@@ -210,15 +210,15 @@ export function BankReceiptsClient({
 
         {/* Footer Pagination bar matching Screenshot */}
         <div className="p-4 border-t border-neutral-200 dark:border-[#292d33] flex items-center justify-between text-xs text-neutral-500 dark:text-[#8c96a3]">
-          <span>Showing 1 out of 1</span>
+          <span>Showing {receipts.length === 0 ? 0 : (currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, receipts.length)} of {receipts.length}</span>
           <div className="flex items-center gap-1">
-            <button className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d]">
+            <button disabled={currentPage <= 1} onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d] disabled:opacity-40 disabled:cursor-not-allowed">
               &lsaquo;
             </button>
-            <button className="px-2.5 py-1 rounded bg-[#04abf2] text-white font-semibold">
-              1
-            </button>
-            <button className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d]">
+            <span className="px-2.5 py-1 rounded bg-[#04abf2] text-white font-semibold">
+              {currentPage} / {Math.max(1, Math.ceil(receipts.length / pageSize))}
+            </span>
+            <button disabled={currentPage >= Math.ceil(receipts.length / pageSize)} onClick={() => setCurrentPage((p) => p + 1)} className="px-2 py-1 rounded border border-neutral-200 dark:border-[#292d33] hover:bg-neutral-100 dark:hover:bg-[#181a1d] disabled:opacity-40 disabled:cursor-not-allowed">
               &rsaquo;
             </button>
           </div>

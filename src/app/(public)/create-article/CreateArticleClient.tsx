@@ -590,7 +590,8 @@ export default function CreateArticlePage({ categoriesList = [] }: CreateArticle
 
               <button
                 type="button"
-                title="More"
+                title="Insert Horizontal Rule"
+                onClick={() => document.execCommand("insertHorizontalRule")}
                 className="p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded transition-colors cursor-pointer"
               >
                 <MoreHorizontal className="w-4 h-4" />

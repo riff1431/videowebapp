@@ -22,7 +22,12 @@ export function ManageMonetizationRequestsClient({
   const [requests, setRequests] = useState<MonetizationRequestItem[]>(initialRequests);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [action, setAction] = useState<"verify" | "delete">("verify");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [, startTransition] = useTransition();
+
+  const totalPages = Math.max(1, Math.ceil(requests.length / pageSize));
+  const paginatedRequests = requests.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const toggleSelectAll = () => {
     if (selectedIds.length === requests.length) {
@@ -96,12 +101,6 @@ export function ManageMonetizationRequestsClient({
           <h6 className="text-[15px] font-bold text-neutral-900 dark:text-white">
             Manage Monetization Requests
           </h6>
-          <button
-            onClick={() => {}}
-            className="px-6 py-1.5 border border-neutral-300 dark:border-[#2f343b] text-neutral-700 dark:text-neutral-300 text-xs font-semibold rounded hover:bg-neutral-50 dark:hover:bg-[#181a1d] transition-colors cursor-pointer"
-          >
-            All
-          </button>
         </div>
 
         {/* Table */}
@@ -141,14 +140,14 @@ export function ManageMonetizationRequestsClient({
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-[#292d33]">
-              {requests.length === 0 ? (
+              {paginatedRequests.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
                     No monetization requests found.
                   </td>
                 </tr>
               ) : (
-                requests.map((req) => {
+                paginatedRequests.map((req) => {
                   const isSelected = selectedIds.includes(req.id);
                   return (
                     <tr key={req.id} className="hover:bg-neutral-50/50 dark:hover:bg-[#1f2226] transition-colors">
@@ -212,7 +211,8 @@ export function ManageMonetizationRequestsClient({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-2">
           <div className="text-xs text-neutral-700 dark:text-[#ced4da]">
-            Showing {requests.length} out of {requests.length}
+            Showing {requests.length === 0 ? 0 : (currentPage - 1) * pageSize + 1} to{" "}
+            {Math.min(currentPage * pageSize, requests.length)} of {requests.length} entries
           </div>
           <div className="space-y-1">
             <span className="text-xs text-neutral-700 dark:text-[#ced4da] block">Action</span>
@@ -238,14 +238,24 @@ export function ManageMonetizationRequestsClient({
 
         {/* Pagination */}
         <div className="flex items-center gap-1 self-start sm:self-center">
-          <button className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] cursor-pointer">
-            |&lt;
+          <button
+            type="button"
+            disabled={currentPage <= 1}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+          >
+            Previous
           </button>
-          <button className="w-7 h-7 bg-[#04abf2] text-white rounded-full text-xs font-bold flex items-center justify-center">
-            1
-          </button>
-          <button className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] cursor-pointer">
-            &gt;|
+          <span className="w-7 h-7 bg-[#04abf2] text-white rounded-full text-xs font-bold flex items-center justify-center">
+            {currentPage}
+          </span>
+          <button
+            type="button"
+            disabled={currentPage >= totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            className="px-2.5 py-1 border border-neutral-200 dark:border-[#2f343b] rounded text-neutral-600 dark:text-neutral-400 text-xs hover:bg-neutral-100 dark:hover:bg-[#181a1d] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+          >
+            Next
           </button>
         </div>
       </div>
