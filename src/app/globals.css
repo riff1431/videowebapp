@@ -1,26 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&family=Roboto:wght@400;500;700&display=swap');
 @import "tailwindcss";
+
+@source "../themes";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* PlayTube Light Theme Core Tokens */
+  /* Default base fallback tokens */
   --background: #f9f9f9;
   --foreground: #222222;
-  --header-bg: #ffffff;
-  --sidebar-bg: #ffffff;
-  --card-bg: #ffffff;
-  --card-border: #e9e9e9;
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   --primary: #04abf2;
   --primary-hover: #039be5;
   --primary-rgb: 4, 171, 242;
-  --accent-yellow: #fad657;
-  --accent-red: #f44336;
-  --muted: #666666;
-  --border: #e5e7eb;
-  --search-bg: #f1f2f4;
-  --search-border: #dcdfe4;
   --radius: 6px;
 
   /* Admin Theme Tokens - Light Mode (PlayTube Gogi admin theme) */
@@ -40,23 +30,9 @@
 }
 
 .dark {
-  /* PlayTube Dark Theme Core Tokens (Matches screenshots exactly) */
+  /* Default dark base fallback tokens */
   --background: #121212;
   --foreground: #f1f1f1;
-  --header-bg: #181818;
-  --sidebar-bg: #121212;
-  --card-bg: #212121;
-  --card-border: #2a2a2a;
-  --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-  --primary: #04abf2;
-  --primary-hover: #039be5;
-  --primary-rgb: 4, 171, 242;
-  --accent-yellow: #fad657;
-  --accent-red: #f44336;
-  --muted: #999999;
-  --border: #262626;
-  --search-bg: #202020;
-  --search-border: #333333;
 
   /* Admin Theme Tokens - Dark Mode (PlayTube Night Mode) */
   --admin-bg: #1c1e22;
@@ -77,17 +53,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Roboto', 'Lato', sans-serif;
 }
 
 /* Custom PlayTube Scrollbar */
@@ -107,21 +73,4 @@ h6 {
 
 .dark ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
-}
-
-/* Theme Switching Styles: Default (Classic PlayTube) vs YouPlay (Modern PlayTube) */
-html[data-theme="default"],
-body.theme-default {
-  --primary: #c4302b;
-  --primary-hover: #b32520;
-  --primary-rgb: 196, 48, 43;
-  --radius: 2px;
-}
-
-html[data-theme="youplay"],
-body.theme-youplay {
-  --primary: #04abf2;
-  --primary-hover: #039be5;
-  --primary-rgb: 4, 171, 242;
-  --radius: 8px;
 }

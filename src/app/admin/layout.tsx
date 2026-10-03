@@ -238,8 +238,16 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const profileRef = useRef<HTMLDivElement>(null);
 
   const { openMobile, setOpenMobile } = useSidebar();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const user = session?.user as any;
+
+  // Admin lockout protection: unauthenticated hits on /admin redirect to /admin/login
+  useEffect(() => {
+    if (pathname === "/admin/login") return;
+    if (!isPending && !session?.user) {
+      router.replace(`/admin/login?redirect=${encodeURIComponent(pathname || "/admin")}`);
+    }
+  }, [pathname, session, isPending, router]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -250,6 +258,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
 
   useEffect(() => {
     // Auto expand the section containing current pathname
@@ -406,10 +415,15 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     </nav>
   );
 
+  if (pathname === "/admin/login") {
+    return <div className="min-h-screen bg-[#f4f5fd] dark:bg-[#1c1e22] text-[#212529] dark:text-[#f1f5f9] flex items-center justify-center p-4">{children}</div>;
+  }
+
   return (
     <div className="min-h-screen bg-[var(--admin-bg)] text-[var(--admin-text-main)] flex flex-col font-sans transition-colors duration-200">
       {/* Top Header Navbar */}
       <header className="bg-white dark:bg-[#111215] border-b border-neutral-200 dark:border-[#292d33] h-14 flex items-center justify-between px-4 sticky top-0 z-40 shadow-xs">
+
         {/* Left: Mobile Toggle & Brand Logo */}
         <div className="flex items-center gap-2 md:gap-6">
           {/* Mobile Sidebar Hamburger Trigger (matching PlayTube navigation-toggler) */}
