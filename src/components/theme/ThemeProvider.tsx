@@ -10,10 +10,12 @@ export interface DesignSettings {
   logo: string;
   lightLogo: string;
   nightMode: string; // "both" | "night_default" | "night" | "light"
+  theme?: string; // "youplay" | "default"
 }
 
 interface ThemeContextType {
   theme: Theme;
+  activeSiteTheme: string;
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
   designSettings: DesignSettings;
@@ -25,6 +27,7 @@ const defaultDesignSettings: DesignSettings = {
   logo: "/logo.png",
   lightLogo: "/logo-light.png",
   nightMode: "night_default",
+  theme: "youplay",
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -55,6 +58,14 @@ export function ThemeProvider({
     }
     loadSettings();
   }, []);
+
+  // Set data-theme on html element whenever theme setting changes
+  useEffect(() => {
+    const currentSiteTheme = designSettings.theme || "youplay";
+    document.documentElement.setAttribute("data-theme", currentSiteTheme);
+    document.body.classList.remove("theme-youplay", "theme-default");
+    document.body.classList.add(`theme-${currentSiteTheme}`);
+  }, [designSettings.theme]);
 
   // Compute allowed mode behavior based on nightMode
   // "both" -> toggleable, default light
@@ -120,7 +131,14 @@ export function ThemeProvider({
 
   return (
     <ThemeContext.Provider
-      value={{ theme, toggleTheme, setTheme, designSettings, canToggle }}
+      value={{
+        theme,
+        activeSiteTheme: designSettings.theme || "youplay",
+        toggleTheme,
+        setTheme,
+        designSettings,
+        canToggle,
+      }}
     >
       {children}
     </ThemeContext.Provider>

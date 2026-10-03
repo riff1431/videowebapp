@@ -91,7 +91,6 @@ export async function saveCustomDesignAction(data: {
 // ==========================================
 
 export async function getSiteDesignSettingsAction() {
-  await assertAdmin();
   try {
     const configs = await db
       .select()
@@ -102,6 +101,7 @@ export async function getSiteDesignSettingsAction() {
           "logo",
           "light_logo",
           "night_mode",
+          "theme",
         ])
       );
 
@@ -117,6 +117,7 @@ export async function getSiteDesignSettingsAction() {
         logo: map["logo"] || "/logo.png",
         lightLogo: map["light_logo"] || "/logo-light.png",
         nightMode: map["night_mode"] || "night_default", // both | night_default | night | light
+        theme: map["theme"] || "youplay",
       },
     };
   } catch (error: any) {
@@ -128,6 +129,7 @@ export async function getSiteDesignSettingsAction() {
         logo: "/logo.png",
         lightLogo: "/logo-light.png",
         nightMode: "night_default",
+        theme: "youplay",
       },
     };
   }

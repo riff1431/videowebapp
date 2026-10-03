@@ -6,6 +6,8 @@ import { CustomDesignInjector } from "@/components/theme/CustomDesignInjector";
 import { LanguageProvider } from "@/providers/language-provider";
 import { getServerTranslations } from "@/lib/translations/server";
 
+import { getSiteConfig } from "@/lib/config";
+
 export const metadata: Metadata = {
   title: "PlayTube - Video Sharing Platform",
   description: "PlayTube is the premier video sharing platform.",
@@ -18,9 +20,16 @@ export default async function RootLayout({
 }>) {
   const { currentLang, currentMeta, languages, dict } = await getServerTranslations();
   const isRtl = currentMeta?.direction === "rtl";
+  const siteThemeConfig = await getSiteConfig(["theme"]);
+  const activeTheme = siteThemeConfig["theme"] || "youplay";
 
   return (
-    <html lang={currentMeta?.iso || "en"} dir={isRtl ? "rtl" : "ltr"} suppressHydrationWarning>
+    <html
+      lang={currentMeta?.iso || "en"}
+      dir={isRtl ? "rtl" : "ltr"}
+      data-theme={activeTheme}
+      suppressHydrationWarning
+    >
       <head>
         <CustomDesignInjector />
       </head>

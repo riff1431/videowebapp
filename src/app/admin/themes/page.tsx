@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Palette, CheckCircle2, ExternalLink } from "lucide-react";
+import { getThemesAction, activateThemeAction } from "@/modules/admin/design.actions";
 
 interface ThemeItem {
   id: string;
@@ -41,16 +42,51 @@ const INITIAL_THEMES: ThemeItem[] = [
 export default function ManageThemesPage() {
   const [themes, setThemes] = useState<ThemeItem[]>(INITIAL_THEMES);
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleActivate = (id: string) => {
-    setThemes((prev) =>
-      prev.map((t) => ({
-        ...t,
-        isActive: t.id === id,
-      }))
-    );
-    setMsg("Theme activated successfully!");
-    setTimeout(() => setMsg(""), 3000);
+  useEffect(() => {
+    async function loadTheme() {
+      try {
+        const res = await getThemesAction();
+        if (res.success && res.activeTheme) {
+          setThemes((prev) =>
+            prev.map((t) => ({
+              ...t,
+              isActive: t.id === res.activeTheme,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("Failed to load themes:", err);
+      }
+    }
+    loadTheme();
+  }, []);
+
+  const handleActivate = async (id: string) => {
+    setLoading(true);
+    try {
+      const res = await activateThemeAction(id);
+      if (res.success) {
+        setThemes((prev) =>
+          prev.map((t) => ({
+            ...t,
+            isActive: t.id === id,
+          }))
+        );
+        document.documentElement.setAttribute("data-theme", id);
+        document.body.classList.remove("theme-youplay", "theme-default");
+        document.body.classList.add(`theme-${id}`);
+        setMsg(res.message || "Theme activated successfully!");
+      } else {
+        setMsg(res.message || "Failed to activate theme");
+      }
+    } catch (err: any) {
+      setMsg(err.message || "Error activating theme");
+    } finally {
+      setLoading(false);
+      setTimeout(() => setMsg(""), 3500);
+    }
   };
 
   return (
