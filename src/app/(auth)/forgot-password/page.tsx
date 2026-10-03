@@ -10,7 +10,6 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [demoLink, setDemoLink] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +21,6 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError("");
     setSuccessMsg("");
-    setDemoLink("");
 
     try {
       const formData = new FormData();
@@ -31,9 +29,6 @@ export default function ForgotPasswordPage() {
       const res = await requestPasswordResetAction(formData);
       if (res.success) {
         setSuccessMsg(res.message || "Reset link dispatched.");
-        if (res.demoResetUrl) {
-          setDemoLink(res.demoResetUrl);
-        }
       } else {
         setError(res.error || "Failed to submit request.");
       }
@@ -71,19 +66,6 @@ export default function ForgotPasswordPage() {
               <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
               <span>{successMsg}</span>
             </div>
-            {demoLink && (
-              <div className="pt-2 border-t border-emerald-200 dark:border-emerald-900/40">
-                <p className="text-[11px] text-neutral-600 dark:text-neutral-300">
-                  Direct reset link (localhost test environment):
-                </p>
-                <Link
-                  href={demoLink}
-                  className="font-bold text-[var(--primary)] underline inline-flex items-center gap-1 mt-1"
-                >
-                  Click to set new password <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
-            )}
           </div>
         )}
 
