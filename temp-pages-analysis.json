@@ -1,0 +1,752 @@
+[
+  {
+    "route": "/forgot-password",
+    "relPath": "(auth)/forgot-password/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "No"
+  },
+  {
+    "route": "/login",
+    "relPath": "(auth)/login/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "No"
+  },
+  {
+    "route": "/register",
+    "relPath": "(auth)/register/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "No"
+  },
+  {
+    "route": "/reset-password",
+    "relPath": "(auth)/reset-password/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "No"
+  },
+  {
+    "route": "/ads/create",
+    "relPath": "(public)/ads/create/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/ads",
+    "relPath": "(public)/ads/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/articles",
+    "relPath": "(public)/articles/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/articles/read/[id]",
+    "relPath": "(public)/articles/read/[id]/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "No"
+  },
+  {
+    "route": "/channel/[username]",
+    "relPath": "(public)/channel/[username]/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/contact-us",
+    "relPath": "(public)/contact-us/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "No"
+  },
+  {
+    "route": "/create-article",
+    "relPath": "(public)/create-article/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/create-post",
+    "relPath": "(public)/create-post/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/create_article",
+    "relPath": "(public)/create_article/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/create_post",
+    "relPath": "(public)/create_post/page.tsx",
+    "dataSource": "Server Actions + Direct Supabase Storage (Client)",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/dashboard",
+    "relPath": "(public)/dashboard/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/edit-video/[id]",
+    "relPath": "(public)/edit-video/[id]/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/go-pro",
+    "relPath": "(public)/go-pro/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "No"
+  },
+  {
+    "route": "/help/faqs",
+    "relPath": "(public)/help/faqs/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "No"
+  },
+  {
+    "route": "/help",
+    "relPath": "(public)/help/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "No"
+  },
+  {
+    "route": "/history",
+    "relPath": "(public)/history/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/import-video",
+    "relPath": "(public)/import-video/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/liked-videos",
+    "relPath": "(public)/liked-videos/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/manage-videos",
+    "relPath": "(public)/manage-videos/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/messages",
+    "relPath": "(public)/messages/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/movies",
+    "relPath": "(public)/movies/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/my-articles",
+    "relPath": "(public)/my-articles/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "No"
+  },
+  {
+    "route": "/my_articles",
+    "relPath": "(public)/my_articles/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/paid-videos",
+    "relPath": "(public)/paid-videos/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/popular-channels",
+    "relPath": "(public)/popular-channels/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/saved-videos",
+    "relPath": "(public)/saved-videos/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/search",
+    "relPath": "(public)/search/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/settings",
+    "relPath": "(public)/settings/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/settings/[tab]",
+    "relPath": "(public)/settings/[tab]/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/shorts",
+    "relPath": "(public)/shorts/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/site-pages/[pageName]",
+    "relPath": "(public)/site-pages/[pageName]/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/stock-videos",
+    "relPath": "(public)/stock-videos/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/subscriptions",
+    "relPath": "(public)/subscriptions/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/switch-account",
+    "relPath": "(public)/switch-account/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/terms/[type]",
+    "relPath": "(public)/terms/[type]/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/upload-video",
+    "relPath": "(public)/upload-video/page.tsx",
+    "dataSource": "Server Actions + Direct Supabase Storage (Client)",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/videos/latest",
+    "relPath": "(public)/videos/latest/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/videos/top",
+    "relPath": "(public)/videos/top/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/videos/trending",
+    "relPath": "(public)/videos/trending/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "No"
+  },
+  {
+    "route": "/wallet",
+    "relPath": "(public)/wallet/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/watch/[videoId]",
+    "relPath": "(public)/watch/[videoId]/page.tsx",
+    "dataSource": "Direct Drizzle DB + Service Layer (@/services)",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/add-language",
+    "relPath": "admin/add-language/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/add-new-custom-page",
+    "relPath": "admin/add-new-custom-page/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/ads",
+    "relPath": "admin/ads/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/ads-settings",
+    "relPath": "admin/ads-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/affiliates-settings",
+    "relPath": "admin/affiliates-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/api-settings",
+    "relPath": "admin/api-settings/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/articles",
+    "relPath": "admin/articles/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/auto-delete",
+    "relPath": "admin/auto-delete/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/auto_subscribe",
+    "relPath": "admin/auto_subscribe/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/backup",
+    "relPath": "admin/backup/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/ban-users",
+    "relPath": "admin/ban-users/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/bank-receipts",
+    "relPath": "admin/bank-receipts/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/categories",
+    "relPath": "admin/categories/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/change-site-desgin",
+    "relPath": "admin/change-site-desgin/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/clean-videos",
+    "relPath": "admin/clean-videos/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/copy_report",
+    "relPath": "admin/copy_report/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/create-article",
+    "relPath": "admin/create-article/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/create-video-ad",
+    "relPath": "admin/create-video-ad/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/cronjob-settings",
+    "relPath": "admin/cronjob-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/custom-design",
+    "relPath": "admin/custom-design/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/earnings",
+    "relPath": "admin/earnings/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/edit-article",
+    "relPath": "admin/edit-article/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/edit-custom-page",
+    "relPath": "admin/edit-custom-page/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/edit-lang",
+    "relPath": "admin/edit-lang/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/edit-terms-pages",
+    "relPath": "admin/edit-terms-pages/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/email-settings",
+    "relPath": "admin/email-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/ffmpeg",
+    "relPath": "admin/ffmpeg/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/import-from-dailymotion",
+    "relPath": "admin/import-from-dailymotion/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/import-from-twitch",
+    "relPath": "admin/import-from-twitch/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/import-from-youtube",
+    "relPath": "admin/import-from-youtube/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/languages",
+    "relPath": "admin/languages/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/live",
+    "relPath": "admin/live/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-activities",
+    "relPath": "admin/manage-activities/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-announcements",
+    "relPath": "admin/manage-announcements/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-articles",
+    "relPath": "admin/manage-articles/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-comments",
+    "relPath": "admin/manage-comments/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-currencies",
+    "relPath": "admin/manage-currencies/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-custom-pages",
+    "relPath": "admin/manage-custom-pages/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-faqs",
+    "relPath": "admin/manage-faqs/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-invitation",
+    "relPath": "admin/manage-invitation/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-invitation-keys",
+    "relPath": "admin/manage-invitation-keys/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-languages",
+    "relPath": "admin/manage-languages/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-movies-category",
+    "relPath": "admin/manage-movies-category/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-pages",
+    "relPath": "admin/manage-pages/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-profile-fields/create",
+    "relPath": "admin/manage-profile-fields/create/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-profile-fields",
+    "relPath": "admin/manage-profile-fields/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-themes",
+    "relPath": "admin/manage-themes/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-user-ads",
+    "relPath": "admin/manage-user-ads/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-users",
+    "relPath": "admin/manage-users/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-video-ads",
+    "relPath": "admin/manage-video-ads/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-video-reports",
+    "relPath": "admin/manage-video-reports/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-videos",
+    "relPath": "admin/manage-videos/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage-website-ads",
+    "relPath": "admin/manage-website-ads/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage_categories",
+    "relPath": "admin/manage_categories/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/manage_sub_categories",
+    "relPath": "admin/manage_sub_categories/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/mass-notifications",
+    "relPath": "admin/mass-notifications/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/monitization-requests",
+    "relPath": "admin/monitization-requests/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/movies",
+    "relPath": "admin/movies/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/movies-categories",
+    "relPath": "admin/movies-categories/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/newsletters",
+    "relPath": "admin/newsletters/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin",
+    "relPath": "admin/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/pages",
+    "relPath": "admin/pages/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/payment-requests",
+    "relPath": "admin/payment-requests/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/payment-settings",
+    "relPath": "admin/payment-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/payments",
+    "relPath": "admin/payments/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/pro-settings",
+    "relPath": "admin/pro-settings/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/prosys-settings",
+    "relPath": "admin/prosys-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/reports",
+    "relPath": "admin/reports/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/seo",
+    "relPath": "admin/seo/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/settings",
+    "relPath": "admin/settings/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/site-settings",
+    "relPath": "admin/site-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/sitemap",
+    "relPath": "admin/sitemap/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/social-login",
+    "relPath": "admin/social-login/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/system-status",
+    "relPath": "admin/system-status/page.tsx",
+    "dataSource": "Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/themes",
+    "relPath": "admin/themes/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/users",
+    "relPath": "admin/users/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/verification-requests",
+    "relPath": "admin/verification-requests/page.tsx",
+    "dataSource": "Direct Drizzle DB",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/video-settings",
+    "relPath": "admin/video-settings/page.tsx",
+    "dataSource": "Direct Drizzle DB + Server Actions",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/admin/videos",
+    "relPath": "admin/videos/page.tsx",
+    "dataSource": "Static / UI-Only",
+    "authRequired": "Yes"
+  },
+  {
+    "route": "/",
+    "relPath": "page.tsx",
+    "dataSource": "Service Layer (@/services)",
+    "authRequired": "No"
+  }
+]

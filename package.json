@@ -12,7 +12,14 @@
     "setup": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/setup.ts",
     "cron": "node --env-file=.env node_modules/tsx/dist/cli.mjs scripts/cron.ts",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "test:seed": "node --env-file=.env.test node_modules/tsx/dist/cli.mjs tests/setup/seed.ts",
+    "test:cleanup": "node --env-file=.env.test node_modules/tsx/dist/cli.mjs tests/setup/cleanup.ts",
+    "test:api": "vitest run tests/api",
+    "test:rls": "vitest run tests/rls",
+    "test:static": "vitest run tests/static",
+    "test:e2e": "playwright test",
+    "test": "vitest run tests/api tests/rls tests/static && playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -36,13 +43,17 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^18.0.5",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
   }
 }
