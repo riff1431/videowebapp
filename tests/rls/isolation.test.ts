@@ -171,4 +171,82 @@ describe("RLS & Data Layer Isolation Suite", () => {
       }
     });
   });
+
+  describe("4. Direct PostgREST RLS Denial across Public Tables", () => {
+    const publicTables = [
+      "users",
+      "videos",
+      "comments",
+      "playlists",
+      "sessions",
+      "accounts",
+      "config",
+      "payments",
+      "views",
+      "likes_dislikes",
+    ];
+
+    const authenticatedJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJzdWIiOiJ1c2VyLWEtdXVpZCIsImV4cCI6MTk4MzgxMjk5Nn0.UPFUR6J8O4JX0WdHMwMVvgk1rg-ZAL_qSVhoidS1FK0";
+    const authenticatedClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || "http://127.0.0.1:55321",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${authenticatedJwt}`,
+          },
+        },
+      }
+    );
+
+    for (const table of publicTables) {
+      it(`denies direct PostgREST SELECT to anon role on public.${table}`, async () => {
+        const { data, error } = await anonClient.from(table).select("*").limit(1);
+        if (error) {
+          expect(error).toBeDefined();
+        } else {
+          expect(data).toEqual([]);
+        }
+      });
+
+      it(`denies direct PostgREST INSERT to anon role on public.${table}`, async () => {
+        const { error } = await anonClient.from(table).insert({} as any);
+        expect(error).toBeDefined();
+      });
+
+      it(`denies direct PostgREST UPDATE to anon role on public.${table}`, async () => {
+        const { error } = await anonClient.from(table).update({} as any).eq("id", "1");
+        expect(error).toBeDefined();
+      });
+
+      it(`denies direct PostgREST DELETE to anon role on public.${table}`, async () => {
+        const { error } = await anonClient.from(table).delete().eq("id", "1");
+        expect(error).toBeDefined();
+      });
+
+      it(`denies direct PostgREST SELECT to authenticated role on public.${table}`, async () => {
+        const { data, error } = await authenticatedClient.from(table).select("*").limit(1);
+        if (error) {
+          expect(error).toBeDefined();
+        } else {
+          expect(data).toEqual([]);
+        }
+      });
+
+      it(`denies direct PostgREST INSERT to authenticated role on public.${table}`, async () => {
+        const { error } = await authenticatedClient.from(table).insert({} as any);
+        expect(error).toBeDefined();
+      });
+
+      it(`denies direct PostgREST UPDATE to authenticated role on public.${table}`, async () => {
+        const { error } = await authenticatedClient.from(table).update({} as any).eq("id", "1");
+        expect(error).toBeDefined();
+      });
+
+      it(`denies direct PostgREST DELETE to authenticated role on public.${table}`, async () => {
+        const { error } = await authenticatedClient.from(table).delete().eq("id", "1");
+        expect(error).toBeDefined();
+      });
+    }
+  });
 });
