@@ -182,18 +182,40 @@ export async function uploadDesignAssetAction(formData: FormData) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Ensure upload dir exists
-    const uploadsDir = path.join(process.cwd(), "public", "upload", "design");
-    await fs.mkdir(uploadsDir, { recursive: true });
-
     // Generate safe filename
     const ext = path.extname(file.name) || ".png";
     const filename = `${type}_${Date.now()}${ext}`;
-    const filePath = path.join(uploadsDir, filename);
 
-    await fs.writeFile(filePath, buffer);
+    let publicUrl = "";
 
-    const publicUrl = `/upload/design/${filename}`;
+    // Always ensure local file is written so local dev and /upload/design/... paths resolve
+    const uploadsDir = path.join(process.cwd(), "public", "upload", "design");
+    await fs.mkdir(uploadsDir, { recursive: true });
+    const localFilePath = path.join(uploadsDir, filename);
+    await fs.writeFile(localFilePath, buffer);
+    publicUrl = `/upload/design/${filename}`;
+
+    // If STORAGE_DRIVER is supabase, also upload to Supabase Storage for remote hosting
+    const isSupabaseDriver =
+      process.env.STORAGE_DRIVER === "supabase" ||
+      (!process.env.STORAGE_DRIVER && !!process.env.NEXT_PUBLIC_SUPABASE_URL);
+
+    if (isSupabaseDriver) {
+      try {
+        const { uploadToSupabaseStorage } = await import("@/lib/storage/supabase");
+        const supabaseRes = await uploadToSupabaseStorage(
+          "playtube-uploads",
+          `design/${filename}`,
+          buffer,
+          file.type || "image/png"
+        );
+        if (supabaseRes.url) {
+          publicUrl = supabaseRes.url;
+        }
+      } catch (storageErr) {
+        console.warn("Supabase storage upload failed, falling back to local path:", storageErr);
+      }
+    }
 
     // Update DB
     const existing = await db
@@ -227,6 +249,7 @@ export async function uploadDesignAssetAction(formData: FormData) {
     return { success: false, message: error.message || "Upload failed" };
   }
 }
+
 
 // ==========================================
 // Themes Actions (Default, YouPlay)

@@ -7,6 +7,8 @@ import { authClient } from "@/lib/auth/auth-client";
 import { AlertCircle, Ticket } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 import { getRegistrationStatusAction } from "@/modules/auth/registration.actions";
+import { useTheme } from "@/components/theme/ThemeProvider";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -88,6 +90,10 @@ export default function RegisterPage() {
     }
   };
 
+  const { designSettings } = useTheme();
+  const logoSrc = getPublicImageUrl(designSettings?.logo, "/logo.png") || "/logo.png";
+  const lightLogoSrc = getPublicImageUrl(designSettings?.lightLogo, "/logo-light.png") || "/logo-light.png";
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-140px)] py-10 px-4">
       <div className="w-full max-w-md bg-[var(--card-bg)] text-[var(--foreground)] rounded-xl shadow-lg border border-[var(--border)] p-8">
@@ -95,7 +101,7 @@ export default function RegisterPage() {
         <div className="flex flex-col items-center mb-6">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
+            src={logoSrc}
             alt="PlayTube"
             className="h-9 mb-4 dark:hidden"
             onError={(e) => {
@@ -104,7 +110,7 @@ export default function RegisterPage() {
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo-light.png"
+            src={lightLogoSrc}
             alt="PlayTube"
             className="h-9 mb-4 hidden dark:block"
             onError={(e) => {
@@ -113,6 +119,7 @@ export default function RegisterPage() {
           />
           <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
             {t("register", "Sign Up")}
+
           </h2>
           {regStatus.inviteOnly && (
             <div className="mt-2 text-xs text-amber-600 dark:text-amber-400 font-medium flex items-center gap-1.5">

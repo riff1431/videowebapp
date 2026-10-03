@@ -10,6 +10,8 @@ import {
   removeSwitchedAccountAction,
   prepareAddAccountAction,
 } from "@/modules/auth/switch-account.actions";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
+
 
 interface SwitchAccountModalProps {
   initialAccounts: SwitchedAccountItem[];
@@ -123,7 +125,7 @@ export function SwitchAccountModal({
                       <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-800 shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={acc.avatar || "/upload/photos/d-avatar.jpg"}
+                          src={getPublicImageUrl(acc.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
                           alt={acc.name}
                           className="w-full h-full object-cover"
                           onError={(e) => {

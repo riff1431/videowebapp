@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getSiteDesignSettingsAction } from "@/modules/admin/design.actions";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 type Theme = "light" | "dark";
 
@@ -108,9 +109,10 @@ export function ThemeProvider({
         link.rel = "shortcut icon";
         document.getElementsByTagName("head")[0].appendChild(link);
       }
-      link.href = designSettings.favicon;
+      link.href = getPublicImageUrl(designSettings.favicon, "/favicon.ico") || "/favicon.ico";
     }
   }, [mode, designSettings.favicon]);
+
 
   const setTheme = (newTheme: Theme) => {
     if (!canToggle) return; // Ignore toggle if forced light or dark

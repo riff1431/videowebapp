@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Eye, Users, Video, CheckCircle2, UserPlus, UserCheck } from "lucide-react";
 import { toggleSubscribeAction } from "@/modules/videos/video.actions";
 import { authClient } from "@/lib/auth/auth-client";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 export interface ChannelItem {
   id: number;
@@ -71,7 +72,7 @@ export function ChannelCard({ channel }: { channel: ChannelItem }) {
       {/* Cover Banner */}
       <div className="h-24 bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 overflow-hidden relative">
         <img
-          src={channel.cover || "/upload/photos/d-cover.jpg"}
+          src={getPublicImageUrl(channel.cover, "/upload/photos/d-cover.jpg") || "/upload/photos/d-cover.jpg"}
           alt={displayName}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -82,7 +83,7 @@ export function ChannelCard({ channel }: { channel: ChannelItem }) {
       <div className="px-5 pb-5 pt-0 -mt-10 flex flex-col items-center text-center flex-1">
         <Link href={`/channel/${channel.username}`} className="relative block group/avatar">
           <img
-            src={channel.avatar || "/upload/photos/d-avatar.jpg"}
+            src={getPublicImageUrl(channel.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
             alt={displayName}
             className="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-[#1a1a1a] shadow-sm group-hover/avatar:ring-2 group-hover/avatar:ring-[#04abf2] transition-all"
           />

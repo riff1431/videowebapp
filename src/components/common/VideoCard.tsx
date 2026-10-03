@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 export interface VideoCardProps {
   id?: number;
@@ -50,7 +51,7 @@ export function VideoCard(props: VideoCardProps) {
       <Link href={`/watch/${videoId}`} className="relative aspect-video w-full bg-neutral-900 block overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={thumbnail || "/upload/photos/d-cover.jpg"}
+          src={getPublicImageUrl(thumbnail, "/upload/photos/d-cover.jpg") || "/upload/photos/d-cover.jpg"}
           alt={title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
         />
@@ -66,7 +67,7 @@ export function VideoCard(props: VideoCardProps) {
           <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-800">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={channelInfo.avatar || "/upload/photos/d-avatar.jpg"}
+              src={getPublicImageUrl(channelInfo.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
               alt={channelInfo.name || channelInfo.username}
               className="w-full h-full object-cover"
             />

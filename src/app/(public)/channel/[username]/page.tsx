@@ -16,6 +16,7 @@ import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { VideoCard } from "@/components/common/VideoCard";
 import { getServerTranslations } from "@/lib/translations/server";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 import {
   Video as VideoIcon,
   List,
@@ -209,19 +210,11 @@ export default async function ChannelPage({
     { key: "about", label: t("about", "About"), href: `/@${channelUser.username}?page=about` },
   ];
 
-  const coverUrl = channelUser.cover
-    ? channelUser.cover.startsWith("http") || channelUser.cover.startsWith("/")
-      ? channelUser.cover
-      : `/${channelUser.cover}`
-    : "/upload/photos/d-cover.jpg";
-
-  const avatarUrl = channelUser.avatar
-    ? channelUser.avatar.startsWith("http") || channelUser.avatar.startsWith("/")
-      ? channelUser.avatar
-      : `/${channelUser.avatar}`
-    : "/upload/photos/d-avatar.jpg";
+  const coverUrl = getPublicImageUrl(channelUser.cover, "/upload/photos/d-cover.jpg") || "/upload/photos/d-cover.jpg";
+  const avatarUrl = getPublicImageUrl(channelUser.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg";
 
   return (
+
     <div className="-m-4 md:-m-6 bg-[#f4f5f7] dark:bg-[#0f0f0f] min-h-[calc(100vh-3.5rem)] pb-20 w-full">
       {/* 1. Cover Banner Image with placeholder */}
       <div className="w-full h-48 sm:h-60 md:h-68 lg:h-72 relative bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
@@ -508,7 +501,7 @@ export default async function ChannelPage({
                       <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-200 shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={channelUser.avatar || "/upload/photos/d-avatar.jpg"}
+                          src={avatarUrl}
                           alt={displayName}
                           className="w-full h-full object-cover"
                         />

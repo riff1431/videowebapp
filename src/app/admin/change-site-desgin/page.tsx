@@ -17,6 +17,7 @@ import {
   Loader2,
   ExternalLink,
 } from "lucide-react";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 export default function ChangeSiteDesignPage() {
   const [favicon, setFavicon] = useState("/favicon.ico");
@@ -194,6 +195,16 @@ export default function ChangeSiteDesignPage() {
                 <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 truncate">
                   Current: {logo}
                 </div>
+                {logo && (
+                  <div className="mt-2 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded inline-block">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={getPublicImageUrl(logo, "/logo.png") || "/logo.png"}
+                      alt="Logo preview"
+                      className="h-6 w-auto object-contain"
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -232,6 +243,16 @@ export default function ChangeSiteDesignPage() {
                 <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 truncate">
                   Current: {lightLogo}
                 </div>
+                {lightLogo && (
+                  <div className="mt-2 p-1.5 bg-neutral-900 dark:bg-neutral-800 rounded inline-block">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={getPublicImageUrl(lightLogo, "/logo-light.png") || "/logo-light.png"}
+                      alt="Light Logo preview"
+                      className="h-6 w-auto object-contain"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

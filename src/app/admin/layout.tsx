@@ -11,6 +11,7 @@ import {
   SidebarClose,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 import {
   LayoutDashboard,
   Settings,
@@ -419,13 +420,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           <Link href="/admin" className="flex items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={designSettings?.logo || "/logo.png"}
+              src={getPublicImageUrl(designSettings?.logo, "/logo.png") || "/logo.png"}
               alt="playtube"
               className="h-7 w-auto block dark:hidden"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={designSettings?.lightLogo || "/logo-light.png"}
+              src={getPublicImageUrl(designSettings?.lightLogo, "/logo-light.png") || "/logo-light.png"}
               alt="playtube"
               className="h-7 w-auto hidden dark:block"
             />
@@ -469,7 +470,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={user?.image || "/upload/photos/d-avatar.jpg"}
+                src={getPublicImageUrl(user?.image, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
                 alt="admin"
                 className="w-7 h-7 rounded-full object-cover bg-neutral-300 dark:bg-neutral-700"
                 onError={(e) => {
@@ -486,7 +487,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-col items-center px-4 pb-3 border-b border-[var(--admin-card-border)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={user?.image || "/upload/photos/d-avatar.jpg"}
+                    src={getPublicImageUrl(user?.image, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
                     alt="admin"
                     className="w-14 h-14 rounded-full object-cover bg-neutral-300 dark:bg-neutral-700 mb-2"
                     onError={(e) => {
@@ -571,13 +572,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 <Link href="/admin" onClick={() => setOpenMobile(false)}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/logo.png"
+                    src={getPublicImageUrl(designSettings?.logo, "/logo.png") || "/logo.png"}
                     alt="playtube"
                     className="h-6 w-auto block dark:hidden"
                   />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/logo-light.png"
+                    src={getPublicImageUrl(designSettings?.lightLogo, "/logo-light.png") || "/logo-light.png"}
                     alt="playtube"
                     className="h-6 w-auto hidden dark:block"
                   />

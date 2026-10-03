@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 import { NotificationBell } from "./NotificationBell";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const router = useRouter();
@@ -85,8 +86,9 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
     }
   };
 
-  const logoSrc = designSettings?.logo || "/logo.png";
-  const lightLogoSrc = designSettings?.lightLogo || "/logo-light.png";
+  const logoSrc = getPublicImageUrl(designSettings?.logo, "/logo.png") || "/logo.png";
+  const lightLogoSrc = getPublicImageUrl(designSettings?.lightLogo, "/logo-light.png") || "/logo-light.png";
+
 
   return (
     <header className="sticky top-0 z-40 w-full h-14 bg-[var(--header-bg)] border-b border-[var(--border)] px-4 flex items-center justify-between transition-colors">
@@ -277,7 +279,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             <span className="hidden sm:inline text-xs">My Account</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={user?.image || "/upload/photos/d-avatar.jpg"}
+              src={getPublicImageUrl(user?.image, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
               alt="Account"
               className="w-7 h-7 rounded-full object-cover bg-neutral-200 border border-neutral-700"
               onError={(e) => {
@@ -295,7 +297,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                   <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={user?.image || "/upload/photos/d-avatar.jpg"}
+                      src={getPublicImageUrl(user?.image, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
                       alt="Avatar"
                       className="w-10 h-10 rounded-full object-cover bg-neutral-200 dark:bg-neutral-700"
                       onError={(e) => {

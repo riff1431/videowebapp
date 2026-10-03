@@ -15,6 +15,7 @@ import { getServerTranslations } from "@/lib/translations/server";
 
 import { getSiteConfig } from "@/lib/config";
 import { getSeoMetadata } from "@/lib/config/seo";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 import type { Metadata } from "next";
 
 export interface WatchPageProps {
@@ -169,7 +170,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
           <div className="flex items-center gap-3">
             <Link href={`/channel/${video.user.username}`} className="shrink-0">
               <img
-                src={video.user.avatar || "/upload/photos/d-avatar.jpg"}
+                src={getPublicImageUrl(video.user.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
                 alt={video.user.name || video.user.username}
                 className="w-10 h-10 rounded-full object-cover bg-neutral-200"
               />

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { MessageSquare, Send, CheckCircle2, CornerDownRight, Loader2 } from "lucide-react";
 import { addCommentAction, addCommentReplyAction, loadMoreCommentsAction } from "@/modules/videos/video.actions";
 import { useTranslation } from "@/providers/language-provider";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 interface ReplyItem {
   id: number;
@@ -194,7 +195,7 @@ export function VideoComments({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   {c.user.avatar ? (
                     <img
-                      src={c.user.avatar}
+                      src={getPublicImageUrl(c.user.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
                       alt={c.user.name || c.user.username}
                       className="w-full h-full object-cover"
                     />
