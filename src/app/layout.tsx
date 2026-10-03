@@ -25,7 +25,6 @@ export default async function RootLayout({
     <html
       lang={currentMeta?.iso || "en"}
       dir={isRtl ? "rtl" : "ltr"}
-      data-theme={activeTheme}
       suppressHydrationWarning
     >
       <head>

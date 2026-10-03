@@ -11,6 +11,8 @@
   --muted: #666666;
   --border: #e5e7eb;
   --radius: 8px;
+  --font-body: var(--font-body, "Lato", sans-serif);
+  --font-heading: var(--font-heading, "Roboto", sans-serif);
 
   --primary: #04abf2;
   --primary-hover: #039be5;

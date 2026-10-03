@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { bannedIps, sessions, users } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import {
   FALLBACK_THEME_ID,
   getActiveThemeId,
@@ -72,12 +72,13 @@ export function getClientIp(req: NextRequest | Request): string {
  * Used for admin preview verification (?preview_theme=<id>).
  */
 async function isAdminSession(request: NextRequest): Promise<boolean> {
-  // Check Better Auth session token cookie
-  const sessionToken =
+  // Check Better Auth session token cookie (may be signed with .signature suffix)
+  const rawCookie =
     request.cookies.get("better-auth.session_token")?.value ||
     request.cookies.get("__Secure-better-auth.session_token")?.value;
 
-  if (!sessionToken) return false;
+  if (!rawCookie) return false;
+  const token = rawCookie.split(".")[0];
 
   try {
     const [sess] = await db
@@ -90,7 +91,7 @@ async function isAdminSession(request: NextRequest): Promise<boolean> {
       })
       .from(sessions)
       .innerJoin(users, eq(sessions.userId, users.id))
-      .where(eq(sessions.token, sessionToken))
+      .where(or(eq(sessions.token, rawCookie), eq(sessions.token, token)))
       .limit(1);
 
     if (!sess) return false;

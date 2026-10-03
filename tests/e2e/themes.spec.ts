@@ -22,7 +22,7 @@ test.describe("Multi-Theme Switching and Architecture Verification", () => {
 
   test("a) with youplay active, / renders data-theme='youplay'", async ({ page }) => {
     await page.goto("/");
-    const shell = page.locator('[data-theme="youplay"]');
+    const shell = page.locator('div[data-theme="youplay"]').first();
     await expect(shell).toBeVisible({ timeout: 10000 });
   });
 
@@ -36,26 +36,26 @@ test.describe("Multi-Theme Switching and Architecture Verification", () => {
     expect(adminLoginRes?.status()).toBe(200);
 
     // /admin/login does NOT render theme shell
-    const themedShell = page.locator('[data-theme="youplay"]');
+    const themedShell = page.locator('div[data-theme="youplay"]');
     await expect(themedShell).toHaveCount(0);
   });
 
-  test("h) preview_theme works for admin and is ignored for anonymous/normal users", async ({ page, context }) => {
+  test("h) preview_theme works for admin and is ignored for anonymous/normal users", async ({ page }) => {
     // Anonymous user attempting preview: should ignore preview and remain youplay
     await page.goto("/?preview_theme=testtheme");
-    const anonShell = page.locator('[data-theme="youplay"]');
+    const anonShell = page.locator('div[data-theme="youplay"]').first();
     await expect(anonShell).toBeVisible();
 
     // Log in as Admin via /admin/login
     await page.goto("/admin/login");
-    await page.fill('input[type="email"], input[name="email"]', "admin@playtube.test");
-    await page.fill('input[type="password"], input[name="password"]', "adminpassword123");
+    await page.fill('input[placeholder="admin@playtube.com"]', "admin@playtube.test");
+    await page.fill('input[type="password"]', "adminpassword123");
     await page.click('button[type="submit"]');
     await page.waitForURL(/\/admin/);
 
     // Admin previewing testtheme
     await page.goto("/?preview_theme=testtheme");
-    const previewBanner = page.locator("text=Previewing theme testtheme");
+    const previewBanner = page.locator("text=Previewing theme: testtheme");
     await expect(previewBanner).toBeVisible();
   });
 
@@ -77,8 +77,8 @@ test.describe("Multi-Theme Switching and Architecture Verification", () => {
     await page.goto("/login");
     expect(page.url()).not.toContain("/themes/");
 
-    await page.fill('input[type="email"], input[name="email"]', "user_a@playtube.test");
-    await page.fill('input[type="password"], input[name="password"]', "password123");
+    await page.fill('input[type="text"]', "test_user_a");
+    await page.fill('input[type="password"]', "password123");
     await page.click('button[type="submit"]');
 
     // Should redirect to clean URL /
@@ -92,7 +92,7 @@ test.describe("Multi-Theme Switching and Architecture Verification", () => {
       .where(eq(siteConfig.name, "active_theme"));
 
     await page.goto("/");
-    const shell = page.locator('[data-theme="youplay"]');
+    const shell = page.locator('div[data-theme="youplay"]').first();
     await expect(shell).toBeVisible();
   });
 });

@@ -48,3 +48,7 @@ next-env.d.ts
 #existing-codebase
 existing-videowebsite/
 temp/
+
+# Test
+playwright-report/
+test-results/
