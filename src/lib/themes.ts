@@ -18,6 +18,14 @@ export interface ThemeMeta {
 
 export const THEME_REGISTRY: ThemeMeta[] = [
   {
+    id: "default",
+    name: "Default",
+    version: "1.0",
+    author: "Custom Author",
+    description: "Custom theme based on YouPlay.",
+    preview: "/themes/default.png",
+  },
+  {
     id: "youplay",
     name: "YouPlay",
     version: "1.0",

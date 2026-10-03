@@ -39,17 +39,17 @@ describe("Phase 1.8: Themes System", () => {
     // Set theme directly in DB
     await db
       .insert(siteConfig)
-      .values({ name: "theme", value: "default" })
-      .onConflictDoUpdate({ target: siteConfig.name, set: { value: "default" } });
+      .values({ name: "active_theme", value: "youplay" })
+      .onConflictDoUpdate({ target: siteConfig.name, set: { value: "youplay" } });
 
-    const config = await getSiteConfig(["theme"]);
-    expect(config["theme"]).toBe("default");
+    const config = await getSiteConfig(["active_theme"]);
+    expect(config["active_theme"]).toBe("youplay");
 
     // Also verify public design settings action returns it
     const { getPublicDesignSettingsAction } = await import("@/modules/videos/design-public.actions");
     const designRes = await getPublicDesignSettingsAction();
     expect(designRes.success).toBe(true);
-    expect(designRes.data?.theme).toBe("default");
+    expect(designRes.data?.theme).toBe("youplay");
   });
 
   it("updates active theme to youplay", async () => {
