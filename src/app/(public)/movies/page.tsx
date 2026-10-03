@@ -4,6 +4,12 @@ import { db } from "@/db";
 import { videos, users, movieCategories } from "@/db/schema";
 import { eq, desc, and, or, ilike, gte } from "drizzle-orm";
 import { Film, Star, Play, Search, Filter } from "lucide-react";
+import { getSeoMetadata } from "@/lib/config/seo";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return getSeoMetadata({ pageKey: "movies", url: "/movies" });
+}
 
 interface MoviesPageProps {
   searchParams: Promise<{

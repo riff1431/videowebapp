@@ -14,9 +14,25 @@ import { headers } from "next/headers";
 import { getServerTranslations } from "@/lib/translations/server";
 
 import { getSiteConfig } from "@/lib/config";
+import { getSeoMetadata } from "@/lib/config/seo";
+import type { Metadata } from "next";
 
 export interface WatchPageProps {
   params: Promise<{ videoId: string }>;
+}
+
+export async function generateMetadata({ params }: WatchPageProps): Promise<Metadata> {
+  const { videoId } = await params;
+  const video = await getVideoByVideoId(videoId);
+  if (!video) return { title: "Video Not Found" };
+
+  return getSeoMetadata({
+    fallbackTitle: `${video.title} - {SITE_TITLE}`,
+    fallbackDescription: video.description || "{SITE_DESC}",
+    image: video.thumbnail,
+    url: `/watch/${videoId}`,
+    type: "video.other",
+  });
 }
 
 export default async function WatchPage({ params }: WatchPageProps) {

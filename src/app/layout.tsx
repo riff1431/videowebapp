@@ -7,11 +7,11 @@ import { LanguageProvider } from "@/providers/language-provider";
 import { getServerTranslations } from "@/lib/translations/server";
 
 import { getSiteConfig } from "@/lib/config";
+import { getSeoMetadata } from "@/lib/config/seo";
 
-export const metadata: Metadata = {
-  title: "PlayTube - Video Sharing Platform",
-  description: "PlayTube is the premier video sharing platform.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return getSeoMetadata({ pageKey: "home" });
+}
 
 export default async function RootLayout({
   children,
