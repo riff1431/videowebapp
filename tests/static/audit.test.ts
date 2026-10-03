@@ -119,11 +119,11 @@ describe("Static Audit & Non-API Code Detector", () => {
     ).toEqual([]);
   });
 
-  it("audits fallback mock item arrays in API import endpoints", () => {
+  it("audits fallback mock item arrays in API import endpoints and ensures zero mock fallbacks remain", () => {
     const mockEndpoints: string[] = [];
 
     for (const file of allFiles) {
-      if (file.includes("api")) {
+      if (file.includes("api") && file.includes("import")) {
         const content = fs.readFileSync(file, "utf-8");
         if (content.includes("mockItems")) {
           mockEndpoints.push(path.relative(process.cwd(), file).replace(/\\/g, "/"));
@@ -131,9 +131,9 @@ describe("Static Audit & Non-API Code Detector", () => {
       }
     }
 
-    expect(mockEndpoints.length).toBeGreaterThan(0);
-    expect(mockEndpoints).toContain("src/app/api/admin/import/youtube/route.ts");
-    expect(mockEndpoints).toContain("src/app/api/admin/import/dailymotion/route.ts");
-    expect(mockEndpoints).toContain("src/app/api/admin/import/twitch/route.ts");
+    expect(
+      mockEndpoints,
+      `Unapproved mock fallback items found in API import routes: ${JSON.stringify(mockEndpoints)}`
+    ).toEqual([]);
   });
 });
