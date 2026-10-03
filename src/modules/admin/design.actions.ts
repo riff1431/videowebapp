@@ -290,7 +290,7 @@ export async function getThemesAction() {
       const hasForgot = implemented.includes("/forgot-password");
       const hasReset = implemented.includes("/reset-password");
 
-      const missingAuth = !hasLogin || !hasRegister || !hasForgot || !hasReset;
+      const missingAuth = !hasLogin || !hasRegister || !hasForgot || !hasReset || !hasHome || !hasWatch;
 
       return {
         key: t.id,
