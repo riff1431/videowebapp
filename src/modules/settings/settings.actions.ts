@@ -7,43 +7,29 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 
+import { assertUser } from "@/lib/auth/assert-admin";
+
 async function getAuthUserId(): Promise<number | null> {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (session?.user?.id) {
-      return Number(session.user.id);
-    }
-  } catch (e) {
-    // fallback
+    const user = await assertUser();
+    return user.id;
+  } catch {
+    return null;
   }
-
-  // fallback to first admin/user for demo / local dev
-  const [firstUser] = await db.select().from(users).limit(1);
-  return firstUser?.id || null;
 }
 
 // 1. General Settings Action
-export async function updateGeneralSettingsAction(formData: FormData) {
+export async function updateGeneralSettingsAction(formData: FormData, customHeaders?: Headers) {
   try {
-    const userId = await getAuthUserId();
-    if (!userId) {
-      return { success: false, error: "Authentication required" };
-    }
+    const user = await assertUser(customHeaders);
+    const userId = user.id;
 
+    // Strict allow-list of user-editable fields
     const username = (formData.get("username") as string)?.trim();
     const email = (formData.get("email") as string)?.trim().toLowerCase();
     const gender = (formData.get("gender") as string) || "male";
     const countryId = Number(formData.get("countryId") || 0);
     const age = Number(formData.get("age") || 0);
-    const donationPaypal = (formData.get("donationPaypal") as string)?.trim() || "";
-    const active = formData.get("active") === "true";
-    const isPro = formData.get("isPro") === "true";
-    const isAdmin = formData.get("isAdmin") === "true";
-    const role = isAdmin ? "admin" : "user";
-    const verified = formData.get("verified") === "true";
-    const wallet = Number(formData.get("wallet") || 0);
 
     if (!username) {
       return { success: false, error: "Username is required" };
@@ -63,6 +49,7 @@ export async function updateGeneralSettingsAction(formData: FormData) {
       return { success: false, error: "Username is already taken" };
     }
 
+    // Only update allowed fields (never role, isAdmin, isPro, verified, active, wallet, balance)
     await db
       .update(users)
       .set({
@@ -71,12 +58,6 @@ export async function updateGeneralSettingsAction(formData: FormData) {
         gender,
         countryId,
         age,
-        active,
-        isPro,
-        isAdmin,
-        role,
-        verified,
-        wallet,
         updatedAt: new Date(),
       })
       .where(eq(users.id, userId));
