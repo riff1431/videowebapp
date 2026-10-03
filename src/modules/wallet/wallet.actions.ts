@@ -6,6 +6,7 @@ import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
+import { assertAdmin } from "@/lib/auth/assert-admin";
 
 async function getAuthUserId() {
   const session = await auth.api.getSession({
@@ -186,6 +187,11 @@ export async function transferWalletToBalanceAction(amount: number) {
 }
 
 export async function addCreatorEarningsAction(amount: number = 100) {
+  if (process.env.NODE_ENV === "production") {
+    return { success: false, error: "Test earnings are not available in production." };
+  }
+  await assertAdmin();
+
   try {
     const userId = await getAuthUserId();
     if (!userId) {

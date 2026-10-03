@@ -16,7 +16,6 @@ import {
   depositWalletAction,
   transferBalanceToWalletAction,
   transferWalletToBalanceAction,
-  addCreatorEarningsAction,
 } from "@/modules/wallet/wallet.actions";
 
 interface TransactionItem {
@@ -167,22 +166,6 @@ export function WalletClient({
     }
   };
 
-  const handleAddDemoEarnings = async () => {
-    setLoading(true);
-    try {
-      const res = await addCreatorEarningsAction(100);
-      if (res.success && res.balance !== undefined) {
-        setBalance(res.balance);
-        setSuccessBanner("Credited +$100.00 demo earnings to your Available Balance!");
-        setTimeout(() => setSuccessBanner(""), 5000);
-      }
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="w-full max-w-5xl mx-auto space-y-6">
       {/* Top Header Card matching PlayTube UI */}
@@ -196,18 +179,6 @@ export function WalletClient({
               Wallet
             </h1>
           </div>
-
-          {/* Quick Demo Balance Helper */}
-          <button
-            type="button"
-            onClick={handleAddDemoEarnings}
-            disabled={loading}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition-colors cursor-pointer"
-            title="Add test creator revenue so you can test transferring from Available Balance to Wallet"
-          >
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span>Add $100 Creator Earnings</span>
-          </button>
         </div>
 
         {/* Global Notification Banner */}
@@ -275,15 +246,6 @@ export function WalletClient({
                 className="bg-[#04abf2] hover:bg-[#0399d8] active:bg-[#028ec8] text-white text-xs font-medium px-6 py-2 rounded-full transition-colors cursor-pointer shadow-xs select-none"
               >
                 Transfer
-              </button>
-
-              <button
-                type="button"
-                onClick={handleAddDemoEarnings}
-                disabled={loading}
-                className="sm:hidden text-xs text-emerald-600 font-medium hover:underline cursor-pointer"
-              >
-                + $100 Earnings
               </button>
             </div>
           </div>
