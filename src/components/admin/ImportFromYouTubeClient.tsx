@@ -34,6 +34,7 @@ export function ImportFromYouTubeClient({
   const [isSearching, setIsSearching] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
+  const [settingsLink, setSettingsLink] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -55,8 +56,10 @@ export function ImportFromYouTubeClient({
 
       if (!res.ok || !data.success) {
         setErrorText(data.error || "Failed to fetch videos from YouTube");
+        setSettingsLink(data.settingsLink || null);
         setVideos([]);
       } else {
+        setSettingsLink(null);
         const fetchedVideos: YouTubeVideoCard[] = (data.items || []).map((v: any) => ({
           id: v.id,
           title: v.title,
@@ -295,9 +298,19 @@ export function ImportFromYouTubeClient({
       )}
 
       {errorText && (
-        <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded text-xs font-medium flex items-center gap-2">
-          <AlertCircle className="w-4 h-4" />
-          <span>{errorText}</span>
+        <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded text-xs font-medium flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorText}</span>
+          </div>
+          {settingsLink && (
+            <Link
+              href={settingsLink}
+              className="px-3 py-1 bg-red-500 text-white rounded text-[11px] font-semibold hover:bg-red-600 transition-colors shrink-0 ml-3"
+            >
+              Configure in Settings
+            </Link>
+          )}
         </div>
       )}
 

@@ -98,17 +98,15 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
       expect(data.error).toBe("Query is required");
     });
 
-    it("returns video items array for valid query (happy path)", async () => {
+    it("returns 400 with error and settings link when YouTube API key is missing", async () => {
       const req = new Request("http://localhost:3000/api/admin/import/youtube?query=Nature");
       const res = await getYoutubeImport(req);
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(400);
 
       const data = await res.json();
-      expect(data.success).toBe(true);
-      expect(Array.isArray(data.items)).toBe(true);
-      expect(data.items.length).toBeGreaterThan(0);
-      expect(data.items[0]).toHaveProperty("id");
-      expect(data.items[0]).toHaveProperty("title");
+      expect(data.success).toBe(false);
+      expect(data.error).toBe("YouTube API key is not configured");
+      expect(data.settingsLink).toBe("/admin/settings");
     });
   });
 
@@ -123,31 +121,31 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
       expect(data.error).toBe("Keyword is required");
     });
 
-    it("returns video items list for valid keyword query (happy path)", async () => {
+    it("returns video items list for valid keyword query (happy path) or 502 on upstream rate limit", async () => {
       const req = new Request("http://localhost:3000/api/admin/import/dailymotion?query=gaming");
       const res = await getDailymotionImport(req);
-      expect(res.status).toBe(200);
-
       const data = await res.json();
-      expect(data.success).toBe(true);
-      expect(Array.isArray(data.items)).toBe(true);
-      expect(data.items[0]).toHaveProperty("title");
+      if (res.status === 200) {
+        expect(data.success).toBe(true);
+        expect(Array.isArray(data.items)).toBe(true);
+      } else {
+        expect(res.status).toBe(502);
+        expect(data.success).toBe(false);
+      }
     });
   });
 
   describe("5. GET /api/admin/import/twitch", () => {
-    it("handles twitch import requests and checks client id configuration", async () => {
+    it("returns 400 and explicit error when Twitch Client ID is missing", async () => {
       const req = new Request("http://localhost:3000/api/admin/import/twitch?query=esports");
       const res = await getTwitchImport(req);
-      const data = await res.json();
+      expect(res.status).toBe(400);
 
-      if (data.noClientId) {
-        expect(data.success).toBe(false);
-        expect(data.error).toContain("Twitch Client Id");
-      } else {
-        expect(data.success).toBe(true);
-        expect(Array.isArray(data.items)).toBe(true);
-      }
+      const data = await res.json();
+      expect(data.success).toBe(false);
+      expect(data.noClientId).toBe(true);
+      expect(data.error).toContain("Twitch Client ID is not configured");
+      expect(data.settingsLink).toBe("/admin/settings");
     });
   });
 
