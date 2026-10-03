@@ -12,6 +12,7 @@ import {
   Search,
 } from "lucide-react";
 import { UserAd } from "@/modules/ads/ads.actions";
+import { useTranslation } from "@/providers/language-provider";
 
 interface AdsClientProps {
   wallet: number;
@@ -20,6 +21,7 @@ interface AdsClientProps {
 }
 
 export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
+  const { t } = useTranslation();
   const [entriesPerPage, setEntriesPerPage] = useState("10");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -39,7 +41,7 @@ export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
               <Layers className="w-5 h-5" />
             </div>
             <h1 className="text-xl font-bold text-neutral-800 dark:text-neutral-100">
-              Advertising
+              {t("advertising", "Advertising")}
             </h1>
           </div>
 
@@ -48,7 +50,7 @@ export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#04abf2] hover:bg-[#0396d5] text-white text-xs font-bold uppercase tracking-wider rounded-full transition-colors shadow-xs cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Create ad</span>
+            <span>{t("create_ad", "Create ad")}</span>
           </Link>
         </div>
 
@@ -74,7 +76,7 @@ export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
                 <WalletIcon className="w-5 h-5" />
               </div>
               <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-200 group-hover:text-[#04abf2] transition-colors">
-                Wallet
+                {t("wallet", "Wallet")}
               </span>
             </div>
             <span className="text-2xl font-bold text-neutral-800 dark:text-white">
@@ -92,7 +94,7 @@ export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
                 <CircleDollarSign className="w-5 h-5" />
               </div>
               <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-200 group-hover:text-emerald-500 transition-colors">
-                Available balance
+                {t("available_balance", "Available balance")}
               </span>
             </div>
             <span className="text-2xl font-bold text-neutral-800 dark:text-white">
@@ -104,7 +106,7 @@ export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
         {/* Ads Data Table Controls */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400">
-            <span>Show</span>
+            <span>{t("show", "Show")}</span>
             <select
               value={entriesPerPage}
               onChange={(e) => setEntriesPerPage(e.target.value)}
@@ -114,11 +116,11 @@ export function AdsClient({ wallet, balance, ads }: AdsClientProps) {
               <option value="25">25</option>
               <option value="50">50</option>
             </select>
-            <span>entries</span>
+            <span>{t("entries", "entries")}</span>
           </div>
 
           <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400">
-            <span>Search:</span>
+            <span>{t("search", "Search:")}</span>
             <input
               type="text"
               value={searchQuery}

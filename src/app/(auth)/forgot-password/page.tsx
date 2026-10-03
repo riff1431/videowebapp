@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { KeyRound, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 import { requestPasswordResetAction } from "@/modules/auth/password.actions";
+import { useTranslation } from "@/providers/language-provider";
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -47,10 +49,10 @@ export default function ForgotPasswordPage() {
         </div>
 
         <h2 className="text-2xl font-bold text-center text-neutral-900 dark:text-white mb-2">
-          Reset Password
+          {t("reset_password", "Reset Password")}
         </h2>
         <p className="text-xs text-center text-neutral-500 mb-6">
-          Enter your registered email address and we will send you a password reset link.
+          {t("forgot_password_desc", "Enter your registered email address and we will send you a password reset link.")}
         </p>
 
         {error && (
@@ -72,7 +74,7 @@ export default function ForgotPasswordPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              Your Email Address *
+              {t("email_address", "Your Email Address")} *
             </label>
             <input
               type="email"
@@ -89,12 +91,12 @@ export default function ForgotPasswordPage() {
             disabled={loading}
             className="w-full py-2.5 px-4 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors cursor-pointer shadow-xs disabled:opacity-50"
           >
-            {loading ? "Please wait..." : "Request New Password"}
+            {loading ? "Please wait..." : t("request_new_password", "Request New Password")}
           </button>
         </form>
 
         <div className="mt-6 pt-4 border-t border-[var(--border)] text-center text-xs text-neutral-600 dark:text-neutral-400">
-          Already have an account?{" "}
+          {t("already_have_account", "Already have an account?")}{" "}
           <Link
             href="/login"
             className="text-[var(--primary)] hover:underline font-semibold"

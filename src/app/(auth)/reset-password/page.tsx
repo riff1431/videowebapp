@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, AlertCircle, CheckCircle2 } from "lucide-react";
 import { resetPasswordAction } from "@/modules/auth/password.actions";
+import { useTranslation } from "@/providers/language-provider";
 
 function ResetPasswordForm() {
+  const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
@@ -63,10 +65,10 @@ function ResetPasswordForm() {
       </div>
 
       <h2 className="text-2xl font-bold text-center text-neutral-900 dark:text-white mb-2">
-        Change Password
+        {t("change_password", "Change Password")}
       </h2>
       <p className="text-xs text-center text-neutral-500 mb-6">
-        Create a new secure password for your account.
+        {t("reset_password_desc", "Create a new secure password for your account.")}
       </p>
 
       {error && (
@@ -86,7 +88,7 @@ function ResetPasswordForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-            New Password *
+            {t("new_password", "New Password")} *
           </label>
           <input
             type="password"
@@ -100,7 +102,7 @@ function ResetPasswordForm() {
 
         <div>
           <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-            Confirm Password *
+            {t("confirm_password", "Confirm Password")} *
           </label>
           <input
             type="password"
@@ -122,7 +124,7 @@ function ResetPasswordForm() {
       </form>
 
       <div className="mt-6 pt-4 border-t border-[var(--border)] text-center text-xs text-neutral-600 dark:text-neutral-400">
-        Remember your credentials?{" "}
+        {t("remember_credentials", "Remember your credentials?")}{" "}
         <Link
           href="/login"
           className="text-[var(--primary)] hover:underline font-semibold"
