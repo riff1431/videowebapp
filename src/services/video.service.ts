@@ -97,3 +97,13 @@ export async function getCategories() {
     return [];
   }
 }
+
+export async function deleteVideoService(videoId: number): Promise<{ success: boolean; error?: string }> {
+  try {
+    await db.delete(videos).where(eq(videos.id, videoId));
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to delete video" };
+  }
+}
+

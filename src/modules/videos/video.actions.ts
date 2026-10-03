@@ -384,15 +384,18 @@ export async function updateVideoAction(formData: FormData) {
 // 7. Delete Video Action
 // ==========================================
 export async function deleteVideoAction(videoId: number) {
-  try {
-    await db.delete(videos).where(eq(videos.id, videoId));
-    revalidatePath("/manage-videos");
-    revalidatePath("/dashboard");
-    revalidatePath("/");
-    return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err.message || "Failed to delete video" };
+  const { deleteVideoService } = await import("@/services/video.service");
+  const result = await deleteVideoService(videoId);
+  if (result.success) {
+    try {
+      revalidatePath("/manage-videos");
+      revalidatePath("/dashboard");
+      revalidatePath("/");
+    } catch {
+      // Gracefully handle invocation outside Next.js request context if any
+    }
   }
+  return result;
 }
 
 // ==========================================

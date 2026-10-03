@@ -167,6 +167,13 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
       expect(result).toHaveProperty("success", true);
     });
 
+    it("executes deleteVideoService outside request context without throwing cache errors", async () => {
+      const { deleteVideoService } = await import("@/services/video.service");
+      const serviceResult = await deleteVideoService(99999999);
+      expect(serviceResult).toEqual({ success: true });
+    });
+
+
     it("fails validation when adding a comment without valid text", async () => {
       const result = await addCommentAction({
         videoId: seed.videos.publicVideo.id,
