@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 import { uploadVideoAction } from "@/modules/videos/video.actions";
 import { uploadToSupabaseStorage } from "@/lib/storage/supabase";
+import { UserUploadLimitInfo } from "@/lib/config/upload-policy";
 
-function UploadVideoContent() {
+function UploadVideoContent({ policy }: { policy?: UserUploadLimitInfo }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isShortsFlow =
@@ -42,6 +43,10 @@ function UploadVideoContent() {
 
   // Handle video selection
   const processSelectedVideo = (file: File) => {
+    if (policy && policy.maxUploadBytes > 0 && file.size > policy.maxUploadBytes) {
+      setError(`File size (${(file.size / (1024 * 1024)).toFixed(1)}MB) exceeds the maximum upload limit of ${policy.maxUploadFormatted}`);
+      return;
+    }
     setVideoFile(file);
     setVideoFileName(file.name);
     // Extract default title from file name without extension
@@ -144,6 +149,7 @@ function UploadVideoContent() {
       formData.set("tags", tags.trim());
       formData.set("videoLocation", finalVideoUrl);
       formData.set("thumbnail", finalThumbnailUrl);
+      if (videoFile) formData.set("fileSizeBytes", String(videoFile.size));
 
       const res = await uploadVideoAction(formData);
 
@@ -323,23 +329,25 @@ function UploadVideoContent() {
               </div>
             </div>
 
-            {/* Admin Notice Box */}
-            <div className="pt-6 mt-8 border-t border-neutral-100 dark:border-neutral-800 text-left space-y-1.5">
-              <h4 className="text-xs font-semibold text-[#04abf2]">
-                Just admins can see this message
-              </h4>
-              <p className="text-xs text-neutral-500">
-                Note: Your server max upload size is: 2048M, means you can&apos;t upload files that are larger than: 2048M
-              </p>
-              <p className="text-[11px] text-neutral-400 leading-relaxed pt-1">
-                If you want to increase the limit or if you can&apos;t upload large files, go to Admin Settings &gt; Settings &gt; Site Settings &gt; Max upload size and increase the value, if you still can&apos;t upload large files, please contact your host provider and let them increase the upload limit and max_execution_time.
-              </p>
-            </div>
+            {/* Admin Notice Box (Visible only to admins) */}
+            {policy?.isAdmin && (
+              <div className="pt-6 mt-8 border-t border-neutral-100 dark:border-neutral-800 text-left space-y-1.5">
+                <h4 className="text-xs font-semibold text-[#04abf2]">
+                  Just admins can see this message
+                </h4>
+                <p className="text-xs text-neutral-500">
+                  Note: Your configured upload limit is: {policy?.maxUploadFormatted}, means you can&apos;t upload files larger than this limit.
+                </p>
+                <p className="text-[11px] text-neutral-400 leading-relaxed pt-1">
+                  If you want to increase the limit, go to Admin Settings &gt; Settings &gt; Site Settings &gt; Max upload size.
+                </p>
+              </div>
+            )}
 
             {/* Maximum Duration Notice matching Screenshot 1 */}
             <div className="pt-4 mt-4 border-t border-neutral-100 dark:border-neutral-800 text-left">
               <p className="text-xs text-amber-800 dark:text-amber-400 font-normal">
-                Please note that maximum duration allow is 15 seconds.
+                Please note that maximum duration allow is {policy?.maxDurationSeconds ?? 15} seconds.
               </p>
             </div>
           </div>
@@ -553,7 +561,7 @@ function UploadVideoContent() {
   );
 }
 
-export default function UploadVideoPage() {
+export default function UploadVideoPage({ policy }: { policy?: UserUploadLimitInfo }) {
   return (
     <Suspense
       fallback={
@@ -562,7 +570,7 @@ export default function UploadVideoPage() {
         </div>
       }
     >
-      <UploadVideoContent />
+      <UploadVideoContent policy={policy} />
     </Suspense>
   );
 }
