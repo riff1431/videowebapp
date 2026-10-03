@@ -15,6 +15,7 @@ import {
   categories,
   notifications,
 } from "@/db/schema";
+import { eq, inArray, ilike, or, desc, asc, and, gte, lte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { sendMail } from "@/lib/mailer";
 
@@ -874,6 +875,16 @@ export async function sendNewsletterAction(data: {
       type: "newsletter",
       text: `Newsletter broadcast: ${data.subject.substring(0, 100)}`,
     });
+
+    // Send emails using configured SMTP mailer
+    const emailPromises = recipientUsers.slice(0, 50).map((u) =>
+      sendMail({
+        to: u.email,
+        subject: data.subject,
+        html: data.message,
+      }).catch((e) => console.error(`[NEWSLETTER] Failed sending to ${u.email}:`, e))
+    );
+    await Promise.allSettled(emailPromises);
 
     return {
       success: true,
