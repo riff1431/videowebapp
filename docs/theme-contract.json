@@ -1,0 +1,1736 @@
+{
+  "version": "1.0.0",
+  "description": "PlayTube Multi-Theme Machine-Readable Theme Contract",
+  "routes": [
+    {
+      "url": "/",
+      "file": "src/app/themes/youplay/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "getCategories",
+        "getFeaturedVideos"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "HomeClient",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/ads",
+      "file": "src/app/themes/youplay/ads/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "eq"
+      ],
+      "actions": [
+        "getUserAdsAction"
+      ],
+      "hooks": [],
+      "components": [
+        "AdsClient",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/ads/create",
+      "file": "src/app/themes/youplay/ads/create/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "db",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "CreateAdClient",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/articles",
+      "file": "src/app/themes/youplay/articles/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "and",
+        "asc",
+        "db",
+        "desc",
+        "eq",
+        "ilike"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "BookOpen",
+        "Link",
+        "Newspaper",
+        "React",
+        "Search"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/articles/read/[id]",
+      "file": "src/app/themes/youplay/articles/read/[id]/page.tsx",
+      "params": [
+        "id"
+      ],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "and",
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [
+        "postArticleCommentAction"
+      ],
+      "hooks": [],
+      "components": [
+        "ArrowLeft",
+        "Calendar",
+        "Eye",
+        "Link",
+        "MessageSquare",
+        "React",
+        "Send",
+        "Share2",
+        "User"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/channel/[username]",
+      "file": "src/app/themes/youplay/channel/[username]/page.tsx",
+      "params": [
+        "username"
+      ],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "and",
+        "count",
+        "db",
+        "desc",
+        "eq",
+        "getPublicImageUrl",
+        "getServerTranslations"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "Calendar",
+        "ChannelSubscribeButton",
+        "CheckCircle2",
+        "Eye",
+        "Heart",
+        "Info",
+        "Link",
+        "List",
+        "Megaphone",
+        "MessageCircle",
+        "React",
+        "Share2",
+        "Sparkles",
+        "ThumbsUp",
+        "Video",
+        "VideoCard",
+        "VideoOff"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/contact-us",
+      "file": "src/app/themes/youplay/contact-us/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [],
+      "actions": [
+        "submitContactAction"
+      ],
+      "hooks": [
+        "useState"
+      ],
+      "components": [
+        "AlertCircle",
+        "CheckCircle2",
+        "Loader2",
+        "Mail",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": true
+    },
+    {
+      "url": "/create_article",
+      "file": "src/app/themes/youplay/create_article/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/create_post",
+      "file": "src/app/themes/youplay/create_post/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "CreatePostClient"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/create-article",
+      "file": "src/app/themes/youplay/create-article/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "asc",
+        "db"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "CreateArticleClient"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/create-post",
+      "file": "src/app/themes/youplay/create-post/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/dashboard",
+      "file": "src/app/themes/youplay/dashboard/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "and",
+        "count",
+        "db",
+        "desc",
+        "eq",
+        "sql"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "DashboardClient",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/edit-video/[id]",
+      "file": "src/app/themes/youplay/edit-video/[id]/page.tsx",
+      "params": [
+        "id"
+      ],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "asc",
+        "db",
+        "eq"
+      ],
+      "actions": [
+        "updateVideoAction"
+      ],
+      "hooks": [],
+      "components": [
+        "AlertCircle",
+        "ArrowLeft",
+        "CheckCircle2",
+        "Edit3",
+        "Film",
+        "Link",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/forgot-password",
+      "file": "src/app/themes/youplay/(auth)/forgot-password/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [
+        "useForgotPassword",
+        "useTranslation"
+      ],
+      "components": [
+        "AlertCircle",
+        "CheckCircle2",
+        "KeyRound",
+        "Link",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": true
+    },
+    {
+      "url": "/go-pro",
+      "file": "src/app/themes/youplay/go-pro/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "asc",
+        "db",
+        "eq"
+      ],
+      "actions": [
+        "upgradeToProAction"
+      ],
+      "hooks": [],
+      "components": [
+        "Check",
+        "CheckCircle2",
+        "Crown",
+        "Link",
+        "React",
+        "Shield",
+        "Sparkles",
+        "UploadCloud",
+        "Zap"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/help",
+      "file": "src/app/themes/youplay/help/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/help/faqs",
+      "file": "src/app/themes/youplay/help/faqs/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/history",
+      "file": "src/app/themes/youplay/history/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "HistoryClient",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/import-video",
+      "file": "src/app/themes/youplay/import-video/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "asc",
+        "db"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "ImportVideoClient"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/liked-videos",
+      "file": "src/app/themes/youplay/liked-videos/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "React",
+        "ThumbsUp",
+        "VideoCard"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/login",
+      "file": "src/app/themes/youplay/(auth)/login/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [
+        "useLogin",
+        "useTranslation"
+      ],
+      "components": [
+        "AlertCircle",
+        "Link",
+        "Loader2",
+        "React",
+        "Suspense"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": true
+    },
+    {
+      "url": "/manage-videos",
+      "file": "src/app/themes/youplay/manage-videos/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/messages",
+      "file": "src/app/themes/youplay/messages/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "and",
+        "db",
+        "desc",
+        "eq",
+        "ne",
+        "or"
+      ],
+      "actions": [
+        "clearChatAction",
+        "sendMessageAction"
+      ],
+      "hooks": [],
+      "components": [
+        "CheckCheck",
+        "Clock",
+        "Link",
+        "MessageSquare",
+        "React",
+        "Search",
+        "Send",
+        "Trash2",
+        "User"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/movies",
+      "file": "src/app/themes/youplay/movies/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "and",
+        "db",
+        "desc",
+        "eq",
+        "getSeoMetadata",
+        "gte",
+        "ilike",
+        "or"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "Film",
+        "Filter",
+        "Link",
+        "Play",
+        "React",
+        "Search",
+        "Star"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/my_articles",
+      "file": "src/app/themes/youplay/my_articles/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "count",
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "MyArticlesClient",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/my-articles",
+      "file": "src/app/themes/youplay/my-articles/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/paid-videos",
+      "file": "src/app/themes/youplay/paid-videos/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "and",
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "PaidVideosClient"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/popular-channels",
+      "file": "src/app/themes/youplay/popular-channels/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "eq",
+        "getSiteConfig",
+        "sql"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "ChannelCard",
+        "ChannelItem",
+        "PopularChannelsHero",
+        "React",
+        "VideoOff"
+      ],
+      "siteConfigKeys": [
+        "popular_channels"
+      ],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/register",
+      "file": "src/app/themes/youplay/(auth)/register/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "getPublicImageUrl"
+      ],
+      "actions": [],
+      "hooks": [
+        "useRegister",
+        "useTheme",
+        "useTranslation"
+      ],
+      "components": [
+        "AlertCircle",
+        "Link",
+        "React",
+        "Ticket"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": true
+    },
+    {
+      "url": "/reset-password",
+      "file": "src/app/themes/youplay/(auth)/reset-password/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [
+        "useResetPassword",
+        "useTranslation"
+      ],
+      "components": [
+        "AlertCircle",
+        "CheckCircle2",
+        "Link",
+        "Lock",
+        "React",
+        "Suspense"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": true
+    },
+    {
+      "url": "/saved-videos",
+      "file": "src/app/themes/youplay/saved-videos/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/search",
+      "file": "src/app/themes/youplay/search/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "and",
+        "db",
+        "desc",
+        "eq",
+        "ilike",
+        "or"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "Link",
+        "React",
+        "Search",
+        "VideoCard"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/settings",
+      "file": "src/app/themes/youplay/settings/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/settings/[tab]",
+      "file": "src/app/themes/youplay/settings/[tab]/page.tsx",
+      "params": [
+        "tab"
+      ],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "asc",
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "React",
+        "SettingsClient"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/shorts",
+      "file": "src/app/themes/youplay/shorts/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "Link",
+        "Play",
+        "Plus",
+        "React",
+        "ShortsIcon"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/site-pages/[pageName]",
+      "file": "src/app/themes/youplay/site-pages/[pageName]/page.tsx",
+      "params": [
+        "pageName"
+      ],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "ArrowLeft",
+        "FileText",
+        "Link",
+        "React"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/stock-videos",
+      "file": "src/app/themes/youplay/stock-videos/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq",
+        "or"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "React",
+        "StockVideoItem",
+        "StockVideosClient",
+        "Suspense"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/subscriptions",
+      "file": "src/app/themes/youplay/subscriptions/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "List",
+        "React",
+        "VideoCard",
+        "VideoOff"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/switch-account",
+      "file": "src/app/themes/youplay/switch-account/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "getSiteConfig"
+      ],
+      "actions": [
+        "getSwitchedAccountsAction"
+      ],
+      "hooks": [],
+      "components": [
+        "SwitchAccountModal"
+      ],
+      "siteConfigKeys": [
+        "switch_account"
+      ],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/terms/[type]",
+      "file": "src/app/themes/youplay/terms/[type]/page.tsx",
+      "params": [
+        "type"
+      ],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "ArrowLeft",
+        "FileText",
+        "HelpCircle",
+        "Info",
+        "Link",
+        "React",
+        "RefreshCw",
+        "Shield"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/upload-video",
+      "file": "src/app/themes/youplay/upload-video/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "getUserUploadLimit"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "UploadVideoClient"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/videos/latest",
+      "file": "src/app/themes/youplay/videos/latest/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq",
+        "getServerTranslations"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "React",
+        "Video",
+        "VideoCard",
+        "VideoOff"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/videos/top",
+      "file": "src/app/themes/youplay/videos/top/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "and",
+        "db",
+        "desc",
+        "eq",
+        "getServerTranslations",
+        "gte"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "BarChart2",
+        "Calendar",
+        "Link",
+        "React",
+        "Video",
+        "VideoCard",
+        "VideoOff"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/videos/trending",
+      "file": "src/app/themes/youplay/videos/trending/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq",
+        "getServerTranslations"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "React",
+        "Video",
+        "VideoCard",
+        "VideoOff"
+      ],
+      "siteConfigKeys": [],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/wallet",
+      "file": "src/app/themes/youplay/wallet/page.tsx",
+      "params": [],
+      "searchParams": [],
+      "auth": "required",
+      "required": true,
+      "queries": [
+        "db",
+        "desc",
+        "eq",
+        "getSiteConfig"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "React",
+        "WalletClient"
+      ],
+      "siteConfigKeys": [
+        "bank_payment",
+        "paypal_payment",
+        "stripe_payment"
+      ],
+      "adSlots": [],
+      "isClient": false
+    },
+    {
+      "url": "/watch/[videoId]",
+      "file": "src/app/themes/youplay/watch/[videoId]/page.tsx",
+      "params": [
+        "videoId"
+      ],
+      "searchParams": [],
+      "auth": "none",
+      "required": true,
+      "queries": [
+        "and",
+        "count",
+        "db",
+        "desc",
+        "eq",
+        "getFeaturedVideos",
+        "getPublicImageUrl",
+        "getSeoMetadata",
+        "getServerTranslations",
+        "getSiteConfig",
+        "getVideoByVideoId"
+      ],
+      "actions": [],
+      "hooks": [],
+      "components": [
+        "CheckCircle2",
+        "Link",
+        "React",
+        "VideoActionButtons",
+        "VideoCard",
+        "VideoComments"
+      ],
+      "siteConfigKeys": [
+        "autoplay_system",
+        "comments_default_num"
+      ],
+      "adSlots": [],
+      "isClient": false
+    }
+  ],
+  "tokens": [
+    {
+      "name": "--brand",
+      "required": true,
+      "purpose": "Primary brand accent color",
+      "lightDefault": "#04abf2",
+      "darkDefault": "#04abf2"
+    },
+    {
+      "name": "--brand-hover",
+      "required": true,
+      "purpose": "Hover state for primary brand accent",
+      "lightDefault": "#039be5",
+      "darkDefault": "#039be5"
+    },
+    {
+      "name": "--brand-rgb",
+      "required": true,
+      "purpose": "RGB triplet for alpha transparency calculations",
+      "lightDefault": "4, 171, 242",
+      "darkDefault": "4, 171, 242"
+    },
+    {
+      "name": "--bg",
+      "required": true,
+      "purpose": "Global viewport background color",
+      "lightDefault": "#f9f9f9",
+      "darkDefault": "#121212"
+    },
+    {
+      "name": "--surface",
+      "required": true,
+      "purpose": "Container and elevated surface background",
+      "lightDefault": "#ffffff",
+      "darkDefault": "#212121"
+    },
+    {
+      "name": "--text",
+      "required": true,
+      "purpose": "Base typography color",
+      "lightDefault": "#222222",
+      "darkDefault": "#f1f1f1"
+    },
+    {
+      "name": "--muted",
+      "required": true,
+      "purpose": "Secondary/subtle typography color",
+      "lightDefault": "#666666",
+      "darkDefault": "#999999"
+    },
+    {
+      "name": "--border",
+      "required": true,
+      "purpose": "Structural card and divider borders",
+      "lightDefault": "#e5e7eb",
+      "darkDefault": "#262626"
+    },
+    {
+      "name": "--radius",
+      "required": true,
+      "purpose": "Base border radius for buttons and cards",
+      "lightDefault": "8px",
+      "darkDefault": "8px"
+    },
+    {
+      "name": "--font-body",
+      "required": true,
+      "purpose": "Body font family variable",
+      "lightDefault": "var(--font-body, 'Lato', sans-serif)",
+      "darkDefault": "var(--font-body, 'Lato', sans-serif)"
+    },
+    {
+      "name": "--font-heading",
+      "required": true,
+      "purpose": "Heading typography font family",
+      "lightDefault": "var(--font-heading, 'Roboto', sans-serif)",
+      "darkDefault": "var(--font-heading, 'Roboto', sans-serif)"
+    },
+    {
+      "name": "--primary",
+      "required": true,
+      "purpose": "Primary accent color (used across 35+ components)",
+      "lightDefault": "#04abf2",
+      "darkDefault": "#04abf2"
+    },
+    {
+      "name": "--primary-hover",
+      "required": true,
+      "purpose": "Primary button hover state",
+      "lightDefault": "#039be5",
+      "darkDefault": "#039be5"
+    },
+    {
+      "name": "--primary-rgb",
+      "required": true,
+      "purpose": "Primary RGB triplet",
+      "lightDefault": "4, 171, 242",
+      "darkDefault": "4, 171, 242"
+    },
+    {
+      "name": "--accent-yellow",
+      "required": false,
+      "purpose": "Night-mode toggle icon and featured badges",
+      "lightDefault": "#fad657",
+      "darkDefault": "#fad657"
+    },
+    {
+      "name": "--accent-red",
+      "required": false,
+      "purpose": "Alerts, unread notifications, live badges",
+      "lightDefault": "#f44336",
+      "darkDefault": "#f44336"
+    },
+    {
+      "name": "--background",
+      "required": true,
+      "purpose": "Next.js App body background variable",
+      "lightDefault": "#f9f9f9",
+      "darkDefault": "#121212"
+    },
+    {
+      "name": "--foreground",
+      "required": true,
+      "purpose": "Next.js App body text variable",
+      "lightDefault": "#222222",
+      "darkDefault": "#f1f1f1"
+    },
+    {
+      "name": "--header-bg",
+      "required": true,
+      "purpose": "Sticky navigation header background",
+      "lightDefault": "#ffffff",
+      "darkDefault": "#181818"
+    },
+    {
+      "name": "--sidebar-bg",
+      "required": true,
+      "purpose": "Left navigation sidebar background",
+      "lightDefault": "#ffffff",
+      "darkDefault": "#121212"
+    },
+    {
+      "name": "--card-bg",
+      "required": true,
+      "purpose": "Video card and content container background",
+      "lightDefault": "#ffffff",
+      "darkDefault": "#212121"
+    },
+    {
+      "name": "--card-border",
+      "required": true,
+      "purpose": "Card border separator color",
+      "lightDefault": "#e9e9e9",
+      "darkDefault": "#2a2a2a"
+    },
+    {
+      "name": "--card-shadow",
+      "required": false,
+      "purpose": "Card depth and dropdown drop shadow",
+      "lightDefault": "0 1px 3px rgba(0, 0, 0, 0.06)",
+      "darkDefault": "0 1px 4px rgba(0, 0, 0, 0.4)"
+    },
+    {
+      "name": "--search-bg",
+      "required": true,
+      "purpose": "Header search input background",
+      "lightDefault": "#f1f2f4",
+      "darkDefault": "#202020"
+    },
+    {
+      "name": "--search-border",
+      "required": true,
+      "purpose": "Header search input border",
+      "lightDefault": "#dcdfe4",
+      "darkDefault": "#333333"
+    }
+  ],
+  "sharedExports": [
+    {
+      "path": "@/components/layout/SiteShell",
+      "name": "SiteShell",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/layout/Navigation",
+      "name": "Header",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/layout/Navigation",
+      "name": "Sidebar",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/layout/NotificationBell",
+      "name": "NotificationBell",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/channels/ChannelSubscribeButton",
+      "name": "ChannelSubscribeButton",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/channels/ChannelCard",
+      "name": "ChannelCard",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/channels/PopularChannelsHero",
+      "name": "PopularChannelsHero",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/common/VideoCard",
+      "name": "VideoCard",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/common/VideoComments",
+      "name": "VideoComments",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/common/VideoActionButtons",
+      "name": "VideoActionButtons",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/common/HomeClient",
+      "name": "HomeClient",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/common/ShortsIcon",
+      "name": "ShortsIcon",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/theme/ThemeProvider",
+      "name": "ThemeProvider",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/components/theme/ThemeProvider",
+      "name": "useTheme",
+      "kind": "hook"
+    },
+    {
+      "path": "@/components/theme/CustomDesignInjector",
+      "name": "CustomDesignInjector",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/providers/language-provider",
+      "name": "LanguageProvider",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/providers/language-provider",
+      "name": "useTranslation",
+      "kind": "hook"
+    },
+    {
+      "path": "@/modules/auth/hooks",
+      "name": "sanitizeRedirectPath",
+      "kind": "function"
+    },
+    {
+      "path": "@/modules/auth/hooks",
+      "name": "useLogin",
+      "kind": "hook"
+    },
+    {
+      "path": "@/modules/auth/hooks",
+      "name": "useRegister",
+      "kind": "hook"
+    },
+    {
+      "path": "@/modules/auth/hooks",
+      "name": "useForgotPassword",
+      "kind": "hook"
+    },
+    {
+      "path": "@/modules/auth/hooks",
+      "name": "useResetPassword",
+      "kind": "hook"
+    },
+    {
+      "path": "@/modules/auth/switch-account.actions",
+      "name": "getSwitchedAccountsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/auth/switch-account.actions",
+      "name": "syncCurrentAccountAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/auth/switch-account.actions",
+      "name": "switchAccountAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/auth/switch-account.actions",
+      "name": "removeSwitchedAccountAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/auth/switch-account.actions",
+      "name": "prepareAddAccountAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/auth/registration.actions",
+      "name": "getRegistrationStatusAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/auth/password.actions",
+      "name": "requestPasswordResetAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/auth/password.actions",
+      "name": "resetPasswordAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/history.actions",
+      "name": "clearWatchHistoryAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/history.actions",
+      "name": "removeVideoFromHistoryAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/history.actions",
+      "name": "recordWatchHistoryAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "uploadVideoAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "importVideoAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "toggleLikeVideoAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "addCommentAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "addCommentReplyAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "loadMoreCommentsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "toggleSubscribeAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "toggleWatchLaterAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "updateVideoAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "deleteVideoAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/videos/video.actions",
+      "name": "deleteCommentAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/articles/article.actions",
+      "name": "createArticleAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/articles/article.actions",
+      "name": "postArticleCommentAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/articles/article.actions",
+      "name": "deleteArticleAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/messages/message.actions",
+      "name": "sendMessageAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/messages/message.actions",
+      "name": "clearChatAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "updateGeneralSettingsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "updateProfileSettingsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "updatePrivacySettingsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "toggleMonetizationAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "updatePasswordSettingsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "updateAvatarCoverAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "submitVerificationRequestAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "toggleTwoFactorAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "terminateSessionAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/settings/settings.actions",
+      "name": "deleteAccountAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/wallet/wallet.actions",
+      "name": "depositWalletAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/wallet/wallet.actions",
+      "name": "transferBalanceToWalletAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/wallet/wallet.actions",
+      "name": "transferWalletToBalanceAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/wallet/wallet.actions",
+      "name": "addCreatorEarningsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/wallet/wallet.actions",
+      "name": "requestWithdrawalAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/wallet/wallet.actions",
+      "name": "upgradeToProAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/contact/contact.actions",
+      "name": "submitContactAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/ads/ads.actions",
+      "name": "getUserAdsAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/modules/ads/ads.actions",
+      "name": "createAdAction",
+      "kind": "action"
+    },
+    {
+      "path": "@/services/video.service",
+      "name": "getFeaturedVideos",
+      "kind": "query"
+    },
+    {
+      "path": "@/services/video.service",
+      "name": "getVideoByVideoId",
+      "kind": "query"
+    },
+    {
+      "path": "@/services/video.service",
+      "name": "incrementVideoViews",
+      "kind": "function"
+    },
+    {
+      "path": "@/services/video.service",
+      "name": "getCategories",
+      "kind": "query"
+    },
+    {
+      "path": "@/services/video.service",
+      "name": "deleteVideoService",
+      "kind": "function"
+    },
+    {
+      "path": "@/lib/config",
+      "name": "fetchConfigKeys",
+      "kind": "query"
+    },
+    {
+      "path": "@/lib/config",
+      "name": "getSiteConfig",
+      "kind": "query"
+    },
+    {
+      "path": "@/lib/config/seo",
+      "name": "getSeoMetadata",
+      "kind": "query"
+    },
+    {
+      "path": "@/lib/config/upload-policy",
+      "name": "formatBytes",
+      "kind": "function"
+    },
+    {
+      "path": "@/lib/config/upload-policy",
+      "name": "getUserUploadLimit",
+      "kind": "query"
+    },
+    {
+      "path": "@/lib/storage/image-url",
+      "name": "getPublicImageUrl",
+      "kind": "query"
+    },
+    {
+      "path": "@/lib/translations/server",
+      "name": "getServerTranslations",
+      "kind": "query"
+    },
+    {
+      "path": "@/lib/security/sanitize",
+      "name": "SAFE_HTML_CONFIG",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/lib/security/sanitize",
+      "name": "PLAIN_TEXT_CONFIG",
+      "kind": "component",
+      "props": "ComponentProps"
+    },
+    {
+      "path": "@/lib/security/sanitize",
+      "name": "sanitizeUserHtml",
+      "kind": "function"
+    },
+    {
+      "path": "@/lib/security/sanitize",
+      "name": "sanitizePlainText",
+      "kind": "function"
+    }
+  ]
+}

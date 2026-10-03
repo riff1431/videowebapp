@@ -217,4 +217,14 @@ describe("Themes Architecture & Security Tests", () => {
       `Unscoped selectors in theme.css:\n${JSON.stringify(cssViolations, null, 2)}`
     ).toEqual([]);
   });
+
+  it("STATIC TEST: Theme contract drift check (docs/theme-contract.json and docs/theme-contract.md)", async () => {
+    const { checkThemeContract } = await import("../../scripts/check-theme-contract");
+    const result = checkThemeContract();
+    expect(
+      result.failures,
+      `Theme contract drift detected:\n${JSON.stringify(result.failures, null, 2)}`
+    ).toEqual([]);
+    expect(result.success).toBe(true);
+  });
 });
