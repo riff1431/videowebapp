@@ -5,6 +5,8 @@ import { eq, desc } from "drizzle-orm";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { WalletClient } from "./WalletClient";
 
+import { getSiteConfig } from "@/lib/config";
+
 export const metadata = {
   title: "Wallet - PlayTube",
   description: "Manage your PlayTube wallet, balance, and transactions.",
@@ -43,11 +45,18 @@ export default async function WalletPage() {
     .orderBy(desc(transactions.createdAt))
     .limit(20);
 
+  const config = await getSiteConfig(["paypal_payment", "stripe_payment", "bank_payment"]);
+
   return (
     <WalletClient
       initialWallet={currentUser?.wallet || 0}
       initialBalance={currentUser?.balance || 0}
       transactions={userTransactions}
+      paymentGateways={{
+        paypal: config["paypal_payment"] === "on" || config["paypal_payment"] === "1",
+        stripe: config["stripe_payment"] === "on" || config["stripe_payment"] === "1",
+        bank: config["bank_payment"] === "on" || config["bank_payment"] === "1",
+      }}
     />
   );
 }

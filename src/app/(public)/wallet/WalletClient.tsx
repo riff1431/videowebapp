@@ -32,12 +32,18 @@ interface WalletClientProps {
   initialWallet: number;
   initialBalance: number;
   transactions: TransactionItem[];
+  paymentGateways?: {
+    paypal: boolean;
+    stripe: boolean;
+    bank: boolean;
+  };
 }
 
 export function WalletClient({
   initialWallet,
   initialBalance,
   transactions,
+  paymentGateways = { paypal: false, stripe: false, bank: true },
 }: WalletClientProps) {
   const [wallet, setWallet] = useState<number>(initialWallet);
   const [balance, setBalance] = useState<number>(initialBalance);
@@ -346,6 +352,33 @@ export function WalletClient({
                   placeholder="00.00"
                   className="w-full text-4xl sm:text-5xl font-light text-neutral-700 dark:text-neutral-200 bg-transparent focus:outline-none"
                 />
+              </div>
+
+              {/* Supported Payment Methods according to Admin Settings */}
+              <div className="space-y-1.5 pt-1">
+                <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">
+                  Payment Method
+                </label>
+                <div className="space-y-1.5 text-xs">
+                  {paymentGateways.bank && (
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700">
+                      <span className="font-medium text-neutral-700 dark:text-neutral-200">Bank Transfer / Receipt</span>
+                      <span className="text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded font-semibold">Active</span>
+                    </div>
+                  )}
+                  {paymentGateways.paypal && (
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700">
+                      <span className="font-medium text-neutral-700 dark:text-neutral-200">PayPal Express</span>
+                      <span className="text-[10px] text-blue-600 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded font-semibold">Enabled</span>
+                    </div>
+                  )}
+                  {paymentGateways.stripe && (
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700">
+                      <span className="font-medium text-neutral-700 dark:text-neutral-200">Credit / Debit Card (Stripe)</span>
+                      <span className="text-[10px] text-purple-600 bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 rounded font-semibold">Enabled</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Action Buttons */}
