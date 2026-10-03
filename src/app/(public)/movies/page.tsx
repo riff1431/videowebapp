@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { db } from "@/db";
-import { videos, users } from "@/db/schema";
+import { videos, users, movieCategories } from "@/db/schema";
 import { eq, desc, and, or, ilike, gte } from "drizzle-orm";
 import { Film, Star, Play, Search, Filter } from "lucide-react";
 
@@ -23,11 +23,24 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
   const releaseYear = resolvedParams.release || "";
   const selectedCat = resolvedParams.category_ || "all";
 
+  // Fetch dynamic movie categories from DB
+  const categoriesList = await db
+    .select({
+      key: movieCategories.key,
+      name: movieCategories.name,
+    })
+    .from(movieCategories)
+    .orderBy(movieCategories.name);
+
   // Build query conditions
   let conditions: any[] = [];
 
   // Movie filter
   conditions.push(or(eq(videos.isMovie, true), eq(videos.categoryId, "movies"), eq(videos.categoryId, "film")));
+
+  if (selectedCat !== "all") {
+    conditions.push(eq(videos.categoryId, selectedCat));
+  }
 
   if (keyword.trim()) {
     conditions.push(ilike(videos.title, `%${keyword.trim()}%`));
@@ -122,6 +135,24 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
                   placeholder="e.g. 7.5"
                   className="w-full h-9 px-3 text-xs bg-neutral-50 dark:bg-neutral-800 border border-[var(--border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+                  Category
+                </label>
+                <select
+                  name="category_"
+                  defaultValue={selectedCat}
+                  className="w-full h-9 px-3 text-xs bg-neutral-50 dark:bg-neutral-800 border border-[var(--border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+                >
+                  <option value="all">All Categories</option>
+                  {categoriesList.map((cat) => (
+                    <option key={cat.key} value={cat.key}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
