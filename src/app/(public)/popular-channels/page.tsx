@@ -6,6 +6,9 @@ import { PopularChannelsHero } from "@/components/channels/PopularChannelsHero";
 import { ChannelCard, ChannelItem } from "@/components/channels/ChannelCard";
 import { VideoOff } from "lucide-react";
 
+import { notFound } from "next/navigation";
+import { getSiteConfig } from "@/lib/config";
+
 export const revalidate = 30;
 
 interface PopularChannelsProps {
@@ -16,6 +19,11 @@ interface PopularChannelsProps {
 }
 
 export default async function PopularChannelsPage({ searchParams }: PopularChannelsProps) {
+  const config = await getSiteConfig(["popular_channels"]);
+  if (config["popular_channels"] === "off" || config["popular_channels"] === "0") {
+    notFound();
+  }
+
   const resolvedParams = searchParams ? await searchParams : {};
   const sortMetric = resolvedParams.type || "views"; // views, subscribers, active
   const timeMetric = resolvedParams.time || "all_time"; // today, this_week, this_month, this_year, all_time

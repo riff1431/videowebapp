@@ -30,6 +30,7 @@ export const users = pgTable("users", {
   isAdmin: boolean("is_admin").default(false),
   wallet: doublePrecision("wallet").default(0),
   balance: doublePrecision("balance").default(0),
+  points: integer("points").default(0).notNull(),
   about: text("about"),
   gender: varchar("gender", { length: 20 }).default("male"),
   countryId: integer("country_id").default(0),

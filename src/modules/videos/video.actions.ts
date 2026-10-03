@@ -19,6 +19,7 @@ import { getUserUploadLimit } from "@/lib/config/upload-policy";
 import { censorText } from "@/lib/security/censor";
 import { getSiteConfig } from "@/lib/config";
 import { createNotification } from "@/services/notification.service";
+import { awardUserPoints } from "@/services/points.service";
 
 // ==========================================
 // 1. Video Upload Server Action
@@ -105,6 +106,9 @@ export async function uploadVideoAction(formData: FormData, customHeaders?: Head
         videoType: "video/mp4",
       })
       .returning();
+
+    // Award points for video upload (Phase 1.7)
+    await awardUserPoints(currentUserId, "upload");
 
     revalidatePath("/");
     revalidatePath("/videos/latest");
@@ -250,6 +254,10 @@ export async function toggleLikeVideoAction({
           .update(likesDislikes)
           .set({ type })
           .where(eq(likesDislikes.id, existing.id));
+
+        // Award points if switched to like or dislike (Phase 1.7)
+        await awardUserPoints(currentUserId, type === 1 ? "like" : "dislike");
+
         revalidatePath("/watch/[videoId]", "page");
         return { success: true, removed: false, currentVote: type };
       }
@@ -260,6 +268,10 @@ export async function toggleLikeVideoAction({
         videoId: videoDbId,
         type,
       });
+
+      // Award points for like/dislike (Phase 1.7)
+      await awardUserPoints(currentUserId, type === 1 ? "like" : "dislike");
+
       revalidatePath("/watch/[videoId]", "page");
       return { success: true, removed: false, currentVote: type };
     }
@@ -304,6 +316,9 @@ export async function addCommentAction({
         text: censoredComment,
       })
       .returning();
+
+    // Award points for commenting (Phase 1.7)
+    await awardUserPoints(currentUserId, "comment");
 
     // Trigger notification to video owner if different
     const [targetVid] = await db.select({ userId: videos.userId, videoId: videos.videoId }).from(videos).where(eq(videos.id, videoDbId)).limit(1);
