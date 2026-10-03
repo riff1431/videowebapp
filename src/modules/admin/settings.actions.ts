@@ -5,7 +5,7 @@ import { assertAdmin } from "@/lib/auth/assert-admin";
 import { db } from "@/db";
 import { siteConfig } from "@/db/schema";
 import { inArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function saveSingleSettingAction(key: string, value: string) {
   await assertAdmin();
@@ -17,6 +17,10 @@ export async function saveSingleSettingAction(key: string, value: string) {
         target: siteConfig.name,
         set: { value },
       });
+
+    try {
+      revalidateTag("site-config");
+    } catch {}
 
     revalidatePath("/admin/settings");
     revalidatePath("/admin");
@@ -40,6 +44,10 @@ export async function saveMultipleSettingsAction(settings: Record<string, string
           set: { value },
         });
     }
+
+    try {
+      revalidateTag("site-config");
+    } catch {}
 
     revalidatePath("/admin/settings");
     revalidatePath("/admin");

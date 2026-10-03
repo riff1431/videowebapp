@@ -4,9 +4,9 @@ import { inArray } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 /**
- * Internal fetcher for config keys from PostgreSQL siteConfig table
+ * Direct fetcher for config keys from PostgreSQL siteConfig table
  */
-async function fetchConfigKeys(keys: string[]): Promise<Record<string, string>> {
+export async function fetchConfigKeys(keys: string[]): Promise<Record<string, string>> {
   if (!keys || keys.length === 0) return {};
 
   try {
@@ -30,16 +30,24 @@ async function fetchConfigKeys(keys: string[]): Promise<Record<string, string>> 
  * Cached helper to retrieve configuration keys from the database.
  * Uses unstable_cache tagged with "site-config" so admin mutations
  * can revalidate immediately via revalidateTag("site-config").
+ * Safely falls back to direct query in non-Next runtime environments (e.g. tests).
  */
 export async function getSiteConfig(keys: string[]): Promise<Record<string, string>> {
-  const getCached = unstable_cache(
-    async (keyList: string[]) => fetchConfigKeys(keyList),
-    ["site-config-keys", keys.sort().join(",")],
-    {
-      tags: ["site-config"],
-      revalidate: 60, // 60s cache fallback
+  try {
+    if (typeof unstable_cache === "function") {
+      const getCached = unstable_cache(
+        async (keyList: string[]) => fetchConfigKeys(keyList),
+        ["site-config-keys", keys.sort().join(",")],
+        {
+          tags: ["site-config"],
+          revalidate: 60, // 60s cache fallback
+        }
+      );
+      return await getCached(keys);
     }
-  );
+  } catch {
+    // If unstable_cache is unavailable or outside request scope, query directly
+  }
 
-  return getCached(keys);
+  return fetchConfigKeys(keys);
 }
