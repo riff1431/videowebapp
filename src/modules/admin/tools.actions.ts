@@ -15,8 +15,8 @@ import {
   categories,
   notifications,
 } from "@/db/schema";
-import { eq, inArray, ilike, or, desc, asc, and, gte, lte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { sendMail } from "@/lib/mailer";
 
 export async function getCategoriesForToolsAction() {
   await assertAdmin();
