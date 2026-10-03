@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { articles, users, categories } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
@@ -16,6 +18,7 @@ export interface ArticleInput {
 }
 
 export async function createArticleAction(data: ArticleInput) {
+  await assertAdmin();
   try {
     if (!data.title?.trim()) {
       return { success: false, error: "Title is required" };
@@ -51,6 +54,7 @@ export async function createArticleAction(data: ArticleInput) {
 }
 
 export async function updateArticleAction(id: number, data: ArticleInput) {
+  await assertAdmin();
   try {
     if (!data.title?.trim()) {
       return { success: false, error: "Title is required" };
@@ -83,6 +87,7 @@ export async function updateArticleAction(id: number, data: ArticleInput) {
 }
 
 export async function deleteArticleAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(articles).where(eq(articles.id, id));
     revalidatePath("/admin/manage-articles");
@@ -99,6 +104,7 @@ export async function bulkArticleAction(
   ids: number[],
   action: "activate" | "deactivate" | "delete"
 ) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) {
       return { success: false, error: "No articles selected" };

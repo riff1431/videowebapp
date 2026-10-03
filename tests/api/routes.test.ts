@@ -88,8 +88,31 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
   });
 
   describe("3. GET /api/admin/import/youtube", () => {
-    it("returns 400 when search query is missing", async () => {
+    let adminCookie = "";
+
+    beforeAll(async () => {
+      const loginRes = await auth.api.signInEmail({
+        body: {
+          email: "admin@playtube.test",
+          password: "adminpassword123",
+        },
+        asResponse: true,
+      });
+      const cookieHeader = loginRes.headers.get("set-cookie");
+      if (cookieHeader) {
+        adminCookie = cookieHeader;
+      }
+    });
+
+    it("rejects anonymous request with 401 Unauthorized", async () => {
       const req = new Request("http://localhost:3000/api/admin/import/youtube");
+      await expect(getYoutubeImport(req)).rejects.toThrow("UNAUTHORIZED");
+    });
+
+    it("returns 400 when search query is missing for authenticated admin", async () => {
+      const req = new Request("http://localhost:3000/api/admin/import/youtube", {
+        headers: { cookie: adminCookie },
+      });
       const res = await getYoutubeImport(req);
       expect(res.status).toBe(400);
 
@@ -99,7 +122,9 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
     });
 
     it("returns 400 with error and settings link when YouTube API key is missing", async () => {
-      const req = new Request("http://localhost:3000/api/admin/import/youtube?query=Nature");
+      const req = new Request("http://localhost:3000/api/admin/import/youtube?query=Nature", {
+        headers: { cookie: adminCookie },
+      });
       const res = await getYoutubeImport(req);
       expect(res.status).toBe(400);
 
@@ -111,8 +136,31 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
   });
 
   describe("4. GET /api/admin/import/dailymotion", () => {
-    it("returns 400 when query parameter is missing", async () => {
+    let adminCookie = "";
+
+    beforeAll(async () => {
+      const loginRes = await auth.api.signInEmail({
+        body: {
+          email: "admin@playtube.test",
+          password: "adminpassword123",
+        },
+        asResponse: true,
+      });
+      const cookieHeader = loginRes.headers.get("set-cookie");
+      if (cookieHeader) {
+        adminCookie = cookieHeader;
+      }
+    });
+
+    it("rejects anonymous request with 401 Unauthorized", async () => {
       const req = new Request("http://localhost:3000/api/admin/import/dailymotion");
+      await expect(getDailymotionImport(req)).rejects.toThrow("UNAUTHORIZED");
+    });
+
+    it("returns 400 when query parameter is missing", async () => {
+      const req = new Request("http://localhost:3000/api/admin/import/dailymotion", {
+        headers: { cookie: adminCookie },
+      });
       const res = await getDailymotionImport(req);
       expect(res.status).toBe(400);
 
@@ -122,7 +170,9 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
     });
 
     it("returns video items list for valid keyword query (happy path) or 502 on upstream rate limit", async () => {
-      const req = new Request("http://localhost:3000/api/admin/import/dailymotion?query=gaming");
+      const req = new Request("http://localhost:3000/api/admin/import/dailymotion?query=gaming", {
+        headers: { cookie: adminCookie },
+      });
       const res = await getDailymotionImport(req);
       const data = await res.json();
       if (res.status === 200) {
@@ -136,8 +186,31 @@ describe("API Route Handlers & Core Action Handlers Suite", () => {
   });
 
   describe("5. GET /api/admin/import/twitch", () => {
+    let adminCookie = "";
+
+    beforeAll(async () => {
+      const loginRes = await auth.api.signInEmail({
+        body: {
+          email: "admin@playtube.test",
+          password: "adminpassword123",
+        },
+        asResponse: true,
+      });
+      const cookieHeader = loginRes.headers.get("set-cookie");
+      if (cookieHeader) {
+        adminCookie = cookieHeader;
+      }
+    });
+
+    it("rejects anonymous request with 401 Unauthorized", async () => {
+      const req = new Request("http://localhost:3000/api/admin/import/twitch");
+      await expect(getTwitchImport(req)).rejects.toThrow("UNAUTHORIZED");
+    });
+
     it("returns 400 and explicit error when Twitch Client ID is missing", async () => {
-      const req = new Request("http://localhost:3000/api/admin/import/twitch?query=esports");
+      const req = new Request("http://localhost:3000/api/admin/import/twitch?query=esports", {
+        headers: { cookie: adminCookie },
+      });
       const res = await getTwitchImport(req);
       expect(res.status).toBe(400);
 

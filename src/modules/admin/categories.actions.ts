@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { categories, subCategories } from "@/db/schema";
 import { eq, inArray, and } from "drizzle-orm";
@@ -10,6 +12,7 @@ import { revalidatePath } from "next/cache";
 // ==========================================
 
 export async function addCategoryAction(formData: Record<string, string>) {
+  await assertAdmin();
   try {
     const englishName = formData["english"]?.trim() || "";
     if (!englishName) {
@@ -58,6 +61,7 @@ export async function updateCategoryAction(
   key: string,
   formData: Record<string, string>
 ) {
+  await assertAdmin();
   try {
     const englishName = formData["english"]?.trim() || "";
     if (!englishName) {
@@ -84,6 +88,7 @@ export async function updateCategoryAction(
 }
 
 export async function deleteCategoryAction(key: string) {
+  await assertAdmin();
   try {
     if (key === "other") {
       return { success: false, error: "The default 'other' category cannot be deleted" };
@@ -105,6 +110,7 @@ export async function deleteCategoryAction(key: string) {
 }
 
 export async function bulkDeleteCategoriesAction(keys: string[]) {
+  await assertAdmin();
   try {
     const validKeys = keys.filter((k) => k !== "other");
     if (validKeys.length === 0) {
@@ -133,6 +139,7 @@ export async function addSubCategoryAction(
   categoryKey: string,
   formData: Record<string, string>
 ) {
+  await assertAdmin();
   try {
     if (!categoryKey) {
       return { success: false, error: "Category is required" };
@@ -180,6 +187,7 @@ export async function updateSubCategoryAction(
   key: string,
   formData: Record<string, string>
 ) {
+  await assertAdmin();
   try {
     const englishName = formData["english"]?.trim() || "";
     if (!englishName) {
@@ -204,6 +212,7 @@ export async function updateSubCategoryAction(
 }
 
 export async function deleteSubCategoryAction(key: string) {
+  await assertAdmin();
   try {
     await db.delete(subCategories).where(eq(subCategories.key, key));
     revalidatePath("/admin/manage_sub_categories");
@@ -216,6 +225,7 @@ export async function deleteSubCategoryAction(key: string) {
 }
 
 export async function bulkDeleteSubCategoriesAction(keys: string[]) {
+  await assertAdmin();
   try {
     if (!keys || keys.length === 0) {
       return { success: false, error: "No sub categories selected" };

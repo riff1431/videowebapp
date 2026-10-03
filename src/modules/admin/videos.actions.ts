@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { videos, comments, siteConfig, users, categories } from "@/db/schema";
 import { eq, inArray, sql } from "drizzle-orm";
@@ -10,6 +12,7 @@ import { revalidatePath } from "next/cache";
 // ==========================================
 
 export async function deleteVideoAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(videos).where(eq(videos.id, id));
     revalidatePath("/admin/manage-videos");
@@ -21,6 +24,7 @@ export async function deleteVideoAction(id: number) {
 }
 
 export async function bulkDeleteVideosAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) {
       return { success: false, error: "No videos selected" };
@@ -35,6 +39,7 @@ export async function bulkDeleteVideosAction(ids: number[]) {
 }
 
 export async function toggleApproveVideoAction(id: number, approve: boolean) {
+  await assertAdmin();
   try {
     await db.update(videos).set({ isApproved: approve }).where(eq(videos.id, id));
     revalidatePath("/admin/manage-videos");
@@ -46,6 +51,7 @@ export async function toggleApproveVideoAction(id: number, approve: boolean) {
 }
 
 export async function addFakeViewsAction(id: number, viewsToAdd: number) {
+  await assertAdmin();
   try {
     await db
       .update(videos)
@@ -64,6 +70,7 @@ export async function addFakeViewsAction(id: number, viewsToAdd: number) {
 // ==========================================
 
 export async function deleteCommentAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(comments).where(eq(comments.id, id));
     revalidatePath("/admin/manage-comments");
@@ -74,6 +81,7 @@ export async function deleteCommentAction(id: number) {
 }
 
 export async function bulkDeleteCommentsAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) {
       return { success: false, error: "No comments selected" };
@@ -106,6 +114,7 @@ export interface ImportedVideoPayload {
 }
 
 export async function importVideosAction(items: ImportedVideoPayload[]) {
+  await assertAdmin();
   try {
     if (!items || items.length === 0) {
       return { success: false, error: "No videos provided to import" };
@@ -168,6 +177,7 @@ export async function importVideosAction(items: ImportedVideoPayload[]) {
 // ==========================================
 
 export async function getAdminVideoSettings() {
+  await assertAdmin();
   try {
     const configs = await db.select().from(siteConfig);
     const configMap: Record<string, string> = {};

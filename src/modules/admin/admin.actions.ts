@@ -1,11 +1,14 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { siteConfig, videos, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function updateAdminSettingsAction(formData: FormData) {
+  await assertAdmin();
   try {
     for (const [key, val] of formData.entries()) {
       if (typeof val === "string") {
@@ -33,6 +36,7 @@ export async function updateAdminSettingsAction(formData: FormData) {
 }
 
 export async function deleteVideoAdminAction(videoId: string) {
+  await assertAdmin();
   try {
     await db.delete(videos).where(eq(videos.videoId, videoId));
     revalidatePath("/admin/videos");
@@ -44,6 +48,7 @@ export async function deleteVideoAdminAction(videoId: string) {
 }
 
 export async function toggleUserVerificationAction(userId: number, currentStatus: boolean) {
+  await assertAdmin();
   try {
     await db
       .update(users)

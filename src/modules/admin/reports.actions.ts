@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { reports, copyrightReports, users, videos } from "@/db/schema";
 import { eq, inArray, ilike, or, desc, asc, and, gte, lte, sql } from "drizzle-orm";
@@ -82,6 +84,7 @@ export async function getVideoReportsAction(options?: {
   page: number;
   totalPages: number;
 }> {
+  await assertAdmin();
   try {
     const query = options?.query?.trim() || "";
     const sort = options?.sort || "DESC_i";
@@ -186,6 +189,7 @@ export async function getVideoReportsAction(options?: {
 
 // Mark Safe (action = 1) -> Removes report from DB
 export async function markReportSafeAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(reports).where(eq(reports.id, id));
     revalidatePath("/admin/manage-video-reports");
@@ -197,6 +201,7 @@ export async function markReportSafeAction(id: number) {
 
 // Delete Video & Report (action = 3) -> Deletes video and report
 export async function deleteReportedVideoAction(id: number) {
+  await assertAdmin();
   try {
     const rep = await db.select().from(reports).where(eq(reports.id, id)).limit(1);
     if (rep.length > 0 && rep[0].videoId > 0) {
@@ -213,6 +218,7 @@ export async function deleteReportedVideoAction(id: number) {
 
 // Bulk Actions for Video Reports: 'safe' | 'delete'
 export async function bulkManageVideoReportsAction(ids: number[], actionType: "safe" | "delete") {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) {
       return { success: true };
@@ -253,6 +259,7 @@ export async function getCopyrightReportsAction(options?: {
   page: number;
   totalPages: number;
 }> {
+  await assertAdmin();
   try {
     const query = options?.query?.trim() || "";
     const sort = options?.sort || "DESC_i";
@@ -357,6 +364,7 @@ export async function getCopyrightReportsAction(options?: {
 
 // Delete Copyright Report
 export async function deleteCopyrightReportAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(copyrightReports).where(eq(copyrightReports.id, id));
     revalidatePath("/admin/copy_report");
@@ -368,6 +376,7 @@ export async function deleteCopyrightReportAction(id: number) {
 
 // Bulk Delete Copyright Reports
 export async function bulkDeleteCopyrightReportsAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (ids && ids.length > 0) {
       await db.delete(copyrightReports).where(inArray(copyrightReports.id, ids));

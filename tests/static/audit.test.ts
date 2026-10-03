@@ -136,4 +136,74 @@ describe("Static Audit & Non-API Code Detector", () => {
       `Unapproved mock fallback items found in API import routes: ${JSON.stringify(mockEndpoints)}`
     ).toEqual([]);
   });
+
+  it("enforces assertAdmin() as the first statement of every exported function in src/modules/admin/*.actions.ts and src/app/api/admin/**", () => {
+    const ts = require("typescript");
+    const violations: string[] = [];
+    const EXEMPT_ACTIONS = new Set(["reportVideoAction", "reportCopyrightAction"]);
+
+    const adminActionFiles = allFiles.filter((f) => f.includes(path.join("modules", "admin")) && f.endsWith(".actions.ts"));
+    const adminRouteFiles = allFiles.filter((f) => f.includes(path.join("app", "api", "admin")) && f.endsWith("route.ts"));
+
+    for (const filePath of [...adminActionFiles, ...adminRouteFiles]) {
+      const code = fs.readFileSync(filePath, "utf-8");
+      const sourceFile = ts.createSourceFile(filePath, code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+      const relativePath = path.relative(process.cwd(), filePath).replace(/\\/g, "/");
+
+      function inspectNode(node: any) {
+        if (ts.isFunctionDeclaration(node) && node.name) {
+          const isExported = node.modifiers?.some((m: any) => m.kind === ts.SyntaxKind.ExportKeyword);
+          if (isExported) {
+            const fnName = node.name.text;
+            if (EXEMPT_ACTIONS.has(fnName)) return;
+
+            const body = node.body;
+            if (!body || body.statements.length === 0) {
+              violations.push(`${relativePath}: Function ${fnName} has empty body without assertAdmin()`);
+              return;
+            }
+
+            const firstStmt = body.statements[0];
+            const firstStmtText = firstStmt.getText(sourceFile);
+            if (!firstStmtText.includes("assertAdmin")) {
+              const { line } = sourceFile.getLineAndCharacterOfPosition(firstStmt.getStart());
+              violations.push(`${relativePath}:${line + 1}: Exported function ${fnName} does NOT call assertAdmin() as first line`);
+            }
+          }
+        }
+
+        if (ts.isVariableStatement(node)) {
+          const isExported = node.modifiers?.some((m: any) => m.kind === ts.SyntaxKind.ExportKeyword);
+          if (isExported) {
+            for (const decl of node.declarationList.declarations) {
+              if (decl.initializer && (ts.isArrowFunction(decl.initializer) || ts.isFunctionExpression(decl.initializer))) {
+                const fnName = decl.name.getText(sourceFile);
+                if (EXEMPT_ACTIONS.has(fnName)) continue;
+
+                const body = decl.initializer.body;
+                if (ts.isBlock(body)) {
+                  if (body.statements.length === 0) {
+                    violations.push(`${relativePath}: Function ${fnName} has empty body without assertAdmin()`);
+                    continue;
+                  }
+                  const firstStmt = body.statements[0];
+                  const firstStmtText = firstStmt.getText(sourceFile);
+                  if (!firstStmtText.includes("assertAdmin")) {
+                    const { line } = sourceFile.getLineAndCharacterOfPosition(firstStmt.getStart());
+                    violations.push(`${relativePath}:${line + 1}: Exported function ${fnName} does NOT call assertAdmin() as first line`);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        ts.forEachChild(node, inspectNode);
+      }
+
+      inspectNode(sourceFile);
+    }
+
+    expect(violations, `Admin authorization violations found:\n${violations.join("\n")}`).toEqual([]);
+  });
 });

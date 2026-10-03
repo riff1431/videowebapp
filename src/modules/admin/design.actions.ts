@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { siteConfig } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
@@ -12,6 +14,7 @@ import path from "path";
 // ==========================================
 
 export async function getCustomDesignAction() {
+  await assertAdmin();
   try {
     const configs = await db
       .select()
@@ -45,6 +48,7 @@ export async function saveCustomDesignAction(data: {
   footerJs: string;
   headerCss: string;
 }) {
+  await assertAdmin();
   try {
     const entries = [
       { name: "header_js", value: data.headerJs },
@@ -87,6 +91,7 @@ export async function saveCustomDesignAction(data: {
 // ==========================================
 
 export async function getSiteDesignSettingsAction() {
+  await assertAdmin();
   try {
     const configs = await db
       .select()
@@ -131,6 +136,7 @@ export async function getSiteDesignSettingsAction() {
 export async function saveSiteDesignSettingsAction(data: {
   nightMode: string;
 }) {
+  await assertAdmin();
   try {
     const existing = await db
       .select()
@@ -161,6 +167,7 @@ export async function saveSiteDesignSettingsAction(data: {
 }
 
 export async function uploadDesignAssetAction(formData: FormData) {
+  await assertAdmin();
   try {
     const type = formData.get("type") as string; // "favicon" | "logo" | "light_logo"
     const file = formData.get("file") as File | null;
@@ -224,6 +231,7 @@ export async function uploadDesignAssetAction(formData: FormData) {
 // ==========================================
 
 export async function getThemesAction() {
+  await assertAdmin();
   try {
     const activeConfig = await db
       .select()
@@ -277,6 +285,7 @@ export async function getThemesAction() {
 }
 
 export async function activateThemeAction(themeKey: string) {
+  await assertAdmin();
   try {
     const existing = await db
       .select()

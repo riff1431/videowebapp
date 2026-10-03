@@ -1,11 +1,14 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { siteConfig, managePro, users, proPayments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function updateProSystemSettingsAction(settings: Record<string, string>) {
+  await assertAdmin();
   try {
     for (const [key, val] of Object.entries(settings)) {
       await db
@@ -42,6 +45,7 @@ export async function createProPackageAction(data: {
   image?: string;
   nightImage?: string;
 }) {
+  await assertAdmin();
   try {
     if (!data.type.trim()) {
       return { success: false, error: "Package name cannot be empty" };
@@ -94,6 +98,7 @@ export async function updateProPackageAction(
     nightImage?: string;
   }
 ) {
+  await assertAdmin();
   try {
     if (!data.type.trim()) {
       return { success: false, error: "Package name cannot be empty" };
@@ -136,6 +141,7 @@ export async function updateProPackageAction(
 }
 
 export async function deleteProPackageAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(managePro).where(eq(managePro.id, id));
     revalidatePath("/admin/prosys-settings");
@@ -148,6 +154,7 @@ export async function deleteProPackageAction(id: number) {
 }
 
 export async function cancelExpiredSubscriptionsAction() {
+  await assertAdmin();
   try {
     // In PlayTube, cancel expired subscriptions marks users whose pro expiration date has passed
     // Here we can expire users who have isPro true and proExpiration in past or reset

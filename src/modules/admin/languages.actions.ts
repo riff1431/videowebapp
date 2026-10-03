@@ -1,11 +1,14 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { languages, languageKeys } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function addLanguageAction(formData: FormData) {
+  await assertAdmin();
   try {
     const name = (formData.get("name") as string)?.trim();
     const iso = (formData.get("iso") as string)?.trim().toLowerCase();
@@ -40,6 +43,7 @@ export async function addLanguageAction(formData: FormData) {
 }
 
 export async function addLanguageKeyAction(formData: FormData) {
+  await assertAdmin();
   try {
     const keyName = (formData.get("keyName") as string)?.trim().toLowerCase();
 
@@ -66,6 +70,7 @@ export async function addLanguageKeyAction(formData: FormData) {
 }
 
 export async function toggleLanguageStatusAction(id: number, currentStatus: string) {
+  await assertAdmin();
   try {
     const newStatus = currentStatus === "active" ? "disabled" : "active";
     await db.update(languages).set({ status: newStatus }).where(eq(languages.id, id));
@@ -79,6 +84,7 @@ export async function toggleLanguageStatusAction(id: number, currentStatus: stri
 }
 
 export async function deleteLanguagesAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (ids.length > 0) {
       await db.delete(languages).where(inArray(languages.id, ids));
@@ -92,6 +98,7 @@ export async function deleteLanguagesAction(ids: number[]) {
 }
 
 export async function updateLanguageIsoAction(langName: string, iso: string) {
+  await assertAdmin();
   try {
     const cleanIso = iso.trim().toLowerCase();
     if (!cleanIso) {
@@ -116,6 +123,7 @@ export async function updateLanguageTranslationAction(
   lang: string,
   value: string
 ) {
+  await assertAdmin();
   try {
     const cleanKey = key.trim();
     const cleanLang = lang.trim().toLowerCase();

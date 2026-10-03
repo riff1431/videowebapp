@@ -1,6 +1,8 @@
+import { assertAdmin } from "@/lib/auth/assert-admin";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
+  await assertAdmin(request.headers);
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("query") || "";

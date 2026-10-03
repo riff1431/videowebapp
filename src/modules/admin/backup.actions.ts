@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db, pool } from "@/db";
 import { siteConfig } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -15,6 +17,7 @@ export interface BackupStatusResponse {
 }
 
 export async function getLastBackupDateAction(): Promise<string> {
+  await assertAdmin();
   try {
     const configRow = await db
       .select()
@@ -38,6 +41,7 @@ export async function getLastBackupDateAction(): Promise<string> {
 }
 
 export async function createBackupAction(): Promise<BackupStatusResponse> {
+  await assertAdmin();
   try {
     const now = new Date();
     const d = String(now.getDate()).padStart(2, "0");

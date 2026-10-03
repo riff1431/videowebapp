@@ -1,11 +1,14 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { videoAds } from "@/db/schema";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function createVideoAdAction(formData: FormData) {
+  await assertAdmin();
   try {
     const name = (formData.get("name") as string)?.trim();
     const type = (formData.get("type") as string) || "video";
@@ -34,6 +37,7 @@ export async function createVideoAdAction(formData: FormData) {
 }
 
 export async function deleteVideoAdsAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (ids.length > 0) {
       await db.delete(videoAds).where(inArray(videoAds.id, ids));

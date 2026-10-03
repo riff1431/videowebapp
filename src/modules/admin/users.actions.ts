@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { users, customProfileFields, verificationRequests, monetizationRequests, siteConfig } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
@@ -9,6 +11,7 @@ import { revalidatePath } from "next/cache";
 // 1. Manage Users Actions
 // ========================
 export async function bulkUserAction(userIds: number[], action: "activate" | "deactivate" | "delete") {
+  await assertAdmin();
   try {
     if (!userIds || userIds.length === 0) {
       return { success: false, error: "No users selected" };
@@ -31,6 +34,7 @@ export async function bulkUserAction(userIds: number[], action: "activate" | "de
 }
 
 export async function deleteSingleUserAction(userId: number) {
+  await assertAdmin();
   try {
     await db.delete(users).where(eq(users.id, userId));
     revalidatePath("/admin/manage-users");
@@ -45,6 +49,7 @@ export async function deleteSingleUserAction(userId: number) {
 // 2. Affiliates Settings Actions
 // ========================
 export async function updateAffiliatesSettingsAction(formData: FormData) {
+  await assertAdmin();
   try {
     for (const [key, val] of formData.entries()) {
       if (typeof val === "string") {
@@ -69,6 +74,7 @@ export async function updateAffiliatesSettingsAction(formData: FormData) {
 // 3. Custom Profile Fields Actions
 // ========================
 export async function createCustomProfileFieldAction(formData: FormData) {
+  await assertAdmin();
   try {
     const fieldType = (formData.get("fieldType") as string) || "textbox";
     const fieldName = (formData.get("fieldName") as string)?.trim();
@@ -100,6 +106,7 @@ export async function createCustomProfileFieldAction(formData: FormData) {
 }
 
 export async function deleteCustomProfileFieldsAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (ids.length > 0) {
       await db.delete(customProfileFields).where(inArray(customProfileFields.id, ids));
@@ -115,6 +122,7 @@ export async function deleteCustomProfileFieldsAction(ids: number[]) {
 // 4. Verification Requests Actions
 // ========================
 export async function bulkVerificationRequestAction(requestIds: number[], action: "verify" | "delete") {
+  await assertAdmin();
   try {
     if (!requestIds || requestIds.length === 0) return { success: false, error: "No items selected" };
 
@@ -141,6 +149,7 @@ export async function bulkVerificationRequestAction(requestIds: number[], action
 // 5. Monetization Requests Actions
 // ========================
 export async function bulkMonetizationRequestAction(requestIds: number[], action: "verify" | "delete") {
+  await assertAdmin();
   try {
     if (!requestIds || requestIds.length === 0) return { success: false, error: "No items selected" };
 

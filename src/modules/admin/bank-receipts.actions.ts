@@ -1,11 +1,14 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { bankReceipts, users, transactions } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function approveBankReceiptAction(receiptId: number) {
+  await assertAdmin();
   try {
     const [receipt] = await db
       .select()
@@ -56,6 +59,7 @@ export async function approveBankReceiptAction(receiptId: number) {
 }
 
 export async function declineBankReceiptAction(receiptId: number) {
+  await assertAdmin();
   try {
     await db
       .update(bankReceipts)
@@ -70,6 +74,7 @@ export async function declineBankReceiptAction(receiptId: number) {
 }
 
 export async function deleteBankReceiptAction(receiptId: number) {
+  await assertAdmin();
   try {
     await db.delete(bankReceipts).where(eq(bankReceipts.id, receiptId));
     revalidatePath("/admin/bank-receipts");

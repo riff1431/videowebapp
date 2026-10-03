@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db, pool } from "@/db";
 import { siteConfig } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -15,6 +17,7 @@ export interface SystemStatusIssue {
 }
 
 export async function getSystemStatusAction(): Promise<SystemStatusIssue[]> {
+  await assertAdmin();
   const issues: SystemStatusIssue[] = [];
 
   try {

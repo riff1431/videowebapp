@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { videos, movieCategories } from "@/db/schema";
 import { eq, inArray, and } from "drizzle-orm";
@@ -10,6 +12,7 @@ import { revalidatePath } from "next/cache";
 // ==========================================
 
 export async function deleteMovieAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(videos).where(and(eq(videos.id, id), eq(videos.isMovie, true)));
     revalidatePath("/admin/movies");
@@ -21,6 +24,7 @@ export async function deleteMovieAction(id: number) {
 }
 
 export async function bulkDeleteMoviesAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) {
       return { success: false, error: "No movies selected" };
@@ -41,6 +45,7 @@ export async function bulkDeleteMoviesAction(ids: number[]) {
 // ==========================================
 
 export async function addMovieCategoryAction(formData: Record<string, string>) {
+  await assertAdmin();
   try {
     const englishName = formData["english"]?.trim() || "";
     if (!englishName) {
@@ -82,6 +87,7 @@ export async function updateMovieCategoryAction(
   key: string,
   formData: Record<string, string>
 ) {
+  await assertAdmin();
   try {
     const englishName = formData["english"]?.trim() || "";
     if (!englishName) {
@@ -104,6 +110,7 @@ export async function updateMovieCategoryAction(
 }
 
 export async function deleteMovieCategoryAction(key: string) {
+  await assertAdmin();
   try {
     if (key === "other") {
       return { success: false, error: "The default 'other' category cannot be deleted" };
@@ -118,6 +125,7 @@ export async function deleteMovieCategoryAction(key: string) {
 }
 
 export async function bulkDeleteMovieCategoriesAction(keys: string[]) {
+  await assertAdmin();
   try {
     // Exclude 'other'
     const validKeys = keys.filter((k) => k !== "other");

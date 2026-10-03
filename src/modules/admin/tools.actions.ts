@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import {
   announcements,
@@ -16,6 +18,7 @@ import { eq, inArray, ilike, or, desc, asc, and, gte, lte, sql } from "drizzle-o
 import { revalidatePath } from "next/cache";
 
 export async function getCategoriesForToolsAction() {
+  await assertAdmin();
   try {
     const all = await db.select({ key: categories.key, name: categories.name }).from(categories).orderBy(categories.sortOrder);
     return { success: true, data: all };
@@ -127,6 +130,7 @@ function getDateRangeFilter(range: string) {
 // 1. Announcements Actions
 // ==========================================
 export async function getAnnouncementsAction() {
+  await assertAdmin();
   try {
     const all = await db
       .select()
@@ -160,6 +164,7 @@ export async function getAnnouncementsAction() {
 }
 
 export async function createAnnouncementAction(text: string) {
+  await assertAdmin();
   try {
     if (!text || text.trim().length < 5) {
       return { success: false, message: "Announcement text must be at least 5 characters" };
@@ -181,6 +186,7 @@ export async function createAnnouncementAction(text: string) {
 }
 
 export async function toggleAnnouncementAction(id: number) {
+  await assertAdmin();
   try {
     const [ann] = await db
       .select()
@@ -204,6 +210,7 @@ export async function toggleAnnouncementAction(id: number) {
 }
 
 export async function deleteAnnouncementAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(announcements).where(eq(announcements.id, id));
     revalidatePath("/admin/manage-announcements");
@@ -222,6 +229,7 @@ export async function getBannedIpsAction(params?: {
   range?: string;
   sort?: string;
 }) {
+  await assertAdmin();
   try {
     const conditions: any[] = [];
 
@@ -267,6 +275,7 @@ export async function getBannedIpsAction(params?: {
 }
 
 export async function banIpAction(ipAddress: string) {
+  await assertAdmin();
   try {
     if (!ipAddress || ipAddress.trim().length === 0) {
       return { success: false, message: "Please enter an IP address or email pattern" };
@@ -287,6 +296,7 @@ export async function banIpAction(ipAddress: string) {
 }
 
 export async function deleteBannedIpAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(bannedIps).where(eq(bannedIps.id, id));
     revalidatePath("/admin/ban-users");
@@ -298,6 +308,7 @@ export async function deleteBannedIpAction(id: number) {
 }
 
 export async function deleteMultipleBannedIpsAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) return { success: false, message: "No items selected" };
     await db.delete(bannedIps).where(inArray(bannedIps.id, ids));
@@ -317,6 +328,7 @@ export async function getActivitiesAction(params?: {
   range?: string;
   sort?: string;
 }) {
+  await assertAdmin();
   try {
     const conditions: any[] = [];
 
@@ -373,6 +385,7 @@ export async function getActivitiesAction(params?: {
 }
 
 export async function deleteActivityAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(activities).where(eq(activities.id, id));
     revalidatePath("/admin/manage-activities");
@@ -384,6 +397,7 @@ export async function deleteActivityAction(id: number) {
 }
 
 export async function deleteMultipleActivitiesAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) return { success: false, message: "No items selected" };
     await db.delete(activities).where(inArray(activities.id, ids));
@@ -403,6 +417,7 @@ export async function sendMassNotificationAction(data: {
   description: string;
   usernames?: string;
 }) {
+  await assertAdmin();
   try {
     if (!data.url || !data.description) {
       return { success: false, message: "Please check your details" };
@@ -463,6 +478,7 @@ export async function getAdminInvitationsAction(params?: {
   range?: string;
   sort?: string;
 }) {
+  await assertAdmin();
   try {
     const conditions: any[] = [];
 
@@ -508,6 +524,7 @@ export async function getAdminInvitationsAction(params?: {
 }
 
 export async function generateAdminInvitationAction() {
+  await assertAdmin();
   try {
     const randomHex = Math.random().toString(16).substring(2, 10);
     const code = `${Date.now().toString(16)}${randomHex}${Math.floor(Math.random() * 1000000)}`;
@@ -539,6 +556,7 @@ export async function generateAdminInvitationAction() {
 }
 
 export async function deleteAdminInvitationAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(adminInvitations).where(eq(adminInvitations.id, id));
     revalidatePath("/admin/manage-invitation-keys");
@@ -550,6 +568,7 @@ export async function deleteAdminInvitationAction(id: number) {
 }
 
 export async function deleteMultipleAdminInvitationsAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) return { success: false, message: "No items selected" };
     await db.delete(adminInvitations).where(inArray(adminInvitations.id, ids));
@@ -569,6 +588,7 @@ export async function getUserInvitationsAction(params?: {
   range?: string;
   sort?: string;
 }) {
+  await assertAdmin();
   try {
     const conditions: any[] = [];
 
@@ -623,6 +643,7 @@ export async function getUserInvitationsAction(params?: {
 }
 
 export async function deleteUserInvitationAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(invitationLinks).where(eq(invitationLinks.id, id));
     revalidatePath("/admin/manage-invitation");
@@ -634,6 +655,7 @@ export async function deleteUserInvitationAction(id: number) {
 }
 
 export async function deleteMultipleUserInvitationsAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (!ids || ids.length === 0) return { success: false, message: "No items selected" };
     await db.delete(invitationLinks).where(inArray(invitationLinks.id, ids));
@@ -649,6 +671,7 @@ export async function deleteMultipleUserInvitationsAction(ids: number[]) {
 // 7. Auto Subscribe Setting Actions
 // ==========================================
 export async function getAutoSubscribeSettingAction() {
+  await assertAdmin();
   try {
     const [row] = await db
       .select()
@@ -664,6 +687,7 @@ export async function getAutoSubscribeSettingAction() {
 }
 
 export async function saveAutoSubscribeSettingAction(usersStr: string) {
+  await assertAdmin();
   try {
     const [existing] = await db
       .select()
@@ -700,6 +724,7 @@ export async function autoDeleteVideosAction(data: {
   category?: string;
   timeRange: "all" | "today" | "this_week" | "this_month" | "this_year";
 }) {
+  await assertAdmin();
   try {
     const conditions: any[] = [];
 
@@ -756,6 +781,7 @@ export async function autoDeleteVideosAction(data: {
 // 9. Clean Dead Videos Action
 // ==========================================
 export async function cleanDeadVideosAction(timeRange: "all" | "today" | "this_week" | "this_month" | "this_year") {
+  await assertAdmin();
   try {
     const conditions: any[] = [];
 
@@ -810,6 +836,7 @@ export async function sendNewsletterAction(data: {
   subject: string;
   message: string;
 }) {
+  await assertAdmin();
   try {
     if (!data.subject || !data.message) {
       return { success: false, message: "Please enter both Subject and Message" };

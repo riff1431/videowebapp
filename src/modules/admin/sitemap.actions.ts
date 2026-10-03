@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { siteConfig, videos, articles } from "@/db/schema";
 import { eq, ne } from "drizzle-orm";
@@ -58,6 +60,7 @@ function formatPlayTubeDate(d: Date): string {
 }
 
 export async function getSitemapInfoAction(): Promise<SitemapInfo> {
+  await assertAdmin();
   const appUrl = getAppBaseUrl();
   const sitemapUrl = `${appUrl}/sitemap-main.xml`;
 
@@ -84,6 +87,7 @@ export async function getSitemapInfoAction(): Promise<SitemapInfo> {
 }
 
 export async function generateSitemapAction(): Promise<SitemapGenerateResult> {
+  await assertAdmin();
   const appUrl = getAppBaseUrl();
   const sitemapUrl = `${appUrl}/sitemap-main.xml`;
 

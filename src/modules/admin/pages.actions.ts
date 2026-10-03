@@ -1,5 +1,7 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { customPages, faqs, termsPages, languages, siteConfig } from "@/db/schema";
 import { eq, inArray, ilike, or, desc, asc } from "drizzle-orm";
@@ -19,6 +21,7 @@ export interface CustomPageItem {
 }
 
 export async function getCustomPagesAction(query = "", sort = "DESC_i"): Promise<CustomPageItem[]> {
+  await assertAdmin();
   try {
     let qb = db.select().from(customPages);
 
@@ -51,6 +54,7 @@ export async function getCustomPagesAction(query = "", sort = "DESC_i"): Promise
 }
 
 export async function getCustomPageByNameAction(name: string): Promise<CustomPageItem | null> {
+  await assertAdmin();
   try {
     const rows = await db
       .select()
@@ -70,6 +74,7 @@ export async function createCustomPageAction(data: {
   pageContent: string;
   pageType: number;
 }) {
+  await assertAdmin();
   try {
     const pageName = data.pageName?.trim();
     const pageTitle = data.pageTitle?.trim();
@@ -121,6 +126,7 @@ export async function editCustomPageAction(data: {
   pageContent: string;
   pageType: number;
 }) {
+  await assertAdmin();
   try {
     const pageName = data.pageName?.trim();
     const pageTitle = data.pageTitle?.trim();
@@ -158,6 +164,7 @@ export async function editCustomPageAction(data: {
 }
 
 export async function deleteCustomPageAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(customPages).where(eq(customPages.id, id));
     revalidatePath("/admin/manage-custom-pages");
@@ -168,6 +175,7 @@ export async function deleteCustomPageAction(id: number) {
 }
 
 export async function deleteMultipleCustomPagesAction(ids: number[]) {
+  await assertAdmin();
   try {
     if (ids.length > 0) {
       await db.delete(customPages).where(inArray(customPages.id, ids));
@@ -198,6 +206,7 @@ const TERMS_KEYS: { type: string; name: string }[] = [
 ];
 
 export async function getTermsPagesListAction(): Promise<{ type: string; name: string; enabled: boolean }[]> {
+  await assertAdmin();
   try {
     const rows = await db.select().from(termsPages);
     const map = new Map<string, number>();
@@ -215,6 +224,7 @@ export async function getTermsPagesListAction(): Promise<{ type: string; name: s
 }
 
 export async function toggleTermsStatusAction(type: string, enabled: boolean) {
+  await assertAdmin();
   try {
     const val = enabled ? 1 : 0;
     const existing = await db.select().from(termsPages).where(eq(termsPages.type, type)).limit(1);
@@ -243,6 +253,7 @@ export async function getTermsPageByTypeAction(type: string): Promise<{
   translations: Record<string, string>;
   availableLanguages: { id: number; name: string; iso: string }[];
 }> {
+  await assertAdmin();
   // Fetch dynamic languages from database
   let availableLanguages: { id: number; name: string; iso: string }[] = [];
   try {
@@ -277,6 +288,7 @@ export async function getTermsPageByTypeAction(type: string): Promise<{
 }
 
 export async function saveTermsPageAction(type: string, translations: Record<string, string>) {
+  await assertAdmin();
   try {
     const transJson = JSON.stringify(translations);
     const existing = await db.select().from(termsPages).where(eq(termsPages.type, type)).limit(1);
@@ -318,6 +330,7 @@ export interface FaqItem {
 }
 
 export async function getFaqsAction(): Promise<FaqItem[]> {
+  await assertAdmin();
   try {
     return await db.select().from(faqs).orderBy(desc(faqs.id));
   } catch (err) {
@@ -327,6 +340,7 @@ export async function getFaqsAction(): Promise<FaqItem[]> {
 }
 
 export async function createFaqAction(question: string, answer: string) {
+  await assertAdmin();
   try {
     const q = question?.trim();
     const a = answer?.trim();
@@ -349,6 +363,7 @@ export async function createFaqAction(question: string, answer: string) {
 }
 
 export async function deleteFaqAction(id: number) {
+  await assertAdmin();
   try {
     await db.delete(faqs).where(eq(faqs.id, id));
     revalidatePath("/admin/manage-faqs");
@@ -417,6 +432,7 @@ const DEFAULT_SEO_PAGES: Record<string, { title: string; meta_keywords: string; 
 };
 
 export async function getPagesSeoAction(): Promise<PageSeoItem[]> {
+  await assertAdmin();
   let seoMap = { ...DEFAULT_SEO_PAGES };
 
   try {
@@ -448,6 +464,7 @@ export async function updatePageSeoAction(data: {
   metaKeywords: string;
   metaDescription: string;
 }) {
+  await assertAdmin();
   try {
     let currentMap: Record<string, any> = { ...DEFAULT_SEO_PAGES };
 

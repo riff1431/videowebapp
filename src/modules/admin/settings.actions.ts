@@ -1,11 +1,14 @@
 "use server";
 
+import { assertAdmin } from "@/lib/auth/assert-admin";
+
 import { db } from "@/db";
 import { siteConfig } from "@/db/schema";
 import { inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function saveSingleSettingAction(key: string, value: string) {
+  await assertAdmin();
   try {
     await db
       .insert(siteConfig)
@@ -26,6 +29,7 @@ export async function saveSingleSettingAction(key: string, value: string) {
 }
 
 export async function saveMultipleSettingsAction(settings: Record<string, string>) {
+  await assertAdmin();
   try {
     for (const [key, value] of Object.entries(settings)) {
       await db
