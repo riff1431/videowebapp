@@ -5,6 +5,7 @@ import { videos, likesDislikes, comments, subscriptions, watchLater, siteConfig,
 import { eq, and, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { sanitizePlainText } from "@/lib/security/sanitize";
 
 // ==========================================
 // 1. Video Upload Server Action
@@ -151,11 +152,17 @@ export async function importVideoAction(formData: FormData) {
 }
 
 // Helper to get authenticated user in Server Actions
-async function getAuthUserId(): Promise<number | null> {
+async function getAuthUserId(customHeaders?: Headers): Promise<number | null> {
   const { auth } = await import("@/lib/auth/auth");
-  const { headers } = await import("next/headers");
+  let reqHeaders: Headers;
+  try {
+    const { headers } = await import("next/headers");
+    reqHeaders = customHeaders || (await headers());
+  } catch {
+    reqHeaders = customHeaders || new Headers();
+  }
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: reqHeaders,
   });
   return session?.user?.id ? Number(session.user.id) : null;
 }
@@ -222,24 +229,31 @@ export async function toggleLikeVideoAction({
 export async function addCommentAction({
   videoDbId,
   text,
+  customHeaders,
 }: {
   videoDbId: number;
   text: string;
+  customHeaders?: Headers;
 }) {
   try {
     if (!text || text.trim().length === 0) {
       return { success: false, error: "Comment text cannot be empty" };
     }
 
-    const currentUserId = await getAuthUserId();
+    const currentUserId = await getAuthUserId(customHeaders);
     if (!currentUserId) return { success: false, error: "Please log in to comment" };
+
+    const cleanedText = sanitizePlainText(text.trim());
+    if (!cleanedText) {
+      return { success: false, error: "Comment text cannot be empty or malicious HTML" };
+    }
 
     const [newComment] = await db
       .insert(comments)
       .values({
         userId: currentUserId,
         videoId: videoDbId,
-        text: text.trim(),
+        text: cleanedText,
       })
       .returning();
 

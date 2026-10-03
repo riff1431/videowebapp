@@ -5,6 +5,7 @@ import { articles, articleComments, users } from "@/db/schema";
 import { eq, desc, and, ilike, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { sanitizeUserHtml, sanitizePlainText } from "@/lib/security/sanitize";
 
 const createArticleSchema = z.object({
   title: z.string().min(3).max(250),
@@ -73,12 +74,12 @@ export async function createArticleAction(formData: FormData) {
       .insert(articles)
       .values({
         userId: authorId,
-        title: parsed.title,
-        description: parsed.description,
-        text: parsed.text,
+        title: sanitizePlainText(parsed.title),
+        description: sanitizePlainText(parsed.description),
+        text: sanitizeUserHtml(parsed.text),
         category: parsed.category,
         image: finalImageUrl,
-        tags: parsed.tags,
+        tags: sanitizePlainText(parsed.tags),
         views: 0,
         shared: 0,
         active: true,
@@ -103,12 +104,17 @@ export async function postArticleCommentAction(articleId: number, text: string) 
       return { success: false, error: "User authentication required" };
     }
 
+    const cleaned = sanitizePlainText(text.trim());
+    if (!cleaned) {
+      return { success: false, error: "Comment text cannot be empty" };
+    }
+
     const [comment] = await db
       .insert(articleComments)
       .values({
         articleId,
         userId: user.id,
-        text: text.trim(),
+        text: cleaned,
       })
       .returning();
 

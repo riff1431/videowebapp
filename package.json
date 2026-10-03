@@ -26,6 +26,7 @@
     "@supabase/supabase-js": "^2.117.2",
     "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
+    "@types/sanitize-html": "^2.16.2",
     "better-auth": "^1.7.5",
     "clsx": "^2.1.1",
     "drizzle-kit": "^0.31.11",
@@ -38,6 +39,7 @@
     "react-dom": "19.2.8",
     "react-hook-form": "^7.88.0",
     "recharts": "^3.10.1",
+    "sanitize-html": "^2.18.0",
     "tailwind-merge": "^3.7.0",
     "tsx": "^4.23.15",
     "zod": "^4.6.5"

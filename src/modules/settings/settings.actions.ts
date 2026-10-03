@@ -8,10 +8,11 @@ import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 
 import { assertUser } from "@/lib/auth/assert-admin";
+import { sanitizePlainText } from "@/lib/security/sanitize";
 
-async function getAuthUserId(): Promise<number | null> {
+async function getAuthUserId(customHeaders?: Headers): Promise<number | null> {
   try {
-    const user = await assertUser();
+    const user = await assertUser(customHeaders);
     return user.id;
   } catch {
     return null;
@@ -71,17 +72,19 @@ export async function updateGeneralSettingsAction(formData: FormData, customHead
 }
 
 // 2. Profile Settings Action
-export async function updateProfileSettingsAction(formData: FormData) {
+export async function updateProfileSettingsAction(formData: FormData, customHeaders?: Headers) {
   try {
-    const userId = await getAuthUserId();
+    const userId = await getAuthUserId(customHeaders);
     if (!userId) {
       return { success: false, error: "Authentication required" };
     }
 
     const firstName = (formData.get("firstName") as string)?.trim() || "";
     const lastName = (formData.get("lastName") as string)?.trim() || "";
-    const fullName = `${firstName} ${lastName}`.trim() || firstName || lastName;
-    const about = (formData.get("about") as string)?.trim() || "";
+    const rawFullName = `${firstName} ${lastName}`.trim() || firstName || lastName;
+    const fullName = sanitizePlainText(rawFullName);
+    const rawAbout = (formData.get("about") as string)?.trim() || "";
+    const about = sanitizePlainText(rawAbout);
     const facebook = (formData.get("facebook") as string)?.trim() || "";
     const google = (formData.get("google") as string)?.trim() || "";
     const twitter = (formData.get("twitter") as string)?.trim() || "";

@@ -28,6 +28,7 @@ import {
   Check,
 } from "lucide-react";
 import { createArticleAction } from "@/modules/articles/article.actions";
+import { sanitizeUserHtml } from "@/lib/security/sanitize";
 
 interface CreateArticleClientProps {
   categoriesList?: Array<{ id: number; key: string; name: string }>;
@@ -1254,9 +1255,10 @@ export default function CreateArticlePage({ categoriesList = [] }: CreateArticle
               <div
                 className="text-sm sm:text-base leading-relaxed text-neutral-800 dark:text-neutral-200 space-y-4 break-words"
                 dangerouslySetInnerHTML={{
-                  __html:
+                  __html: sanitizeUserHtml(
                     editorRef.current?.innerHTML ||
-                    "<p class='text-neutral-400 italic'>Article body is empty. Type in the editor to see preview.</p>",
+                    "<p class='text-neutral-400 italic'>Article body is empty. Type in the editor to see preview.</p>"
+                  ),
                 }}
               />
 
