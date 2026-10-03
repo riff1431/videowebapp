@@ -1,8 +1,10 @@
 import { betterAuth } from "better-auth";
+import { createAuthMiddleware, APIError } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { username, multiSession } from "better-auth/plugins";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
+import { eq, or } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -31,6 +33,52 @@ export const auth = betterAuth({
       generateId: ({ model }) => {
         if (model === "user") return false;
         return crypto.randomUUID();
+      },
+    },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/sign-in/email") {
+        const body = ctx.body as Record<string, any>;
+        const emailOrUsername = (body?.email || body?.username || "").trim().toLowerCase();
+        if (emailOrUsername) {
+          const [user] = await db
+            .select({ id: schema.users.id, active: schema.users.active })
+            .from(schema.users)
+            .where(
+              or(
+                eq(schema.users.email, emailOrUsername),
+                eq(schema.users.username, emailOrUsername)
+              )
+            )
+            .limit(1);
+
+          if (user && user.active === false) {
+            throw new APIError("FORBIDDEN", {
+              message: "FORBIDDEN: User account is suspended or banned",
+            });
+          }
+        }
+      }
+    }),
+  },
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session) => {
+          // Block session creation if user active flag is false
+          const [user] = await db
+            .select({ active: schema.users.active })
+            .from(schema.users)
+            .where(eq(schema.users.id, Number(session.userId)))
+            .limit(1);
+
+          if (user && user.active === false) {
+            throw new APIError("FORBIDDEN", {
+              message: "FORBIDDEN: User account is suspended or banned",
+            });
+          }
+        },
       },
     },
   },
