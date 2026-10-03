@@ -81,12 +81,12 @@ export default function AddNewCustomPage() {
           </h6>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Field 1: Page Name http://localhost:8080/site-pages/PAGE_NAME */}
+            {/* Field 1: Page Name */}
             <div>
               <label className="block text-xs font-medium text-neutral-800 dark:text-neutral-200 mb-1.5">
                 Page Name{" "}
                 <span className="text-neutral-400 dark:text-neutral-500 font-normal">
-                  http://localhost:3000/site-pages/PAGE_NAME
+                  {(process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "http://localhost:3000"))}/site-pages/PAGE_NAME
                 </span>
               </label>
               <input

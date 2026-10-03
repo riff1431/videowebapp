@@ -8,7 +8,9 @@ import {
 } from "@/modules/admin/sitemap.actions";
 
 export default function CreateSitemapPage() {
-  const [sitemapUrl, setSitemapUrl] = useState<string>("http://localhost:3000/sitemap-main.xml");
+  const [sitemapUrl, setSitemapUrl] = useState<string>(
+    `${process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "http://localhost:3000")}/sitemap-main.xml`
+  );
   const [lastCreated, setLastCreated] = useState<string>("12-06-2018");
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(0);

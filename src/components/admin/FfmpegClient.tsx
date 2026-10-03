@@ -600,7 +600,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                   How many videos can be converted at the same time? Leave 0 for unlimited.
                 </span>
                 <span className="text-[11px] text-red-500 block font-medium">
-                  If you set max allowed processes, make sure you have added cronjob.php to your server&apos;s cronjob, that should run once every 5 minutes.
+                  If you set max allowed processes, make sure you have scheduled background processing (curl /api/cron or npm run cron), running once every 5 minutes.
                 </span>
               </div>
 
