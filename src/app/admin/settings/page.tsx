@@ -27,8 +27,15 @@ export default async function AdminGeneralSettingsPage() {
     .where(eq(languages.status, "active"))
     .orderBy(asc(languages.name));
 
-  const availableLanguages = dbLanguages.length > 0
-    ? dbLanguages
+  // Deduplicate by key (iso) to avoid React duplicate-key warnings
+  const uniqueLanguageMap = new Map<string, { key: string; name: string }>();
+  for (const l of dbLanguages) {
+    if (!uniqueLanguageMap.has(l.key)) uniqueLanguageMap.set(l.key, l);
+  }
+  const deduped = Array.from(uniqueLanguageMap.values());
+
+  const availableLanguages = deduped.length > 0
+    ? deduped
     : [
         { key: "en", name: "English" },
         { key: "ar", name: "Arabic" },

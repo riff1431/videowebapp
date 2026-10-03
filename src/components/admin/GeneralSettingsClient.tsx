@@ -145,7 +145,7 @@ export function GeneralSettingsClient({
                   type="text"
                   value={config["switch_account_counts"] ?? "3"}
                   onChange={(e) => updateSetting("switch_account_counts", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                   Switch Account Counts
@@ -329,7 +329,7 @@ export function GeneralSettingsClient({
                     type="text"
                     value={config["time_18"] ?? "1"}
                     onChange={(e) => updateSetting("time_18", e.target.value.replace(/[^0-9.]/g, ""))}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Set the amount of hours to block a user which isn't above 18 years old.
@@ -364,10 +364,10 @@ export function GeneralSettingsClient({
                   <select
                     value={config["language"] ?? "english"}
                     onChange={(e) => updateSetting("language", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                   >
-                    {languages.map((l) => (
-                      <option key={l.key} value={l.key} className="bg-neutral-50 dark:bg-[#181a1d]">
+                    {languages.map((l, i) => (
+                      <option key={`${l.key}-${i}`} value={l.key} className="bg-neutral-50 dark:bg-[#181a1d]">
                         {l.name}
                       </option>
                     ))}
@@ -483,7 +483,7 @@ export function GeneralSettingsClient({
                   max="10000"
                   value={config["videos_load_limit"] ?? "20"}
                   onChange={(e) => updateSetting("videos_load_limit", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                   Choose the limit of how many videos will show on each page.
@@ -500,7 +500,7 @@ export function GeneralSettingsClient({
                   value={config["censored_words"] ?? ""}
                   placeholder=""
                   onChange={(e) => updateSetting("censored_words", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                   Set censored words, seperated by a comma (,)
@@ -518,7 +518,7 @@ export function GeneralSettingsClient({
                 <select
                   value={config["date_style"] ?? "m/d/y"}
                   onChange={(e) => updateSetting("date_style", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="m/d/y">mm/dd/yy</option>
                   <option value="d/m/y">dd/mm/yy</option>
@@ -656,7 +656,7 @@ export function GeneralSettingsClient({
                     type="text"
                     value={config["authy_token"] ?? ""}
                     onChange={(e) => updateSetting("authy_token", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Authy Token from your twilio account
@@ -725,7 +725,7 @@ export function GeneralSettingsClient({
                     type="text"
                     value={config["recaptcha_key"] ?? ""}
                     onChange={(e) => updateSetting("recaptcha_key", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                 </div>
               </div>
@@ -755,7 +755,7 @@ export function GeneralSettingsClient({
                     type="text"
                     value={config["bad_login_limit"] ?? "4"}
                     onChange={(e) => updateSetting("bad_login_limit", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     How many times a user can try to login before a lockout?
@@ -769,7 +769,7 @@ export function GeneralSettingsClient({
                     type="text"
                     value={config["lock_time"] ?? "10"}
                     onChange={(e) => updateSetting("lock_time", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     For how long should the user stay locked out?
@@ -868,7 +868,7 @@ export function GeneralSettingsClient({
                     type="text"
                     value={config["admin_com_subscribers"] ?? "2"}
                     onChange={(e) => updateSetting("admin_com_subscribers", e.target.value.replace(/[^0-9.]/g, ""))}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Your percentage cut from paid subscribers (Leave it 0 if you don't want to get any commissions.)
@@ -930,7 +930,7 @@ export function GeneralSettingsClient({
                     type="text"
                     value={config["user_links_limit"] ?? "10"}
                     onChange={(e) => updateSetting("user_links_limit", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                 </div>
                 <div>
@@ -940,7 +940,7 @@ export function GeneralSettingsClient({
                   <select
                     value={config["expire_user_links"] ?? "month"}
                     onChange={(e) => updateSetting("expire_user_links", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                   >
                     <option value="hour">1 Hour</option>
                     <option value="day">1 Day</option>
@@ -971,7 +971,7 @@ export function GeneralSettingsClient({
                 <select
                   value={config["server"] ?? "ajax"}
                   onChange={(e) => updateSetting("server", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="ajax">AJAX</option>
                   <option value="nodejs">WebSockets</option>
@@ -989,7 +989,7 @@ export function GeneralSettingsClient({
                 <select
                   value={config["comment_system"] ?? "default"}
                   onChange={(e) => updateSetting("comment_system", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="default">AJAX (PlayTube)</option>
                   <option value="fb">FaceBook</option>
@@ -1008,7 +1008,7 @@ export function GeneralSettingsClient({
                 <select
                   value={config["comments_default_num"] ?? "40"}
                   onChange={(e) => updateSetting("comments_default_num", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="10">10</option>
                   <option value="20">20</option>

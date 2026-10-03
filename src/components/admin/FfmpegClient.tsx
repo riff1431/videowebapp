@@ -118,7 +118,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 <select
                   value={config["max_upload_all_users"] ?? "1000000000"}
                   onChange={(e) => updateSetting("max_upload_all_users", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="2000000">2MB</option>
                   <option value="6000000">6MB</option>
@@ -145,7 +145,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 <select
                   value={config["max_upload"] ?? "1000000000"}
                   onChange={(e) => updateSetting("max_upload", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="2000000">2MB</option>
                   <option value="6000000">6MB</option>
@@ -172,7 +172,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 <select
                   value={config["chunk_size"] ?? "1900KB"}
                   onChange={(e) => updateSetting("chunk_size", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="1MB">1MB</option>
                   <option value="1900KB">2MB</option>
@@ -194,7 +194,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 <select
                   value={config["who_upload"] ?? "all"}
                   onChange={(e) => updateSetting("who_upload", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="all">All Users</option>
                   <option value="admin">Admin Only</option>
@@ -286,7 +286,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                   placeholder=""
                   value={config["yt_api"] ?? ""}
                   onChange={(e) => updateSetting("yt_api", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] block">
                   Your YouTube API key
@@ -302,7 +302,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                   type="text"
                   value={config["rapid_api"] ?? ""}
                   onChange={(e) => updateSetting("rapid_api", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] block">
                   The API key from RapidAPI used to import YouTube shorts and TikTok videos.
@@ -363,7 +363,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                     type="text"
                     value={config["fb_api_id"] ?? ""}
                     onChange={(e) => updateSetting("fb_api_id", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Your Facebook Application Client ID
@@ -377,7 +377,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                     type="password"
                     value={config["fb_api_sc"] ?? ""}
                     onChange={(e) => updateSetting("fb_api_sc", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Your Facebook Application Client Secret
@@ -442,7 +442,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                     type="password"
                     value={config["twitch_api"] ?? ""}
                     onChange={(e) => updateSetting("twitch_api", e.target.value)}
-                    className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                    className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                   />
                   <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] mt-1 block">
                     Your Twitch Client Id
@@ -578,7 +578,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                   type="text"
                   value={config["ffmpeg_binary_file"] ?? "./assets/libs/ffmpeg/ffmpeg"}
                   onChange={(e) => updateSetting("ffmpeg_binary_file", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] block">
                   Example: Linux(/usr/bin/ffmpeg) or Windows(C:\\ffmpeg\bin\ffmpeg.exe)
@@ -594,7 +594,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                   type="text"
                   value={config["queue_count"] ?? "0"}
                   onChange={(e) => updateSetting("queue_count", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] focus:border-[#04abf2] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden transition-colors"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-[#8c96a3] block">
                   How many videos can be converted at the same time? Leave 0 for unlimited.
@@ -615,7 +615,7 @@ export function FfmpegClient({ initialConfig }: FfmpegClientProps) {
                 <select
                   value={config["convert_speed"] ?? "fast"}
                   onChange={(e) => updateSetting("convert_speed", e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
+                  className="w-full bg-neutral-50 dark:bg-[#181a1d] border border-neutral-300 dark:border-neutral-300 dark:border-[#2f343b] text-neutral-900 dark:text-white rounded px-3 py-2 text-xs focus:outline-hidden focus:border-[#04abf2]"
                 >
                   <option value="ultrafast">Ultrafast</option>
                   <option value="superfast">Superfast</option>
