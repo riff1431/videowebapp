@@ -1,11 +1,23 @@
 "use server";
 
 import { db } from "@/db";
-import { videos, likesDislikes, comments, subscriptions, watchLater, siteConfig, users } from "@/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import {
+  videos,
+  likesDislikes,
+  comments,
+  commentReplies,
+  subscriptions,
+  watchLater,
+  siteConfig,
+  users,
+} from "@/db/schema";
+import { eq, and, sql, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { sanitizePlainText } from "@/lib/security/sanitize";
+import { getUserUploadLimit } from "@/lib/config/upload-policy";
+import { censorText } from "@/lib/security/censor";
+import { getSiteConfig } from "@/lib/config";
 
 // ==========================================
 // 1. Video Upload Server Action
@@ -20,10 +32,38 @@ const uploadVideoSchema = z.object({
   privacy: z.coerce.number().default(0),
   isShort: z.boolean().default(false),
   tags: z.string().optional(),
+  fileSizeBytes: z.coerce.number().optional().default(0),
 });
 
-export async function uploadVideoAction(formData: FormData) {
+export async function uploadVideoAction(formData: FormData, customHeaders?: Headers) {
   try {
+    const currentUserId = await getAuthUserId(customHeaders);
+    if (!currentUserId) {
+      return { success: false, error: "Please log in to upload videos" };
+    }
+
+    // Check upload policy (Phase 1.2)
+    const policy = await getUserUploadLimit(currentUserId);
+    if (!policy.canUpload) {
+      return {
+        success: false,
+        error:
+          policy.whoCanUpload === "admin"
+            ? "Only administrators are allowed to upload videos"
+            : policy.whoCanUpload === "pro"
+            ? "Only Pro members are allowed to upload videos"
+            : "Video uploads are currently disabled",
+      };
+    }
+
+    const fileSizeBytes = Number(formData.get("fileSizeBytes") || 0);
+    if (policy.maxUploadBytes > 0 && fileSizeBytes > policy.maxUploadBytes) {
+      return {
+        success: false,
+        error: `File size exceeds the allowed maximum upload limit of ${policy.maxUploadFormatted}`,
+      };
+    }
+
     const rawData = {
       title: formData.get("title") as string,
       description: formData.get("description") as string,
@@ -33,15 +73,14 @@ export async function uploadVideoAction(formData: FormData) {
       privacy: formData.get("privacy") ? Number(formData.get("privacy")) : 0,
       isShort: formData.get("isShort") === "true",
       tags: (formData.get("tags") as string) || "",
+      fileSizeBytes,
     };
 
     const parsed = uploadVideoSchema.parse(rawData);
 
-    // Get default admin or first user as creator
-    const [user] = await db.select().from(users).limit(1);
-    if (!user) {
-      return { success: false, error: "No user found to associate with video" };
-    }
+    // Apply word censoring (Phase 1.3)
+    const censoredTitle = await censorText(parsed.title);
+    const censoredDescription = await censorText(parsed.description || "");
 
     const videoId = "pt_" + Math.random().toString(36).substring(2, 10);
 
@@ -49,9 +88,9 @@ export async function uploadVideoAction(formData: FormData) {
       .insert(videos)
       .values({
         videoId,
-        userId: user.id,
-        title: parsed.title,
-        description: parsed.description || "",
+        userId: currentUserId,
+        title: censoredTitle,
+        description: censoredDescription,
         categoryId: parsed.categoryId,
         videoLocation: parsed.videoLocation,
         tags: parsed.tags || "",
@@ -59,6 +98,7 @@ export async function uploadVideoAction(formData: FormData) {
           parsed.thumbnail ||
           "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1280&auto=format&fit=crop&q=80",
         duration: parsed.isShort ? "00:30" : "03:45",
+        size: parsed.fileSizeBytes || 0,
         privacy: parsed.privacy,
         isShort: parsed.isShort,
         videoType: "video/mp4",
@@ -88,8 +128,13 @@ const importVideoSchema = z.object({
   duration: z.string().default("00:00"),
 });
 
-export async function importVideoAction(formData: FormData) {
+export async function importVideoAction(formData: FormData, customHeaders?: Headers) {
   try {
+    const currentUserId = await getAuthUserId(customHeaders);
+    if (!currentUserId) {
+      return { success: false, error: "Please log in to import videos" };
+    }
+
     const rawData = {
       url: formData.get("url") as string,
       title: formData.get("title") as string,
@@ -101,10 +146,9 @@ export async function importVideoAction(formData: FormData) {
 
     const parsed = importVideoSchema.parse(rawData);
 
-    const [user] = await db.select().from(users).limit(1);
-    if (!user) {
-      return { success: false, error: "No user found to associate with video" };
-    }
+    // Apply censoring (Phase 1.3)
+    const censoredTitle = await censorText(parsed.title);
+    const censoredDesc = await censorText(parsed.description || "");
 
     // Determine embed type
     let videoType = "youtube";
@@ -128,9 +172,9 @@ export async function importVideoAction(formData: FormData) {
       .insert(videos)
       .values({
         videoId,
-        userId: user.id,
-        title: parsed.title,
-        description: parsed.description || "",
+        userId: currentUserId,
+        title: censoredTitle,
+        description: censoredDesc,
         categoryId: parsed.categoryId,
         videoLocation: embedUrl,
         youtubeUrl: embedUrl,
@@ -248,12 +292,15 @@ export async function addCommentAction({
       return { success: false, error: "Comment text cannot be empty or malicious HTML" };
     }
 
+    // Apply censoring (Phase 1.3)
+    const censoredComment = await censorText(cleanedText);
+
     const [newComment] = await db
       .insert(comments)
       .values({
         userId: currentUserId,
         videoId: videoDbId,
-        text: cleanedText,
+        text: censoredComment,
       })
       .returning();
 
@@ -261,6 +308,94 @@ export async function addCommentAction({
     return { success: true, comment: newComment };
   } catch (err: any) {
     return { success: false, error: err.message };
+  }
+}
+
+// ==========================================
+// 4b. Reply to Comment Server Action
+// ==========================================
+export async function addCommentReplyAction({
+  commentId,
+  videoDbId,
+  text,
+  customHeaders,
+}: {
+  commentId: number;
+  videoDbId: number;
+  text: string;
+  customHeaders?: Headers;
+}) {
+  try {
+    if (!text || text.trim().length === 0) {
+      return { success: false, error: "Reply text cannot be empty" };
+    }
+
+    const currentUserId = await getAuthUserId(customHeaders);
+    if (!currentUserId) return { success: false, error: "Please log in to reply" };
+
+    const cleanedText = sanitizePlainText(text.trim());
+    if (!cleanedText) {
+      return { success: false, error: "Reply text cannot be empty or malicious HTML" };
+    }
+
+    // Apply censoring (Phase 1.3)
+    const censoredReply = await censorText(cleanedText);
+
+    const [newReply] = await db
+      .insert(commentReplies)
+      .values({
+        commentId,
+        userId: currentUserId,
+        videoId: videoDbId,
+        text: censoredReply,
+      })
+      .returning();
+
+    revalidatePath("/watch/[videoId]", "page");
+    return { success: true, reply: newReply };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+// ==========================================
+// 4c. Load More Comments Action
+// ==========================================
+export async function loadMoreCommentsAction({
+  videoId,
+  offset,
+  limit,
+}: {
+  videoId: number;
+  offset: number;
+  limit?: number;
+}) {
+  try {
+    const config = await getSiteConfig(["comments_default_num"]);
+    const fetchLimit = limit || parseInt(config["comments_default_num"] || "20", 10) || 20;
+
+    const list = await db
+      .select({
+        id: comments.id,
+        text: comments.text,
+        createdAt: comments.createdAt,
+        user: {
+          name: users.name,
+          username: users.username,
+          avatar: users.avatar,
+          verified: users.verified,
+        },
+      })
+      .from(comments)
+      .innerJoin(users, eq(comments.userId, users.id))
+      .where(eq(comments.videoId, videoId))
+      .orderBy(desc(comments.createdAt))
+      .limit(fetchLimit)
+      .offset(offset);
+
+    return { success: true, comments: list, hasMore: list.length === fetchLimit };
+  } catch (err: any) {
+    return { success: false, comments: [], hasMore: false, error: err.message };
   }
 }
 
@@ -375,11 +510,15 @@ export async function updateVideoAction(formData: FormData) {
 
     const parsed = updateVideoSchema.parse(rawData);
 
+    // Apply censoring (Phase 1.3)
+    const censoredTitle = await censorText(parsed.title);
+    const censoredDescription = await censorText(parsed.description || "");
+
     await db
       .update(videos)
       .set({
-        title: parsed.title,
-        description: parsed.description || "",
+        title: censoredTitle,
+        description: censoredDescription,
         categoryId: parsed.categoryId,
         privacy: parsed.privacy,
         ...(parsed.thumbnail ? { thumbnail: parsed.thumbnail } : {}),
@@ -443,5 +582,3 @@ export async function deleteCommentAction(commentId: number) {
     return { success: false, error: err.message || "Failed to delete comment" };
   }
 }
-
-

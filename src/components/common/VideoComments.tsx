@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { MessageSquare, Send, CheckCircle2 } from "lucide-react";
-import { addCommentAction } from "@/modules/videos/video.actions";
+import { MessageSquare, Send, CheckCircle2, CornerDownRight, Loader2 } from "lucide-react";
+import { addCommentAction, addCommentReplyAction, loadMoreCommentsAction } from "@/modules/videos/video.actions";
 import { useTranslation } from "@/providers/language-provider";
 
-interface CommentItem {
+interface ReplyItem {
   id: number;
   text: string;
-  user: {
+  user?: {
     name: string | null;
     username: string;
     avatar: string | null;
@@ -16,16 +16,48 @@ interface CommentItem {
   };
 }
 
+interface CommentItem {
+  id: number;
+  text: string;
+  createdAt?: Date | string;
+  user: {
+    name: string | null;
+    username: string;
+    avatar: string | null;
+    verified: boolean | null;
+  };
+  replies?: ReplyItem[];
+}
+
 interface VideoCommentsProps {
   videoId: number;
   initialComments?: CommentItem[];
+  defaultPageSize?: number;
+  totalCommentsCount?: number;
 }
 
-export function VideoComments({ videoId, initialComments = [] }: VideoCommentsProps) {
+export function VideoComments({
+  videoId,
+  initialComments = [],
+  defaultPageSize = 20,
+  totalCommentsCount = 0,
+}: VideoCommentsProps) {
   const { t } = useTranslation();
   const [commentList, setCommentList] = useState<CommentItem[]>(initialComments);
   const [inputVal, setInputVal] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Replies state
+  const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
+  const [replyInputVal, setReplyInputVal] = useState("");
+  const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+
+  // Pagination / Load More state
+  const [offset, setOffset] = useState(initialComments.length);
+  const [hasMore, setHasMore] = useState(
+    totalCommentsCount > initialComments.length || initialComments.length >= defaultPageSize
+  );
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,23 +69,87 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
       text: inputVal.trim(),
     });
 
-    if (res.success) {
+    if (res.success && res.comment) {
       setCommentList([
         {
-          id: res.comment?.id || Date.now(),
-          text: inputVal.trim(),
+          id: res.comment.id,
+          text: res.comment.text,
           user: {
             name: "Current User",
             username: "you",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60",
+            avatar: "/upload/photos/d-avatar.jpg",
             verified: false,
           },
+          replies: [],
         },
         ...commentList,
       ]);
       setInputVal("");
+      setOffset((prev) => prev + 1);
     }
     setIsSubmitting(false);
+  }
+
+  async function handleReplySubmit(commentId: number, e: React.FormEvent) {
+    e.preventDefault();
+    if (!replyInputVal.trim() || isSubmittingReply) return;
+
+    setIsSubmittingReply(true);
+    const res = await addCommentReplyAction({
+      commentId,
+      videoDbId: videoId,
+      text: replyInputVal.trim(),
+    });
+
+    if (res.success && res.reply) {
+      setCommentList((prev) =>
+        prev.map((c) => {
+          if (c.id === commentId) {
+            return {
+              ...c,
+              replies: [
+                ...(c.replies || []),
+                {
+                  id: res.reply!.id,
+                  text: res.reply!.text,
+                  user: {
+                    name: "Current User",
+                    username: "you",
+                    avatar: "/upload/photos/d-avatar.jpg",
+                    verified: false,
+                  },
+                },
+              ],
+            };
+          }
+          return c;
+        })
+      );
+      setReplyInputVal("");
+      setActiveReplyId(null);
+    }
+    setIsSubmittingReply(false);
+  }
+
+  async function handleLoadMore() {
+    if (isLoadingMore) return;
+    setIsLoadingMore(true);
+
+    const res = await loadMoreCommentsAction({
+      videoId,
+      offset,
+      limit: defaultPageSize,
+    });
+
+    if (res.success && res.comments) {
+      const newItems = res.comments as CommentItem[];
+      setCommentList((prev) => [...prev, ...newItems]);
+      setOffset((prev) => prev + newItems.length);
+      setHasMore(res.hasMore ?? false);
+    } else {
+      setHasMore(false);
+    }
+    setIsLoadingMore(false);
   }
 
   return (
@@ -61,7 +157,7 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
       <div className="flex items-center gap-2">
         <MessageSquare className="w-5 h-5 text-[var(--primary)]" />
         <h3 className="text-base font-bold text-neutral-900 dark:text-white">
-          {t("comments", "Comments")} ({commentList.length})
+          {t("comments", "Comments")} ({Math.max(commentList.length, totalCommentsCount)})
         </h3>
       </div>
 
@@ -92,35 +188,105 @@ export function VideoComments({ videoId, initialComments = [] }: VideoCommentsPr
           </p>
         ) : (
           commentList.map((c) => (
-            <div key={c.id} className="flex gap-3 text-xs">
-              <div className="w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden shrink-0">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {c.user.avatar ? (
-                  <img
-                    src={c.user.avatar}
-                    alt={c.user.name || c.user.username}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center font-bold text-neutral-500">
-                    {c.user.username[0]?.toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-1.5 font-semibold text-neutral-900 dark:text-neutral-200">
-                  <span>@{c.user.username}</span>
-                  {c.user.verified && (
-                    <CheckCircle2 className="w-3 h-3 text-[var(--primary)]" />
+            <div key={c.id} className="space-y-2 text-xs">
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {c.user.avatar ? (
+                    <img
+                      src={c.user.avatar}
+                      alt={c.user.name || c.user.username}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center font-bold text-neutral-500">
+                      {c.user.username[0]?.toUpperCase()}
+                    </div>
                   )}
-                  <span className="text-[10px] text-neutral-400 font-normal">Just now</span>
                 </div>
-                <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                  {c.text}
-                </p>
+                <div className="space-y-1 flex-1">
+                  <div className="flex items-center gap-1.5 font-semibold text-neutral-900 dark:text-neutral-200">
+                    <span>@{c.user.username}</span>
+                    {c.user.verified && (
+                      <CheckCircle2 className="w-3 h-3 text-[var(--primary)]" />
+                    )}
+                    <span className="text-[10px] text-neutral-400 font-normal">
+                      {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : "Just now"}
+                    </span>
+                  </div>
+                  <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                    {c.text}
+                  </p>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveReplyId(activeReplyId === c.id ? null : c.id)}
+                      className="text-[11px] font-semibold text-neutral-500 hover:text-[var(--primary)] transition-colors cursor-pointer"
+                    >
+                      {activeReplyId === c.id ? t("cancel", "Cancel") : t("reply", "Reply")}
+                    </button>
+                  </div>
+                </div>
               </div>
+
+              {/* Reply Form */}
+              {activeReplyId === c.id && (
+                <form
+                  onSubmit={(e) => handleReplySubmit(c.id, e)}
+                  className="ml-11 flex gap-2 pt-1"
+                >
+                  <input
+                    type="text"
+                    value={replyInputVal}
+                    onChange={(e) => setReplyInputVal(e.target.value)}
+                    placeholder={t("reply_placeholder", "Write a reply...")}
+                    className="flex-1 text-xs bg-neutral-50 dark:bg-neutral-800 border border-[var(--border)] rounded px-3 py-1.5 focus:outline-hidden focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmittingReply || !replyInputVal.trim()}
+                    className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] disabled:opacity-50 text-white font-medium text-xs px-3 py-1.5 rounded transition-colors shrink-0 cursor-pointer shadow-xs"
+                  >
+                    {isSubmittingReply ? "..." : t("reply", "Reply")}
+                  </button>
+                </form>
+              )}
+
+              {/* Nested Replies List */}
+              {c.replies && c.replies.length > 0 && (
+                <div className="ml-11 space-y-2 pt-1 border-l-2 border-neutral-100 dark:border-neutral-800 pl-3">
+                  {c.replies.map((r) => (
+                    <div key={r.id} className="flex gap-2">
+                      <CornerDownRight className="w-3.5 h-3.5 text-neutral-400 shrink-0 mt-1" />
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5 font-semibold text-neutral-900 dark:text-neutral-200">
+                          <span>@{r.user?.username || "you"}</span>
+                        </div>
+                        <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                          {r.text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))
+        )}
+
+        {/* Load More Button */}
+        {hasMore && (
+          <div className="pt-3 text-center">
+            <button
+              type="button"
+              onClick={handleLoadMore}
+              disabled={isLoadingMore}
+              className="text-xs font-semibold text-[var(--primary)] hover:underline flex items-center justify-center gap-1.5 mx-auto py-2 px-4 rounded border border-[var(--border)] hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer disabled:opacity-50"
+            >
+              {isLoadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              <span>{isLoadingMore ? t("loading", "Loading...") : t("load_more", "Load more comments")}</span>
+            </button>
+          </div>
         )}
       </div>
     </div>

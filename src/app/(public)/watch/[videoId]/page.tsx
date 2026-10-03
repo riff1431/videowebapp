@@ -13,6 +13,8 @@ import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { getServerTranslations } from "@/lib/translations/server";
 
+import { getSiteConfig } from "@/lib/config";
+
 export interface WatchPageProps {
   params: Promise<{ videoId: string }>;
 }
@@ -26,6 +28,11 @@ export default async function WatchPage({ params }: WatchPageProps) {
   }
 
   const { t } = await getServerTranslations();
+
+  // Fetch site config for autoplay and comments default limit
+  const config = await getSiteConfig(["autoplay_system", "comments_default_num"]);
+  const autoplayEnabled = (config["autoplay_system"] ?? "on") !== "off";
+  const commentsDefaultNum = parseInt(config["comments_default_num"] || "20", 10) || 20;
 
   // Record watch history for logged-in viewer
   const session = await auth.api.getSession({
@@ -52,6 +59,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
     relatedVideos,
     [likesCount],
     [dislikesCount],
+    [totalCommentsRes],
     initialComments,
     [existingVote],
     [existingSub],
@@ -67,6 +75,10 @@ export default async function WatchPage({ params }: WatchPageProps) {
       .from(likesDislikes)
       .where(and(eq(likesDislikes.videoId, video.id), eq(likesDislikes.type, 2))),
     db
+      .select({ value: count() })
+      .from(comments)
+      .where(eq(comments.videoId, video.id)),
+    db
       .select({
         id: comments.id,
         text: comments.text,
@@ -80,7 +92,8 @@ export default async function WatchPage({ params }: WatchPageProps) {
       .from(comments)
       .innerJoin(users, eq(comments.userId, users.id))
       .where(eq(comments.videoId, video.id))
-      .orderBy(desc(comments.createdAt)),
+      .orderBy(desc(comments.createdAt))
+      .limit(commentsDefaultNum),
     viewerId
       ? db
           .select({ type: likesDislikes.type })
@@ -122,7 +135,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
               src={video.videoLocation}
               poster={video.thumbnail}
               controls
-              autoPlay
+              autoPlay={autoplayEnabled}
               playsInline
               className="w-full h-full object-contain"
             >
@@ -184,6 +197,8 @@ export default async function WatchPage({ params }: WatchPageProps) {
         <VideoComments
           videoId={video.id}
           initialComments={initialComments as any}
+          defaultPageSize={commentsDefaultNum}
+          totalCommentsCount={totalCommentsRes?.value || 0}
         />
       </div>
 
