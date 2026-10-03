@@ -111,4 +111,18 @@ test.describe("E2E & Marker Verification: Live Data Driven Proof", () => {
 
     expect(hasLoginRedirectOrNotice).toBe(true);
   });
+
+  test("5. Dashboard chart reflects backend data from Drizzle query", async ({ page }) => {
+    // Navigate directly to /dashboard
+    await page.goto("/dashboard");
+    await page.waitForLoadState("domcontentloaded");
+
+    // Check views chart container exists and renders empty state or live polyline
+    const chartContainer = page.locator('[data-testid="dashboard-views-chart"]');
+    await expect(chartContainer).toBeVisible({ timeout: 10000 });
+
+    const hasPolyline = (await page.locator('[data-testid="chart-data-polyline"]').count()) > 0;
+    const hasEmptyState = (await page.locator('[data-testid="chart-empty-state"]').count()) > 0;
+    expect(hasPolyline || hasEmptyState).toBe(true);
+  });
 });

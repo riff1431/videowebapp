@@ -80,11 +80,17 @@ export interface DashboardAnalytics {
   monthEarnings: number;
 }
 
+export interface DashboardChartPoint {
+  hourLabel: string;
+  views: number;
+}
+
 interface DashboardClientProps {
   analytics: DashboardAnalytics;
   videos: DashboardVideo[];
   movies: DashboardVideo[];
   commentsList: DashboardComment[];
+  chartData?: DashboardChartPoint[];
   initialTab?: string;
 }
 
@@ -93,6 +99,7 @@ export function DashboardClient({
   videos: initialVideos,
   movies: initialMovies,
   commentsList: initialComments,
+  chartData = [],
   initialTab = "dashboard",
 }: DashboardClientProps) {
   const router = useRouter();
@@ -641,24 +648,65 @@ export function DashboardClient({
                 </div>
 
                 {/* SVG Line Chart */}
-                <div className="h-44 sm:h-52 w-full relative flex flex-col justify-end">
-                  {/* Horizontal gridline */}
+                <div data-testid="dashboard-views-chart" className="h-44 sm:h-52 w-full relative flex flex-col justify-end">
+                  {/* Horizontal gridlines */}
                   <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
                     <div className="border-b border-neutral-400 w-full" />
                     <div className="border-b border-neutral-400 w-full" />
                     <div className="border-b border-neutral-400 w-full" />
                   </div>
 
-                  <svg className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                    <line
-                      x1="0"
-                      y1="75%"
-                      x2="100%"
-                      y2="75%"
-                      stroke="#8bc34a"
-                      strokeWidth="2"
-                    />
-                  </svg>
+                  {(() => {
+                    const totalViews = chartData.reduce((acc, p) => acc + (p.views || 0), 0);
+                    const maxVal = Math.max(...chartData.map((p) => p.views || 0), 5);
+                    const numPoints = chartData.length > 0 ? chartData.length : 24;
+
+                    if (totalViews === 0) {
+                      return (
+                        <div data-testid="chart-empty-state" className="h-full w-full flex flex-col items-center justify-center text-neutral-400 text-xs">
+                          <p>No video views recorded for this timeframe yet.</p>
+                        </div>
+                      );
+                    }
+
+                    const points = chartData.map((p, idx) => {
+                      const x = (idx / (numPoints - 1)) * 100;
+                      const y = 90 - ((p.views || 0) / maxVal) * 80;
+                      return `${x},${y}`;
+                    }).join(" ");
+
+                    return (
+                      <svg
+                        data-testid="chart-data-polyline"
+                        viewBox="0 0 100 100"
+                        className="w-full h-full overflow-visible"
+                        preserveAspectRatio="none"
+                      >
+                        <polyline
+                          fill="none"
+                          stroke="#04abf2"
+                          strokeWidth="2.5"
+                          points={points}
+                        />
+                        {chartData.map((p, idx) => {
+                          if (!p.views) return null;
+                          const x = (idx / (numPoints - 1)) * 100;
+                          const y = 90 - ((p.views || 0) / maxVal) * 80;
+                          return (
+                            <circle
+                              key={idx}
+                              cx={x}
+                              cy={y}
+                              r="2.5"
+                              fill="#04abf2"
+                              stroke="#ffffff"
+                              strokeWidth="1"
+                            />
+                          );
+                        })}
+                      </svg>
+                    );
+                  })()}
                 </div>
 
                 {/* X Axis Labels */}
@@ -672,8 +720,8 @@ export function DashboardClient({
 
                 {/* Legend */}
                 <div className="flex items-center justify-center gap-2 mt-8 text-xs text-neutral-600 dark:text-neutral-300">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#8bc34a]" />
-                  <span>Subscribers</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#04abf2]" />
+                  <span>Video Views (Hourly)</span>
                 </div>
               </div>
             </div>
