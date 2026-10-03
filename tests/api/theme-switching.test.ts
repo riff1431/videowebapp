@@ -35,7 +35,7 @@ describe("Phase 1.8: Themes System", () => {
     }
   });
 
-  it("persists and reads active theme via getSiteConfig and getThemesAction", async () => {
+  it("persists and reads active theme via getSiteConfig and getPublicDesignSettingsAction", async () => {
     // Set theme directly in DB
     await db
       .insert(siteConfig)
@@ -45,8 +45,9 @@ describe("Phase 1.8: Themes System", () => {
     const config = await getSiteConfig(["theme"]);
     expect(config["theme"]).toBe("default");
 
-    // Also verify getSiteDesignSettingsAction returns it
-    const designRes = await getSiteDesignSettingsAction();
+    // Also verify public design settings action returns it
+    const { getPublicDesignSettingsAction } = await import("@/modules/videos/design-public.actions");
+    const designRes = await getPublicDesignSettingsAction();
     expect(designRes.success).toBe(true);
     expect(designRes.data?.theme).toBe("default");
   });
