@@ -17,9 +17,8 @@ import {
 } from "lucide-react";
 
 export default function ManageThemesPage() {
-  const [activeTheme, setActiveTheme] = useState("default");
+  const [activeTheme, setActiveTheme] = useState("youplay");
   const [themes, setThemes] = useState<any[]>([]);
-  const [thirdPartyThemes, setThirdPartyThemes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activatingKey, setActivatingKey] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -30,7 +29,6 @@ export default function ManageThemesPage() {
     if (res.success) {
       setActiveTheme(res.activeTheme);
       setThemes(res.themes);
-      setThirdPartyThemes(res.thirdPartyThemes);
     }
     setLoading(false);
   };
@@ -93,7 +91,7 @@ export default function ManageThemesPage() {
         </div>
       )}
 
-      {/* Built-in System Themes (Default, YouPlay) */}
+      {/* Installed & Registered Themes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {themes.map((theme) => {
           const isCurrent = activeTheme.toLowerCase() === theme.key.toLowerCase();
@@ -105,13 +103,20 @@ export default function ManageThemesPage() {
               className="bg-white dark:bg-[#22252a] rounded-lg shadow-sm border border-neutral-200 dark:border-[#292d33] p-6 flex flex-col justify-between space-y-4"
             >
               <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-base font-bold text-neutral-900 dark:text-white">
-                    {theme.name}
-                  </h3>
-                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-[#e91e63] text-white rounded">
-                    v{theme.version}
-                  </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-bold text-neutral-900 dark:text-white">
+                      {theme.name}
+                    </h3>
+                    <span className="px-2 py-0.5 text-[11px] font-semibold bg-[#e91e63] text-white rounded">
+                      v{theme.version}
+                    </span>
+                  </div>
+                  {isCurrent && (
+                    <span className="px-2.5 py-0.5 text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded">
+                      Active
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 mt-2">
@@ -126,9 +131,42 @@ export default function ManageThemesPage() {
                     {theme.author}
                   </a>
                 </div>
+
+                {theme.description && (
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-2">
+                    {theme.description}
+                  </p>
+                )}
+
+                {/* Route Coverage Report */}
+                <div className="mt-4 p-3 bg-neutral-50 dark:bg-[#1a1c20] rounded border border-neutral-200/60 dark:border-neutral-800 text-xs space-y-2">
+                  <div className="flex items-center justify-between font-medium text-neutral-700 dark:text-neutral-300">
+                    <span>Route Coverage:</span>
+                    <span>
+                      {theme.requiredCoverage?.implemented || 0} / {theme.requiredCoverage?.total || 10} core routes ({theme.implementedCount} total)
+                    </span>
+                  </div>
+
+                  {theme.missingAuth && (
+                    <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>Warning: Missing dedicated auth routes (will fall back to YouPlay).</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex items-center justify-between gap-3 border-t border-neutral-100 dark:border-neutral-800">
+                <a
+                  href={`/?preview_theme=${theme.key}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-200 text-xs font-semibold rounded transition flex items-center gap-1.5"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Preview</span>
+                </a>
+
                 {isCurrent ? (
                   <button
                     type="button"
@@ -153,51 +191,6 @@ export default function ManageThemesPage() {
             </div>
           );
         })}
-      </div>
-
-      <hr className="border-neutral-200 dark:border-[#292d33] my-6" />
-
-      {/* 3rd Party Themes Section */}
-      <div className="space-y-4">
-        <h4 className="text-base font-bold text-neutral-900 dark:text-white">3rd Party Themes</h4>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {thirdPartyThemes.map((theme, idx) => (
-            <div
-              key={idx}
-              className="bg-white dark:bg-[#22252a] rounded-lg shadow-sm border border-neutral-200 dark:border-[#292d33] p-6 flex items-center gap-4"
-            >
-              <div className="w-20 h-20 rounded-md overflow-hidden bg-neutral-100 dark:bg-[#1c1e22] shrink-0 border border-neutral-200 dark:border-[#292d33] flex items-center justify-center p-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={theme.logo}
-                  alt={theme.name}
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
-              </div>
-
-              <div className="flex-1 space-y-3">
-                <h5 className="text-sm font-bold text-neutral-900 dark:text-white leading-snug">
-                  {theme.name}
-                </h5>
-                <div>
-                  <a
-                    href={theme.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#00adef] hover:bg-[#0096d6] text-white text-xs font-semibold rounded transition shadow-sm"
-                  >
-                    <span>Get Theme</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
