@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getVideoByVideoId, getFeaturedVideos } from "@/services/video.service";
+import { VideoPlayer } from "@/app/themes/default/components/media/VideoPlayer";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { VideoComments } from "@/components/common/VideoComments";
 import { VideoActionButtons } from "@/components/common/VideoActionButtons";
@@ -138,27 +139,18 @@ export default async function WatchPage({ params }: WatchPageProps) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Video & Details */}
       <div className="lg:col-span-2 space-y-4">
-        {/* HTML5 / Embedded Player */}
+        {/* ReactPlayer / Video Player */}
         <div className="relative aspect-video w-full bg-black rounded-xl overflow-hidden shadow-lg border border-[var(--card-border)]">
-          {video.videoType === "youtube" && video.youtubeUrl ? (
-            <iframe
-              src={video.youtubeUrl}
-              title={video.title}
-              className="w-full h-full"
-              allowFullScreen
-            />
-          ) : (
-            <video
-              src={video.videoLocation}
-              poster={video.thumbnail}
-              controls
-              autoPlay={autoplayEnabled}
-              playsInline
-              className="w-full h-full object-contain"
-            >
-              Your browser does not support the video tag.
-            </video>
-          )}
+          <VideoPlayer
+            url={
+              video.videoType === "youtube" && video.youtubeUrl
+                ? video.youtubeUrl
+                : video.videoLocation
+            }
+            poster={video.thumbnail}
+            autoPlay={autoplayEnabled}
+            title={video.title}
+          />
         </div>
 
         {/* Video Title & Actions */}
