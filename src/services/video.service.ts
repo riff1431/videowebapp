@@ -9,9 +9,9 @@ export interface VideoQueryOptions {
   query?: string;
 }
 
-export async function getFeaturedVideos(limit = 12) {
+export async function getFeaturedVideos(limit = 12, offset = 0, categoryId?: string | null) {
   try {
-    return await db
+    let query = db
       .select({
         id: videos.id,
         videoId: videos.videoId,
@@ -32,9 +32,20 @@ export async function getFeaturedVideos(limit = 12) {
         },
       })
       .from(videos)
-      .innerJoin(users, eq(videos.userId, users.id))
+      .innerJoin(users, eq(videos.userId, users.id));
+
+    if (categoryId) {
+      return await query
+        .where(eq(videos.categoryId, categoryId))
+        .orderBy(desc(videos.createdAt))
+        .limit(limit)
+        .offset(offset);
+    }
+
+    return await query
       .orderBy(desc(videos.createdAt))
-      .limit(limit);
+      .limit(limit)
+      .offset(offset);
   } catch (error) {
     console.error("Failed to fetch featured videos:", error);
     return [];

@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { ShortCard } from "@/app/themes/default/components/media/ShortCard";
 import { SectionHeader } from "@/app/themes/default/components/patterns/SectionHeader";
 import { DataState } from "@/app/themes/default/components/patterns/DataState";
 import { useTranslation } from "@/providers/language-provider";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { fetchMoreFeaturedVideosAction } from "@/modules/videos/video.actions";
 
 interface Video {
   id: number;
@@ -42,21 +43,78 @@ interface DefaultHomeClientProps {
 }
 
 export function DefaultHomeClient({
-  featuredVideos,
+  featuredVideos: initialVideos,
   categoriesList,
   userName,
 }: DefaultHomeClientProps) {
   const { t } = useTranslation();
   const [selectedCategoryKey, setSelectedCategoryKey] = useState<string | null>(null);
 
-  const filteredVideos = useMemo(() => {
-    if (selectedCategoryKey === null) return featuredVideos;
-    return featuredVideos.filter((v) => v.categoryId === selectedCategoryKey);
-  }, [featuredVideos, selectedCategoryKey]);
+  // Dynamic videos list with infinite scroll support
+  const [videoList, setVideoList] = useState<Video[]>(initialVideos);
+  const [hasMore, setHasMore] = useState(initialVideos.length >= 14);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Derive shorts (e.g. videos with duration under 60s or sample rail slice)
+  // Sync if initialVideos change
+  useEffect(() => {
+    setVideoList(initialVideos);
+    setHasMore(initialVideos.length >= 14);
+  }, [initialVideos]);
+
+  // Load more function on scroll
+  const handleLoadMore = useCallback(async () => {
+    if (isLoadingMore || !hasMore) return;
+    setIsLoadingMore(true);
+    try {
+      const res = await fetchMoreFeaturedVideosAction({
+        offset: videoList.length,
+        limit: 14,
+        categoryId: selectedCategoryKey,
+      });
+      if (res.success && res.videos) {
+        setVideoList((prev) => {
+          const existingIds = new Set(prev.map((v) => v.id));
+          const newVideos = (res.videos as Video[]).filter((v) => !existingIds.has(v.id));
+          return [...prev, ...newVideos];
+        });
+        setHasMore(res.hasMore);
+      } else {
+        setHasMore(false);
+      }
+    } catch {
+      setHasMore(false);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [isLoadingMore, hasMore, videoList.length, selectedCategoryKey]);
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const sentinel = loadMoreRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+          handleLoadMore();
+        }
+      },
+      { rootMargin: "400px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [handleLoadMore, hasMore, isLoadingMore]);
+
+  const filteredVideos = useMemo(() => {
+    if (selectedCategoryKey === null) return videoList;
+    return videoList.filter((v) => v.categoryId === selectedCategoryKey);
+  }, [videoList, selectedCategoryKey]);
+
+  // Derive shorts
   const allShorts = useMemo(() => {
-    return featuredVideos.map((v) => ({
+    return videoList.map((v) => ({
       id: v.id,
       videoId: v.videoId,
       title: v.title,
@@ -64,13 +122,14 @@ export function DefaultHomeClient({
       views: v.views,
       createdAt: v.createdAt,
     }));
-  }, [featuredVideos]);
+  }, [videoList]);
 
-  // Split filtered videos into chunks of 8 (2 rows in 4-column layout)
+  // Split filtered videos into chunks of 14 (2 rows in 7-column 4K layout, or 2+ rows on 6-col)
   const videoChunks = useMemo(() => {
     const chunks: Video[][] = [];
-    for (let i = 0; i < filteredVideos.length; i += 8) {
-      chunks.push(filteredVideos.slice(i, i + 8));
+    const chunkSize = 14;
+    for (let i = 0; i < filteredVideos.length; i += chunkSize) {
+      chunks.push(filteredVideos.slice(i, i + chunkSize));
     }
     return chunks;
   }, [filteredVideos]);
@@ -121,9 +180,9 @@ export function DefaultHomeClient({
                 type="button"
                 onClick={() => handleScroll("left")}
                 aria-label="Previous categories"
-                className="w-8 h-8 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="w-8 h-8 2xl:w-10 2xl:h-10 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4 2xl:w-5 2xl:h-5" />
               </button>
             </div>
           )}
@@ -136,11 +195,10 @@ export function DefaultHomeClient({
             <button
               type="button"
               onClick={() => setSelectedCategoryKey(null)}
-              className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${
-                selectedCategoryKey === null
-                  ? "bg-[var(--default-brand-red)] text-white shadow-xs"
-                  : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-              }`}
+              className={`px-4 2xl:px-5 py-1.5 2xl:py-2 text-xs 2xl:text-sm font-semibold rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === null
+                ? "bg-[var(--default-brand-red)] text-white shadow-xs"
+                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+                }`}
             >
               {t("all", "All")}
             </button>
@@ -150,11 +208,10 @@ export function DefaultHomeClient({
                 key={cat.id}
                 type="button"
                 onClick={() => setSelectedCategoryKey(cat.key)}
-                className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${
-                  selectedCategoryKey === cat.key
-                    ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
-                    : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-                }`}
+                className={`px-4 2xl:px-5 py-1.5 2xl:py-2 text-xs 2xl:text-sm font-medium rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === cat.key
+                  ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
+                  : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+                  }`}
               >
                 {cat.name}
               </button>
@@ -168,9 +225,9 @@ export function DefaultHomeClient({
                 type="button"
                 onClick={() => handleScroll("right")}
                 aria-label="Next categories"
-                className="w-8 h-8 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="w-8 h-8 2xl:w-10 2xl:h-10 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 2xl:w-5 2xl:h-5" />
               </button>
             </div>
           )}
@@ -212,7 +269,7 @@ export function DefaultHomeClient({
                   />
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  3xl:grid-cols-6  gap-4 2xl:gap-5">
                   {chunk.map((video) => (
                     <VideoCard key={video.id} video={video} />
                   ))}
@@ -228,7 +285,7 @@ export function DefaultHomeClient({
                     viewMoreLabel={t("view_more", "View More >")}
                   />
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 overflow-x-auto pb-2 scrollbar-none">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-9 gap-3 2xl:gap-4 overflow-x-auto pb-2 scrollbar-none">
                     {shortsSlice.map((short, shortIdx) => (
                       <ShortCard
                         key={`short-${chunkIndex}-${short.id || shortIdx}`}
@@ -242,6 +299,16 @@ export function DefaultHomeClient({
           );
         })
       )}
+
+      {/* Infinite Scroll Sentinel & Loading Indicator */}
+      <div ref={loadMoreRef} className="py-6 flex items-center justify-center min-h-[50px]">
+        {isLoadingMore && (
+          <div className="flex items-center gap-2.5 text-sm text-[var(--default-muted)] font-medium">
+            <Loader2 className="w-5 h-5 animate-spin text-[var(--default-brand-red)]" />
+            <span>{t("loading_more", "Loading more videos...")}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

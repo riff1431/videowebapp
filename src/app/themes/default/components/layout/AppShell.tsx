@@ -73,20 +73,20 @@ export function AppShell({ children }: AppShellProps) {
       className={`w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col transition-colors ${
         isShortsRoute
           ? "h-screen max-h-screen overflow-hidden p-0 sm:p-4 lg:p-6"
-          : "min-h-screen p-2 sm:p-4 lg:p-6"
+          : "min-h-screen p-2 sm:p-4 lg:p-6 2xl:p-8"
       }`}
     >
       {/* Main Container Layout */}
-      <div className={`flex-1 flex gap-4 lg:gap-6 w-full mx-auto min-h-0 ${isShortsRoute ? "h-full overflow-hidden" : ""}`}>
+      <div className={`flex-1 flex gap-4 lg:gap-6 2xl:gap-8 w-full mx-auto min-h-0 ${isShortsRoute ? "h-full overflow-hidden" : ""}`}>
         {/* Desktop Left Sidebar: sits directly on the canvas outside the floating panel */}
         <aside
           className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${
-            isCollapsed ? "w-16" : "w-56"
+            isCollapsed ? "w-16 2xl:w-20" : "w-56 2xl:w-64 3xl:w-72"
           }`}
         >
           <div className="sticky top-6 flex flex-col h-[calc(100vh-3rem)]">
             {/* Sidebar Header: Hamburger Toggle + Logo */}
-            <div className={`px-2 py-2 mb-2 flex items-center ${isCollapsed ? "justify-center" : "gap-3 px-3"}`}>
+            <div className={`px-2 py-2 mb-2 flex items-center ${isCollapsed ? "justify-center" : "gap-3 px-3 2xl:gap-4 2xl:px-4"}`}>
               {/* Hamburger Toggle Button on Sidebar */}
               <button
                 type="button"
@@ -104,7 +104,7 @@ export function AppShell({ children }: AppShellProps) {
                   <img
                     src="/logo.png"
                     alt="PlayTube"
-                    className="h-8 w-auto dark:hidden shrink-0"
+                    className="h-8 2xl:h-9 3xl:h-10 w-auto dark:hidden shrink-0"
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = "none";
                     }}
@@ -113,7 +113,7 @@ export function AppShell({ children }: AppShellProps) {
                   <img
                     src="/logo-light.png"
                     alt="PlayTube"
-                    className="h-8 w-auto hidden dark:block shrink-0"
+                    className="h-8 2xl:h-9 3xl:h-10 w-auto hidden dark:block shrink-0"
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = "none";
                     }}
@@ -179,7 +179,7 @@ export function AppShell({ children }: AppShellProps) {
           className={`site-floating-panel flex-1 min-w-0 flex flex-col transition-shadow ${
             isShortsRoute
               ? "rounded-none sm:rounded-[32px] p-0 h-full overflow-hidden"
-              : "rounded-[32px] p-4 sm:p-6 lg:p-8"
+              : "rounded-[32px] 2xl:rounded-[36px] p-4 sm:p-6 lg:p-8 2xl:p-10"
           }`}
         >
           <PanelHeader user={user} onToggleSidebar={handleToggleSidebar} />

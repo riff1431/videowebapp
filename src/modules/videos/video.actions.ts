@@ -777,4 +777,31 @@ export async function recordShortViewAction(videoId: string) {
   }
 }
 
+// ==========================================
+// 11. Fetch More Featured Videos Action (Infinite Scroll)
+// ==========================================
+export async function fetchMoreFeaturedVideosAction({
+  offset,
+  limit = 14,
+  categoryId,
+}: {
+  offset: number;
+  limit?: number;
+  categoryId?: string | null;
+}) {
+  try {
+    const { getFeaturedVideos } = await import("@/services/video.service");
+    const safeLimit = Math.min(Math.max(1, limit), 50);
+    const safeOffset = Math.max(0, offset);
+    const videosList = await getFeaturedVideos(safeLimit, safeOffset, categoryId);
+    return {
+      success: true,
+      videos: videosList,
+      hasMore: videosList.length === safeLimit,
+    };
+  } catch (err: any) {
+    return { success: false, videos: [], hasMore: false, error: err.message };
+  }
+}
+
 

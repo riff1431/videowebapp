@@ -41,12 +41,12 @@ export function ShortCard({ short }: { short: ShortItem }) {
         <Link href={`/shorts?v=${short.videoId}`}>
           <h3
             title={short.title}
-            className="line-clamp-2 text-xs font-semibold text-[var(--default-text)] leading-snug group-hover:text-[var(--default-brand-red)] transition-colors"
+            className="line-clamp-2 text-xs 2xl:text-sm font-semibold text-[var(--default-text)] leading-snug group-hover:text-[var(--default-brand-red)] transition-colors"
           >
             {short.title}
           </h3>
         </Link>
-        <p className="mt-1 text-[11px] text-[var(--default-muted)]">
+        <p className="mt-1 text-[11px] 2xl:text-xs text-[var(--default-muted)]">
           {short.views?.toLocaleString() || 0} views
         </p>
       </div>

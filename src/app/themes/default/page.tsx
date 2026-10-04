@@ -8,7 +8,7 @@ export const revalidate = 60; // ISR cache
 
 export default async function HomePage() {
   const [featuredVideos, categoriesList, session] = await Promise.all([
-    getFeaturedVideos(12),
+    getFeaturedVideos(28),
     getCategories(),
     auth.api.getSession({
       headers: await headers(),

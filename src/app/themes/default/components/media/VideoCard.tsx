@@ -82,13 +82,13 @@ export function VideoCard(props: VideoCardProps) {
       </Link>
 
       {/* 2. Metadata details */}
-      <div className="mt-3 flex items-start gap-3 px-1">
+      <div className="mt-3 2xl:mt-3.5 flex items-start gap-3 2xl:gap-3.5 px-1">
         <Link href={`/@${channelInfo.username}`} className="shrink-0 pt-0.5">
           <Avatar
             src={avatarUrl}
             alt={channelName}
             size="md"
-            className="ring-1 ring-black/5 dark:ring-white/10"
+            className="2xl:w-10 2xl:h-10 ring-1 ring-black/5 dark:ring-white/10"
           />
         </Link>
 
@@ -96,7 +96,7 @@ export function VideoCard(props: VideoCardProps) {
           <Link href={`/watch/${videoId}`} className="block">
             <h3
               title={title}
-              className="line-clamp-2 text-xs sm:text-sm font-semibold text-[var(--default-text)] leading-snug group-hover:text-[var(--default-brand-red)] transition-colors"
+              className="line-clamp-2 text-xs sm:text-sm 2xl:text-base font-semibold text-[var(--default-text)] leading-snug group-hover:text-[var(--default-brand-red)] transition-colors"
             >
               {title}
             </h3>
@@ -104,15 +104,15 @@ export function VideoCard(props: VideoCardProps) {
 
           <Link
             href={`/@${channelInfo.username}`}
-            className="mt-1 flex items-center gap-1 text-[11px] font-medium text-[var(--default-muted)] hover:text-[var(--default-text)] transition-colors"
+            className="mt-1 flex items-center gap-1 text-[11px] 2xl:text-xs font-medium text-[var(--default-muted)] hover:text-[var(--default-text)] transition-colors"
           >
             <span className="truncate">{channelName}</span>
             {channelInfo.verified && (
-              <CheckCircle2 className="w-3 h-3 text-blue-500 shrink-0" />
+              <CheckCircle2 className="w-3 h-3 2xl:w-3.5 2xl:h-3.5 text-blue-500 shrink-0" />
             )}
           </Link>
 
-          <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[var(--default-muted)]">
+          <div className="mt-0.5 flex items-center gap-1.5 text-[11px] 2xl:text-xs text-[var(--default-muted)]">
             <span>
               {(views ?? 0).toLocaleString()} {t("views", "views")}
             </span>

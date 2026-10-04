@@ -90,11 +90,11 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
     );
   }
 
-  // Expanded Mode: Full navigation sidebar (w-56)
+  // Expanded Mode: Full navigation sidebar (w-56, w-64 on 2xl, w-72 on 3xl)
   return (
-    <nav className="w-56 shrink-0 py-4 px-2 space-y-6 text-xs select-none">
+    <nav className="w-56 2xl:w-64 3xl:w-72 shrink-0 py-4 px-2 2xl:px-3 space-y-6 2xl:space-y-8 text-xs 2xl:text-sm select-none">
       {/* 1. Primary Nav Group */}
-      <div className="space-y-1">
+      <div className="space-y-1 2xl:space-y-1.5">
         {primaryLinks.map((item) => {
           const Icon = item.icon;
           const active = isCurrent(item.href);
@@ -103,12 +103,12 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
               key={item.href}
               href={item.href}
               data-active={active ? "true" : undefined}
-              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${active
-                ? "active-nav-pill"
+              className={`relative flex items-center gap-3 2xl:gap-3.5 px-4 2xl:px-5 py-2.5 2xl:py-3 rounded-full transition-all ${active
+                ? "active-nav-pill font-semibold"
                 : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
                 }`}
             >
-              <Icon className="w-4 h-4 shrink-0" />
+              <Icon className="w-4 h-4 2xl:w-5 2xl:h-5 shrink-0" />
               <span className="font-medium truncate">{item.label}</span>
             </Link>
           );
@@ -116,7 +116,7 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
       </div>
 
       {/* 2. Discovery Nav Group */}
-      <div className="pt-4 border-t border-[var(--border)]/40 space-y-1">
+      <div className="pt-4 2xl:pt-6 border-t border-[var(--border)]/40 space-y-1 2xl:space-y-1.5">
         {discoveryLinks.map((item) => {
           const Icon = item.icon;
           const active = isCurrent(item.href);
@@ -125,12 +125,12 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
               key={item.href}
               href={item.href}
               data-active={active ? "true" : undefined}
-              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${active
-                ? "active-nav-pill"
+              className={`relative flex items-center gap-3 2xl:gap-3.5 px-4 2xl:px-5 py-2.5 2xl:py-3 rounded-full transition-all ${active
+                ? "active-nav-pill font-semibold"
                 : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
                 }`}
             >
-              <Icon className="w-4 h-4 shrink-0" />
+              <Icon className="w-4 h-4 2xl:w-5 2xl:h-5 shrink-0" />
               <span className="font-medium truncate">{item.label}</span>
             </Link>
           );
@@ -138,25 +138,25 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
       </div>
 
       {/* 3. Explore More / Help */}
-      <div className="pt-4 border-t border-[var(--border)]/40 space-y-1">
-        <p className="px-4 text-[10px] font-bold text-[var(--default-muted)] uppercase tracking-wider mb-1">
+      <div className="pt-4 2xl:pt-6 border-t border-[var(--border)]/40 space-y-1 2xl:space-y-1.5">
+        <p className="px-4 2xl:px-5 text-[10px] 2xl:text-xs font-bold text-[var(--default-muted)] uppercase tracking-wider mb-1">
           {t("explore_more", "EXPLORE MORE")}
         </p>
         <Link
           href="/contact-us"
           data-active={isCurrent("/contact-us") ? "true" : undefined}
-          className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${isCurrent("/contact-us")
-            ? "active-nav-pill"
+          className={`relative flex items-center gap-3 2xl:gap-3.5 px-4 2xl:px-5 py-2.5 2xl:py-3 rounded-full transition-all ${isCurrent("/contact-us")
+            ? "active-nav-pill font-semibold"
             : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
             }`}
         >
-          <HelpCircle className="w-4 h-4 shrink-0" />
+          <HelpCircle className="w-4 h-4 2xl:w-5 2xl:h-5 shrink-0" />
           <span className="font-medium">{t("help", "Help")}</span>
         </Link>
       </div>
 
       {/* 4. Footer Links & Dynamic Copyright */}
-      <div className="pt-4 border-t border-[var(--border)]/40 px-3 text-[11px] text-[var(--default-muted)] space-y-2">
+      <div className="pt-4 2xl:pt-6 border-t border-[var(--border)]/40 px-3 2xl:px-4 text-[11px] 2xl:text-xs text-[var(--default-muted)] space-y-2">
         <div className="flex flex-wrap gap-x-2 gap-y-1">
           <Link href="/terms/refund" className="hover:underline">{t("refund", "Refund Policy")}</Link>
           <span>•</span>
@@ -174,7 +174,7 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
           <span>•</span>
           <Link href="/language" className="hover:underline">{t("language", "Language")}</Link>
         </div>
-        <p className="text-[10px] text-[var(--default-muted)] pt-2">
+        <p className="text-[10px] 2xl:text-[11px] text-[var(--default-muted)] pt-2">
           {t("copyright", "Copyright © 2026 PlayTube. All rights reserved.")}
         </p>
       </div>

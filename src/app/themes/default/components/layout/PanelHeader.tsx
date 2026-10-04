@@ -148,28 +148,28 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
 
         {/* Desktop Title / Greeting (Hidden on mobile) */}
         {titleContent && (
-          <h1 className="hidden lg:block text-base sm:text-xl font-bold text-[var(--default-text)] tracking-tight truncate">
+          <h1 className="hidden lg:block text-base sm:text-xl 2xl:text-2xl 3xl:text-3xl font-bold text-[var(--default-text)] tracking-tight truncate">
             {titleContent}
           </h1>
         )}
       </div>
 
       {/* 2. Center/Right: Pill Search Bar */}
-      <form onSubmit={handleSearch} className="flex-1 max-w-md hidden sm:block">
-        <div className="relative w-full flex items-center bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full h-10 px-4 transition-all focus-within:ring-2 focus-within:ring-[var(--default-brand-red)]/20">
-          <Search className="w-4 h-4 text-[var(--default-muted)] mr-2.5 shrink-0" />
+      <form onSubmit={handleSearch} className="flex-1 max-w-md 2xl:max-w-xl 3xl:max-w-2xl hidden sm:block">
+        <div className="relative w-full flex items-center bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full h-10 2xl:h-12 3xl:h-13 px-4 2xl:px-5 transition-all focus-within:ring-2 focus-within:ring-[var(--default-brand-red)]/20">
+          <Search className="w-4 h-4 2xl:w-5 2xl:h-5 text-[var(--default-muted)] mr-2.5 shrink-0" />
           <input
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder={t("search_keyword", "Search for videos...")}
-            className="w-full h-full bg-transparent text-xs text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none"
+            className="w-full h-full bg-transparent text-xs 2xl:text-sm text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none"
           />
         </div>
       </form>
 
       {/* 3. Header Action Icons */}
-      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-3 2xl:gap-4 shrink-0">
         {/* Desktop Create / Upload Shortcut Dropdown (hidden on mobile, inside 3-dot overflow) */}
         <div className="relative hidden md:block">
           {user ? (
@@ -177,20 +177,20 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
               type="button"
               onClick={() => setCreateMenuOpen(!createMenuOpen)}
               title={t("upload_video", "Upload Video")}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              className="w-9 h-9 2xl:w-11 2xl:h-11 rounded-full flex items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
             >
-              <Video className="w-4 h-4" />
+              <Video className="w-4 h-4 2xl:w-5 2xl:h-5" />
             </button>
           ) : null}
 
           {createMenuOpen && user && (
-            <div className="absolute right-0 mt-2 w-48 bg-[var(--default-panel)] border border-[var(--border)] rounded-2xl shadow-xl py-1.5 z-50 text-xs">
+            <div className="absolute right-0 mt-2 w-48 2xl:w-56 bg-[var(--default-panel)] border border-[var(--border)] rounded-2xl shadow-xl py-1.5 z-50 text-xs 2xl:text-sm">
               <Link
                 href="/upload-video"
                 onClick={() => setCreateMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
-                <Video className="w-4 h-4 text-[var(--default-brand-red)]" />
+                <Video className="w-4 h-4 2xl:w-5 2xl:h-5 text-[var(--default-brand-red)]" />
                 <span>{t("upload_new_video", "Upload Video")}</span>
               </Link>
               <Link
@@ -198,7 +198,7 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
                 onClick={() => setCreateMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
-                <Layers className="w-4 h-4 text-emerald-500" />
+                <Layers className="w-4 h-4 2xl:w-5 2xl:h-5 text-emerald-500" />
                 <span>{t("import", "Import Video")}</span>
               </Link>
               <Link
@@ -206,7 +206,7 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
                 onClick={() => setCreateMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
-                <Sparkles className="w-4 h-4 text-purple-500" />
+                <Sparkles className="w-4 h-4 2xl:w-5 2xl:h-5 text-purple-500" />
                 <span>{t("shorts", "Shorts")}</span>
               </Link>
               <Link
@@ -214,7 +214,7 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
                 onClick={() => setCreateMenuOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
-                <Newspaper className="w-4 h-4 text-amber-500" />
+                <Newspaper className="w-4 h-4 2xl:w-5 2xl:h-5 text-amber-500" />
                 <span>{t("create_article", "Create Article")}</span>
               </Link>
             </div>
@@ -226,13 +226,13 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
           <button
             type="button"
             onClick={() => setLangOpen(!langOpen)}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            className="w-9 h-9 2xl:w-11 2xl:h-11 rounded-full flex items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
             title="Language"
           >
-            <Globe className="w-4 h-4" />
+            <Globe className="w-4 h-4 2xl:w-5 2xl:h-5" />
           </button>
           {langOpen && (
-            <div className="absolute right-0 mt-2 w-40 max-h-72 overflow-y-auto bg-[var(--default-panel)] border border-[var(--border)] rounded-2xl shadow-xl py-1 z-50 text-xs">
+            <div className="absolute right-0 mt-2 w-40 2xl:w-48 max-h-72 overflow-y-auto bg-[var(--default-panel)] border border-[var(--border)] rounded-2xl shadow-xl py-1 z-50 text-xs 2xl:text-sm">
               {languages.map((l) => (
                 <button
                   key={l.name}
@@ -256,14 +256,14 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
           <button
             type="button"
             onClick={toggleTheme}
-            className="hidden md:flex w-9 h-9 rounded-full items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            className="hidden md:flex w-9 h-9 2xl:w-11 2xl:h-11 rounded-full items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
             title={theme === "dark" ? t("light_mode", "Light Mode") : t("night_mode", "Dark Mode")}
             aria-label="Toggle dark/light mode"
           >
             {theme === "dark" ? (
-              <Sun className="w-4 h-4 text-amber-400" />
+              <Sun className="w-4 h-4 2xl:w-5 2xl:h-5 text-amber-400" />
             ) : (
-              <Moon className="w-4 h-4" />
+              <Moon className="w-4 h-4 2xl:w-5 2xl:h-5" />
             )}
           </button>
         )}
@@ -381,12 +381,12 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
                 src={avatarUrl}
                 alt={user.name || user.username}
                 size="md"
-                className="ring-2 ring-[var(--default-brand-red)]/20 hover:scale-105 transition-transform"
+                className="2xl:w-11 2xl:h-11 ring-2 ring-[var(--default-brand-red)]/20 hover:scale-105 transition-transform"
               />
             </button>
 
             {userMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-[var(--default-panel)] border border-[var(--border)] rounded-2xl shadow-2xl py-2 z-50 text-xs">
+              <div className="absolute right-0 mt-2 w-56 2xl:w-64 bg-[var(--default-panel)] border border-[var(--border)] rounded-2xl shadow-2xl py-2 z-50 text-xs 2xl:text-sm">
                 {/* User info banner */}
                 <div className="px-4 py-2 border-b border-[var(--border)]/60">
                   <p className="font-bold text-[var(--default-text)] truncate">
