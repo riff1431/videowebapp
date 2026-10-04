@@ -1,32 +1,74 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SidebarNav } from "./SidebarNav";
 import { PanelHeader } from "./PanelHeader";
 import { Menu, X } from "lucide-react";
 
 export interface AppShellProps {
   children: React.ReactNode;
-  user?: {
-    username: string;
-    name?: string | null;
-    avatar?: string | null;
-  } | null;
-  logoSrc?: string;
-  lightLogoSrc?: string;
 }
 
-export function AppShell({
-  children,
-  user,
-  logoSrc = "/upload/photos/d-cover.jpg",
-  lightLogoSrc,
-}: AppShellProps) {
+export function AppShell({ children }: AppShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const pathname = usePathname();
+
+  // Load session from auth endpoint without importing authClient
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/auth/get-session")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (mounted && data?.user) {
+          setUser(data.user);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Load saved sidebar collapse state
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("playtube_sidebar_collapsed");
+      if (saved !== null) {
+        setIsCollapsed(saved === "true");
+      }
+    } catch (e) {}
+  }, []);
+
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  const handleToggleSidebar = () => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setMobileMenuOpen((prev) => !prev);
+    } else {
+      setIsCollapsed((prev) => {
+        const next = !prev;
+        try {
+          localStorage.setItem("playtube_sidebar_collapsed", String(next));
+        } catch (e) {}
+        return next;
+      });
+    }
+  };
+
+
 
   return (
-    <div className="min-h-screen w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col p-2 sm:p-4 lg:p-6 transition-colors">
+    <div
+      data-theme="default"
+      className="min-h-screen w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col p-2 sm:p-4 lg:p-6 transition-colors"
+    >
       {/* Top Mobile Bar */}
       <div className="flex lg:hidden items-center justify-between p-2 mb-2">
         <Link href="/" className="flex items-center gap-2">
@@ -61,35 +103,48 @@ export function AppShell({
       {/* Main Container Layout */}
       <div className="flex-1 flex gap-4 lg:gap-6 w-full max-w-[1920px] mx-auto min-h-0">
         {/* Desktop Left Sidebar: sits directly on the canvas outside the floating panel */}
-        <aside className="hidden lg:block shrink-0">
+        <aside
+          className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${
+            isCollapsed ? "w-16" : "w-56"
+          }`}
+        >
           <div className="sticky top-6 flex flex-col h-[calc(100vh-3rem)]">
             {/* Top Logo */}
-            <div className="px-4 py-2 mb-2">
+            <div className={`px-2 py-2 mb-2 flex items-center ${isCollapsed ? "justify-center" : "px-4"}`}>
               <Link href="/" className="inline-block">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/logo.png"
-                  alt="PlayTube"
-                  className="h-8 w-auto dark:hidden"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/logo-light.png"
-                  alt="PlayTube"
-                  className="h-8 w-auto hidden dark:block"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
+                {isCollapsed ? (
+                  /* Mini Favicon / Logo Icon */
+                  <div className="w-9 h-9 rounded-xl bg-[var(--default-brand-red)] flex items-center justify-center text-white font-bold text-base shadow-xs">
+                    P
+                  </div>
+                ) : (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/logo.png"
+                      alt="PlayTube"
+                      className="h-8 w-auto dark:hidden"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/logo-light.png"
+                      alt="PlayTube"
+                      className="h-8 w-auto hidden dark:block"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  </>
+                )}
               </Link>
             </div>
 
             {/* Scrollable Nav Items */}
-            <div className="flex-1 overflow-y-auto pr-2 scrollbar-none">
-              <SidebarNav isLoggedIn={!!user} />
+            <div className="flex-1 overflow-y-auto pr-1 scrollbar-none">
+              <SidebarNav isLoggedIn={!!user} isCollapsed={isCollapsed} />
             </div>
           </div>
         </aside>
@@ -102,14 +157,14 @@ export function AppShell({
               onClick={() => setMobileMenuOpen(false)}
             />
             <div className="relative w-64 max-w-[80%] h-full bg-[var(--default-canvas)] p-4 overflow-y-auto z-10 shadow-2xl">
-              <SidebarNav isLoggedIn={!!user} />
+              <SidebarNav isLoggedIn={!!user} isCollapsed={false} />
             </div>
           </div>
         )}
 
         {/* The Signature Large Floating Panel with 32px rounded corners and soft shadow */}
         <div className="site-floating-panel flex-1 min-w-0 rounded-[32px] p-4 sm:p-6 lg:p-8 flex flex-col transition-shadow">
-          <PanelHeader user={user} onToggleSidebar={() => setMobileMenuOpen(true)} />
+          <PanelHeader user={user} onToggleSidebar={handleToggleSidebar} />
           <main className="flex-1 min-w-0">{children}</main>
         </div>
       </div>

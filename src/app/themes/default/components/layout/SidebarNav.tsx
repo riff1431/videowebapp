@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -19,9 +18,10 @@ import { useTranslation } from "@/providers/language-provider";
 
 export interface SidebarNavProps {
   isLoggedIn?: boolean;
+  isCollapsed?: boolean;
 }
 
-export function SidebarNav({ isLoggedIn = false }: SidebarNavProps) {
+export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarNavProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
 
@@ -34,9 +34,9 @@ export function SidebarNav({ isLoggedIn = false }: SidebarNavProps) {
     { href: "/", label: t("home", "Home"), icon: Video },
     ...(isLoggedIn
       ? [
-          { href: "/history", label: t("history", "History"), icon: History },
-          { href: "/paid-videos", label: t("purchases", "Purchases"), icon: DollarSign },
-        ]
+        { href: "/history", label: t("history", "History"), icon: History },
+        { href: "/paid-videos", label: t("purchases", "Purchases"), icon: DollarSign },
+      ]
       : []),
     { href: "/articles", label: t("articles", "Articles"), icon: FileText },
   ];
@@ -51,6 +51,46 @@ export function SidebarNav({ isLoggedIn = false }: SidebarNavProps) {
     { href: "/shorts", label: t("shorts", "Shorts"), icon: ShortsIcon },
   ];
 
+  const allCollapsedLinks = [
+    ...primaryLinks,
+    ...discoveryLinks,
+    { href: "/contact-us", label: t("help", "Help"), icon: HelpCircle },
+  ];
+
+  // Collapsed Mode: Icon Rail (w-16) with floating tooltips
+  if (isCollapsed) {
+    return (
+      <nav className="w-16 shrink-0 py-3 flex flex-col items-center space-y-2 select-none">
+        {allCollapsedLinks.map((item) => {
+          const Icon = item.icon;
+          const active = isCurrent(item.href);
+          return (
+            <div key={item.href} className="relative group w-full flex justify-center">
+              <Link
+                href={item.href}
+                title={item.label}
+                data-active={active ? "true" : undefined}
+                className={`relative w-10 h-10 flex items-center justify-center rounded-2xl transition-all ${active
+                    ? "active-nav-pill"
+                    : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
+                  }`}
+              >
+                <Icon className="w-5 h-5 shrink-0" />
+              </Link>
+
+              {/* Hover Tooltip */}
+              <div className="pointer-events-none absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-neutral-900 text-white text-[11px] font-medium rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap z-50">
+                {item.label}
+                <span className="absolute -left-1 top-1/2 -translate-y-1/2 border-4 border-transparent border-r-neutral-900" />
+              </div>
+            </div>
+          );
+        })}
+      </nav>
+    );
+  }
+
+  // Expanded Mode: Full navigation sidebar (w-56)
   return (
     <nav className="w-56 shrink-0 py-4 px-2 space-y-6 text-xs select-none">
       {/* 1. Primary Nav Group */}
@@ -63,11 +103,10 @@ export function SidebarNav({ isLoggedIn = false }: SidebarNavProps) {
               key={item.href}
               href={item.href}
               data-active={active ? "true" : undefined}
-              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${
-                active
+              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${active
                   ? "active-nav-pill"
                   : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
-              }`}
+                }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span className="font-medium truncate">{item.label}</span>
@@ -86,11 +125,10 @@ export function SidebarNav({ isLoggedIn = false }: SidebarNavProps) {
               key={item.href}
               href={item.href}
               data-active={active ? "true" : undefined}
-              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${
-                active
+              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${active
                   ? "active-nav-pill"
                   : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
-              }`}
+                }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span className="font-medium truncate">{item.label}</span>
@@ -107,11 +145,10 @@ export function SidebarNav({ isLoggedIn = false }: SidebarNavProps) {
         <Link
           href="/contact-us"
           data-active={isCurrent("/contact-us") ? "true" : undefined}
-          className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${
-            isCurrent("/contact-us")
+          className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${isCurrent("/contact-us")
               ? "active-nav-pill"
               : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
-          }`}
+            }`}
         >
           <HelpCircle className="w-4 h-4 shrink-0" />
           <span className="font-medium">{t("help", "Help")}</span>

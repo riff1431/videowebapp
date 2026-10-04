@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { ShortCard } from "@/app/themes/default/components/media/ShortCard";
 import { SectionHeader } from "@/app/themes/default/components/patterns/SectionHeader";
-import { GreetingHero } from "@/app/themes/default/components/patterns/GreetingHero";
 import { DataState } from "@/app/themes/default/components/patterns/DataState";
-import { Sparkles, Flame, Upload } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 
 interface Video {
@@ -79,20 +76,16 @@ export function DefaultHomeClient({
 
   return (
     <div className="space-y-8">
-      {/* 1. Large Friendly Greeting Header */}
-      <GreetingHero name={userName} />
-
-      {/* 2. Category Filter Pills */}
+      {/* 1. Category Filter Pills */}
       {categoriesList.length > 0 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <button
             type="button"
             onClick={() => setSelectedCategoryKey(null)}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${
-              selectedCategoryKey === null
-                ? "bg-[var(--default-brand-red)] text-white shadow-xs"
-                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-            }`}
+            className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === null
+              ? "bg-[var(--default-brand-red)] text-white shadow-xs"
+              : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+              }`}
           >
             {t("all", "All")}
           </button>
@@ -102,11 +95,10 @@ export function DefaultHomeClient({
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategoryKey(cat.key)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${
-                selectedCategoryKey === cat.key
-                  ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
-                  : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-              }`}
+              className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === cat.key
+                ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
+                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+                }`}
             >
               {cat.name}
             </button>

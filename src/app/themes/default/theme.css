@@ -149,17 +149,17 @@ html.dark[data-theme="default"] {
   color: var(--default-brand-red) !important;
 }
 
-/* Active indicator dot */
+/* Active indicator vertical bar on far-left edge */
 [data-theme="default"] aside a.active-nav-pill::before,
 [data-theme="default"] aside a[data-active="true"]::before {
   content: "";
   position: absolute;
-  left: 0.35rem;
+  left: -6px;
   top: 50%;
   transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
+  width: 4px;
+  height: 20px;
+  border-radius: 4px;
   background-color: var(--default-brand-red);
 }
 

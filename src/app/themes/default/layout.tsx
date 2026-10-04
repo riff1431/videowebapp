@@ -1,6 +1,6 @@
 import React from "react";
 import "./theme.css";
-import { SiteShell } from "@/components/layout/SiteShell";
+import { AppShell } from "./components/layout/AppShell";
 import { Outfit } from "next/font/google";
 
 const outfit = Outfit({
@@ -17,7 +17,7 @@ export default function DefaultThemeLayout({
 }) {
   return (
     <div className={`${outfit.variable} font-sans`}>
-      <SiteShell themeId="default">{children}</SiteShell>
+      <AppShell>{children}</AppShell>
     </div>
   );
 }
