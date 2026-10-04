@@ -192,7 +192,7 @@ export function ShortsFeed({
         {/* Render current active short with windowing (previous, current, next) */}
         {current && (
           <ShortItem
-            key={current.id}
+            key={current.feedKey || `${current.id}-${activeIndex}`}
             short={current}
             isActive={true}
             isMounted={true}
@@ -236,7 +236,7 @@ export function ShortsFeed({
           <button
             type="button"
             onClick={goToNext}
-            disabled={activeIndex === shorts.length - 1 && !hasMore}
+            disabled={shorts.length === 0}
             aria-label="Next short"
             className="w-11 h-11 rounded-full flex items-center justify-center bg-[#0088cc]/90 text-white hover:bg-[#0088cc] shadow-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110 active:scale-95"
           >

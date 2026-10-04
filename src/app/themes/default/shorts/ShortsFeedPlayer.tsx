@@ -35,6 +35,7 @@ export interface ShortData {
   commentsCount: number;
   initialVote?: 1 | 2 | null;
   isSubscribed?: boolean;
+  feedKey?: string;
   user: {
     id: number;
     username: string;

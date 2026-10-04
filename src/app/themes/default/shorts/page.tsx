@@ -47,8 +47,8 @@ export default async function ShortsPage({ searchParams }: ShortsPageProps) {
     .from(videos)
     .innerJoin(users, eq(videos.userId, users.id))
     .where(eq(videos.isShort, true))
-    .orderBy(desc(videos.createdAt))
-    .limit(20);
+    .orderBy(sql`RANDOM()`)
+    .limit(30);
 
   if (rawShorts.length === 0) {
     return <ShortsFeed initialShorts={[]} />;
@@ -121,19 +121,20 @@ export default async function ShortsPage({ searchParams }: ShortsPageProps) {
     }
   }
 
-  // Pick starting index
-  let initialIndex = 0;
+  // If deepLinkedVideoId requested, place that video first if found
+  let orderedShorts = [...rawShorts];
   if (deepLinkedVideoId) {
-    const foundIdx = rawShorts.findIndex((s) => s.videoId === deepLinkedVideoId);
-    if (foundIdx !== -1) {
-      initialIndex = foundIdx;
+    const foundIdx = orderedShorts.findIndex((s) => s.videoId === deepLinkedVideoId);
+    if (foundIdx > 0) {
+      const [target] = orderedShorts.splice(foundIdx, 1);
+      orderedShorts.unshift(target);
     }
-  } else {
-    initialIndex = Math.floor(Math.random() * rawShorts.length);
   }
 
+  const initialIndex = 0;
+
   // Map into ShortData items
-  const shortsData: ShortData[] = rawShorts.map((s) => ({
+  const shortsData: ShortData[] = orderedShorts.map((s) => ({
     ...s,
     likesCount: likesMap[s.id]?.likes || 0,
     dislikesCount: likesMap[s.id]?.dislikes || 0,
