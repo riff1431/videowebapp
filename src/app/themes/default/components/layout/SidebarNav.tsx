@@ -3,17 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Video,
-  History,
-  DollarSign,
-  FileText,
-  TrendingUp,
-  BarChart2,
-  Clapperboard,
-  Star,
-  HelpCircle,
-  SquarePlay,
-} from "lucide-react";
+  RiHome5Fill,
+  RiHistoryFill,
+  RiMoneyDollarCircleFill,
+  RiArticleFill,
+  RiVideoFill,
+  RiFireFill,
+  RiBarChartFill,
+  RiClapperboardFill,
+  RiFolderVideoFill,
+  RiStarFill,
+  RiQuestionFill,
+} from "react-icons/ri";
 import { ShortsIcon } from "@/components/common/ShortsIcon";
 import { useTranslation } from "@/providers/language-provider";
 
@@ -32,30 +33,30 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
   };
 
   const primaryLinks = [
-    { href: "/", label: t("home", "Home"), icon: SquarePlay },
+    { href: "/", label: t("home", "Home"), icon: RiHome5Fill },
     { href: "/shorts", label: t("shorts", "Shorts"), icon: ShortsIcon },
     ...(isLoggedIn
       ? [
-        { href: "/history", label: t("history", "History"), icon: History },
-        { href: "/paid-videos", label: t("purchases", "Purchases"), icon: DollarSign },
+        { href: "/history", label: t("history", "History"), icon: RiHistoryFill },
+        { href: "/paid-videos", label: t("purchases", "Purchases"), icon: RiMoneyDollarCircleFill },
       ]
       : []),
-    { href: "/articles", label: t("articles", "Articles"), icon: FileText },
+    { href: "/articles", label: t("articles", "Articles"), icon: RiArticleFill },
   ];
 
   const discoveryLinks = [
-    { href: "/videos/latest", label: t("latest_videos", "Latest videos"), icon: Video },
-    { href: "/videos/trending", label: t("trending", "Trending"), icon: TrendingUp },
-    { href: "/videos/top", label: t("top_videos", "Top videos"), icon: BarChart2 },
-    { href: "/movies", label: t("movies", "Movies"), icon: Clapperboard },
-    { href: "/stock-videos", label: t("stock_videos", "Stock Videos"), icon: Video },
-    { href: "/popular-channels", label: t("popular_channels", "Popular Channels"), icon: Star },
+    { href: "/videos/latest", label: t("latest_videos", "Latest videos"), icon: RiVideoFill },
+    { href: "/videos/trending", label: t("trending", "Trending"), icon: RiFireFill },
+    { href: "/videos/top", label: t("top_videos", "Top videos"), icon: RiBarChartFill },
+    { href: "/movies", label: t("movies", "Movies"), icon: RiClapperboardFill },
+    { href: "/stock-videos", label: t("stock_videos", "Stock Videos"), icon: RiFolderVideoFill },
+    { href: "/popular-channels", label: t("popular_channels", "Popular Channels"), icon: RiStarFill },
   ];
 
   const allCollapsedLinks = [
     ...primaryLinks,
     ...discoveryLinks,
-    { href: "/contact-us", label: t("help", "Help"), icon: HelpCircle },
+    { href: "/contact-us", label: t("help", "Help"), icon: RiQuestionFill },
   ];
 
   // Collapsed Mode: Icon Rail (w-16) with floating tooltips
@@ -151,7 +152,7 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
             : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
             }`}
         >
-          <HelpCircle className="w-4 h-4 2xl:w-5 2xl:h-5 shrink-0" />
+          <RiQuestionFill className="w-4 h-4 2xl:w-5 2xl:h-5 shrink-0" />
           <span className="font-medium">{t("help", "Help")}</span>
         </Link>
       </div>
