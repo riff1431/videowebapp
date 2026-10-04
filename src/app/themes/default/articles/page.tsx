@@ -101,22 +101,22 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
               {posts.map((post) => (
                 <div
                   key={post.id}
-                  className="bg-white dark:bg-[#212121] border border-[var(--border)] rounded-lg overflow-hidden shadow-xs hover:shadow-md transition-shadow"
+                  className="video-card-item group rounded-[22px] p-2.5 transition-all"
                 >
-                  <Link href={`/articles/read/${post.id}`} className="block aspect-video bg-neutral-100 dark:bg-neutral-800">
+                  <Link href={`/articles/read/${post.id}`} className="block aspect-video rounded-[22px] overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                     <img
                       src={post.image || "/upload/photos/d-cover.jpg"}
                       alt={post.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </Link>
-                  <div className="p-4">
+                  <div className="mt-3 px-1">
                     <Link href={`/articles/read/${post.id}`}>
-                      <h2 className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-2 hover:text-[#04abf2]">
+                      <h2 className="text-sm font-semibold text-[var(--default-text)] line-clamp-2 group-hover:text-[var(--default-brand-red)] transition-colors">
                         {post.title}
                       </h2>
                     </Link>
-                    <p className="text-xs text-neutral-500 mt-1 line-clamp-2">
+                    <p className="text-xs text-[var(--default-muted)] mt-1 line-clamp-2">
                       {post.description}
                     </p>
                   </div>

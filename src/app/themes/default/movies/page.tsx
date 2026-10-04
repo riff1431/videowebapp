@@ -203,11 +203,11 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
               {moviesList.map((movie) => (
                 <div
                   key={movie.id}
-                  className="group bg-white dark:bg-neutral-900 rounded-xl overflow-hidden border border-[var(--border)] shadow-xs hover:shadow-md transition-shadow flex flex-col"
+                  className="video-card-item group rounded-[22px] p-2.5 transition-all flex flex-col"
                 >
                   <Link
                     href={`/watch/${movie.videoId}`}
-                    className="relative aspect-[16/10] w-full bg-neutral-900 block overflow-hidden"
+                    className="relative aspect-[16/10] w-full rounded-[22px] bg-neutral-900 block overflow-hidden"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -217,30 +217,30 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
                     />
 
                     {/* Movie Stars & Quality Badge Overlay */}
-                    <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 rounded bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold">
+                    <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold">
                       <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
                       <span>{movie.rating ? Number(movie.rating).toFixed(1) : "N/A"}</span>
                       <span className="text-neutral-400">·</span>
-                      <span className="text-[10px] text-[var(--primary)] uppercase">{movie.quality || "HD"}</span>
+                      <span className="text-[10px] text-[var(--default-brand-red)] uppercase font-bold">{movie.quality || "HD"}</span>
                     </div>
 
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="w-11 h-11 rounded-full bg-[var(--primary)] text-white flex items-center justify-center shadow-lg">
+                      <div className="w-11 h-11 rounded-full bg-[var(--default-brand-red)] text-white flex items-center justify-center shadow-lg">
                         <Play className="w-5 h-5 fill-current ml-0.5" />
                       </div>
                     </div>
                   </Link>
 
-                  <div className="p-3.5 flex-1 flex flex-col justify-between space-y-2">
+                  <div className="mt-3 px-1 flex-1 flex flex-col justify-between space-y-1.5">
                     <div>
                       <Link
                         href={`/watch/${movie.videoId}`}
-                        className="font-bold text-sm text-neutral-900 dark:text-white line-clamp-1 group-hover:text-[var(--primary)] transition-colors"
+                        className="font-semibold text-sm text-[var(--default-text)] line-clamp-1 group-hover:text-[var(--default-brand-red)] transition-colors"
                         title={movie.title}
                       >
                         {movie.title}
                       </Link>
-                      <div className="flex items-center gap-1.5 text-xs text-neutral-500 mt-1">
+                      <div className="flex items-center gap-1.5 text-xs text-[var(--default-muted)] mt-1">
                         <span>{movie.movieRelease || "Feature"}</span>
                         <span>·</span>
                         <span className="capitalize">{movie.categoryId || "Cinema"}</span>
@@ -248,7 +248,7 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
                     </div>
 
                     {movie.stars && (
-                      <p className="text-[11px] text-neutral-400 line-clamp-1">
+                      <p className="text-[11px] text-[var(--default-muted)] line-clamp-1">
                         Cast: {movie.stars}
                       </p>
                     )}

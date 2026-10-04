@@ -9,7 +9,7 @@
   --default-card-border: transparent;
   --default-text: #0f1419;
   --default-muted: #657280;
-  --default-brand-red: #ef233c;
+  --default-brand-red: #2563eb;
   --default-search-bg: #f0f2f5;
   --default-search-border: transparent;
   --default-pill-active-bg: #ffffff;
@@ -25,8 +25,8 @@
 
   /* Backward Compatibility Aliases for Theme Contract & Shared UI */
   --brand: var(--default-brand-red);
-  --brand-hover: #d90429;
-  --brand-rgb: 239, 35, 60;
+  --brand-hover: #1d4ed8;
+  --brand-rgb: 37, 99, 235;
 
   --bg: var(--default-canvas);
   --surface: var(--default-panel);
@@ -36,8 +36,8 @@
   --radius: 16px;
 
   --primary: var(--default-brand-red);
-  --primary-hover: #d90429;
-  --primary-rgb: 239, 35, 60;
+  --primary-hover: #1d4ed8;
+  --primary-rgb: 37, 99, 235;
   --accent-yellow: #f59e0b;
   --accent-red: var(--default-brand-red);
 
@@ -45,7 +45,7 @@
   --foreground: var(--default-text);
   --header-bg: var(--default-panel);
   --sidebar-bg: var(--default-canvas);
-  --card-bg: var(--default-card);
+  --card-bg: var(--default-panel);
   --card-border: var(--default-card-border);
   --card-shadow: none;
   --search-bg: var(--default-search-bg);
@@ -67,7 +67,7 @@ html.dark[data-theme="default"] {
   --default-card-border: transparent;
   --default-text: #ffffff;
   --default-muted: #909090;
-  --default-brand-red: #ff3333;
+  --default-brand-red: #3b82f6;
   --default-search-bg: #1a1a1a;
   --default-search-border: #2b2b2b;
   --default-pill-active-bg: #262626;
@@ -76,8 +76,8 @@ html.dark[data-theme="default"] {
 
   /* Backward Compatibility Aliases in Dark Mode */
   --brand: var(--default-brand-red);
-  --brand-hover: #ff4d4d;
-  --brand-rgb: 255, 51, 51;
+  --brand-hover: #60a5fa;
+  --brand-rgb: 59, 130, 246;
 
   --bg: var(--default-canvas);
   --surface: var(--default-panel);
@@ -86,14 +86,14 @@ html.dark[data-theme="default"] {
   --border: #222222;
 
   --primary: var(--default-brand-red);
-  --primary-hover: #ff4d4d;
-  --primary-rgb: 255, 51, 51;
+  --primary-hover: #60a5fa;
+  --primary-rgb: 59, 130, 246;
 
   --background: var(--default-panel);
   --foreground: var(--default-text);
   --header-bg: var(--default-panel);
   --sidebar-bg: var(--default-canvas);
-  --card-bg: var(--default-card);
+  --card-bg: var(--default-panel);
   --card-border: var(--default-card-border);
   --card-shadow: none;
   --search-bg: var(--default-search-bg);
@@ -114,17 +114,24 @@ html.dark[data-theme="default"] {
   border: 1px solid var(--border);
 }
 
-/* Card hover effect requested: transparent default, bg reveals on hover */
+/* Card hover effect requested: transparent default, bg reveals on hover, pointer cursor */
 [data-theme="default"] .video-card-item,
 [data-theme="default"] .short-card-item {
   background-color: transparent;
   border-color: transparent;
+  cursor: pointer;
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 [data-theme="default"] .video-card-item:hover,
 [data-theme="default"] .short-card-item:hover {
   background-color: var(--default-card-hover);
+}
+
+/* Ensure any dropdown menus in default theme are completely solid */
+[data-theme="default"] .dropdown-menu,
+[data-theme="default"] [role="menu"] {
+  background-color: var(--default-panel) !important;
 }
 
 /* Active navigation pill styling in sidebar */
@@ -163,7 +170,7 @@ html.dark[data-theme="default"] {
 
 [data-theme="default"] .hover\:bg-\[\#039be5\]:hover,
 [data-theme="default"] .hover\:bg-\[\#0399d8\]:hover {
-  background-color: #d90429 !important;
+  background-color: #1d4ed8 !important;
 }
 
 [data-theme="default"] .text-\[\#04abf2\] {

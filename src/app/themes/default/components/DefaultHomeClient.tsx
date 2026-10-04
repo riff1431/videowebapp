@@ -57,8 +57,8 @@ export function DefaultHomeClient({
   }, [featuredVideos, selectedCategoryKey]);
 
   // Derive shorts (e.g. videos with duration under 60s or sample rail slice)
-  const shortsList = useMemo(() => {
-    return featuredVideos.slice(0, 7).map((v) => ({
+  const allShorts = useMemo(() => {
+    return featuredVideos.map((v) => ({
       id: v.id,
       videoId: v.videoId,
       title: v.title,
@@ -67,6 +67,15 @@ export function DefaultHomeClient({
       createdAt: v.createdAt,
     }));
   }, [featuredVideos]);
+
+  // Split filtered videos into chunks of 8 (2 rows in 4-column layout)
+  const videoChunks = useMemo(() => {
+    const chunks: Video[][] = [];
+    for (let i = 0; i < filteredVideos.length; i += 8) {
+      chunks.push(filteredVideos.slice(i, i + 8));
+    }
+    return chunks;
+  }, [filteredVideos]);
 
   return (
     <div className="space-y-8">
@@ -79,10 +88,11 @@ export function DefaultHomeClient({
           <button
             type="button"
             onClick={() => setSelectedCategoryKey(null)}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === null
-              ? "bg-[var(--default-brand-red)] text-white shadow-xs"
-              : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-              }`}
+            className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${
+              selectedCategoryKey === null
+                ? "bg-[var(--default-brand-red)] text-white shadow-xs"
+                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+            }`}
           >
             {t("all", "All")}
           </button>
@@ -92,10 +102,11 @@ export function DefaultHomeClient({
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategoryKey(cat.key)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === cat.key
-                ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
-                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-                }`}
+              className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${
+                selectedCategoryKey === cat.key
+                  ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
+                  : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+              }`}
             >
               {cat.name}
             </button>
@@ -103,47 +114,70 @@ export function DefaultHomeClient({
         </div>
       )}
 
-      {/* 3. Recommended Videos Grid */}
-      <section>
-        <SectionHeader
-          title={t("recommended", "Recommended")}
-          // icon={<Sparkles className="w-4 h-4" />}
-          viewMoreHref="/videos/latest"
-          viewMoreLabel={t("view_more", "View More >")}
-        />
-
+      {/* 3. Interleaved Feed: 2 Rows of Videos -> 1 Row of Shorts -> 2 Rows of Videos... */}
+      {filteredVideos.length === 0 ? (
         <DataState
-          empty={filteredVideos.length === 0}
+          empty={true}
           emptyTitle={
             selectedCategoryKey === null
               ? t("no_videos_found", "No videos found for now!")
               : t("no_videos_in_category", "No videos in this category yet.")
           }
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredVideos.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
-          </div>
+          <div />
         </DataState>
-      </section>
+      ) : (
+        videoChunks.map((chunk, chunkIndex) => {
+          // Calculate shorts slice for this slot (6-7 shorts per row)
+          const shortsSlice = allShorts.slice(
+            (chunkIndex * 7) % Math.max(1, allShorts.length),
+            ((chunkIndex * 7) % Math.max(1, allShorts.length)) + 7
+          );
+          const showShortsAfterThisChunk =
+            allShorts.length > 0 &&
+            (chunkIndex % 1 === 0); // After each 2-row chunk
 
-      {/* 4. Shorts Rail (7 vertical cards) */}
-      {shortsList.length > 0 && (
-        <section className="pt-4 border-t border-[var(--border)]/40">
-          <SectionHeader
-            title={t("shorts", "Shorts")}
-            // icon={<Flame className="w-4 h-4" />}
-            viewMoreHref="/shorts"
-            viewMoreLabel={t("view_more", "View More >")}
-          />
+          return (
+            <React.Fragment key={`chunk-section-${chunkIndex}`}>
+              {/* 2 Rows of Videos (8 videos) */}
+              <section className="space-y-4">
+                {chunkIndex === 0 && (
+                  <SectionHeader
+                    title={t("recommended", "Recommended")}
+                    viewMoreHref="/videos/latest"
+                    viewMoreLabel={t("view_more", "View More >")}
+                  />
+                )}
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 overflow-x-auto pb-2 scrollbar-none">
-            {shortsList.map((short) => (
-              <ShortCard key={short.id} short={short} />
-            ))}
-          </div>
-        </section>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {chunk.map((video) => (
+                    <VideoCard key={video.id} video={video} />
+                  ))}
+                </div>
+              </section>
+
+              {/* 1 Row of Shorts */}
+              {showShortsAfterThisChunk && shortsSlice.length > 0 && (
+                <section className="pt-6 pb-2 border-y border-[var(--border)]/40 space-y-4">
+                  <SectionHeader
+                    title={t("shorts", "Shorts")}
+                    viewMoreHref="/shorts"
+                    viewMoreLabel={t("view_more", "View More >")}
+                  />
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 overflow-x-auto pb-2 scrollbar-none">
+                    {shortsSlice.map((short, shortIdx) => (
+                      <ShortCard
+                        key={`short-${chunkIndex}-${short.id || shortIdx}`}
+                        short={short}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+            </React.Fragment>
+          );
+        })
       )}
     </div>
   );

@@ -20,7 +20,7 @@ export function ShortCard({ short }: { short: ShortItem }) {
     "/upload/photos/d-cover.jpg";
 
   return (
-    <div className="short-card-item group rounded-[16px] p-2 transition-all">
+    <div className="short-card-item group rounded-[16px] p-2 transition-all cursor-pointer">
       <Link
         href={`/watch/${short.videoId}`}
         className="block relative aspect-[9/16] w-full overflow-hidden rounded-[16px] bg-neutral-200 dark:bg-neutral-800"

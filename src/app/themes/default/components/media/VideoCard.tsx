@@ -61,7 +61,7 @@ export function VideoCard(props: VideoCardProps) {
   const channelName = channelInfo.name || channelInfo.username || "Channel";
 
   return (
-    <div className="video-card-item group rounded-[22px] p-2.5 transition-all">
+    <div className="video-card-item group rounded-[22px] p-2.5 transition-all cursor-pointer">
       {/* 1. Thumbnail Container (22px radius, duration pill bottom right) */}
       <Link
         href={`/watch/${videoId}`}
