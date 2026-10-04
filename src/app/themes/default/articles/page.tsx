@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { articles, users, categories } from "@/db/schema";
 import { eq, desc, and, ilike, asc } from "drizzle-orm";
 import { Search, BookOpen } from "lucide-react";
+import { ArticleCategoryFilter } from "./ArticleCategoryFilter";
 
 interface ArticlesPageProps {
   searchParams: Promise<{
@@ -64,15 +65,13 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
 
   return (
     <div className="w-full space-y-6">
-      {/* Top Action Bar */}
-      <div className="flex items-center justify-end pb-3 border-b border-[var(--border)]">
-        <Link
-          href="/create-article"
-          className="px-4 py-1.5 bg-[#04abf2] hover:bg-[#039be5] text-white text-xs font-semibold rounded-md transition-colors"
-        >
-          Create article
-        </Link>
-      </div>
+      {/* Top Filter & Action Bar: Categories with Prev/Next buttons + Create article button */}
+      <ArticleCategoryFilter
+        categories={articleCategories}
+        activeCategory={activeCategory}
+        currentQuery={query}
+        createButtonHref="/create-article"
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Main Content Area (8 Cols) */}
@@ -137,31 +136,6 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                 <Search className="w-3.5 h-3.5" />
               </button>
             </form>
-          </div>
-
-          {/* Categories Pill Cloud */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
-              Categories
-            </h3>
-            <div className="flex flex-wrap gap-1.5">
-              {articleCategories.map((cat) => {
-                const isActive = activeCategory === cat.id;
-                return (
-                  <Link
-                    key={cat.id}
-                    href={cat.id === "all" ? "/articles" : `/articles?category=${cat.id}`}
-                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                      isActive
-                        ? "bg-[#04abf2] text-white shadow-xs"
-                        : "bg-neutral-100 dark:bg-[#262626] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-[#333333] border border-neutral-200 dark:border-neutral-700"
-                    }`}
-                  >
-                    {cat.name}
-                  </Link>
-                );
-              })}
-            </div>
           </div>
 
           {/* Most Popular */}
