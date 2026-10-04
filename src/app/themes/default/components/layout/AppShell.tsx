@@ -109,37 +109,41 @@ export function AppShell({ children }: AppShellProps) {
           }`}
         >
           <div className="sticky top-6 flex flex-col h-[calc(100vh-3rem)]">
-            {/* Top Logo */}
-            <div className={`px-2 py-2 mb-2 flex items-center ${isCollapsed ? "justify-center" : "px-4"}`}>
-              <Link href="/" className="inline-block">
-                {isCollapsed ? (
-                  /* Mini Favicon / Logo Icon */
-                  <div className="w-9 h-9 rounded-xl bg-[var(--default-brand-red)] flex items-center justify-center text-white font-bold text-base shadow-xs">
-                    P
-                  </div>
-                ) : (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/logo.png"
-                      alt="PlayTube"
-                      className="h-8 w-auto dark:hidden"
-                      onError={(e) => {
-                        (e.target as HTMLElement).style.display = "none";
-                      }}
-                    />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/logo-light.png"
-                      alt="PlayTube"
-                      className="h-8 w-auto hidden dark:block"
-                      onError={(e) => {
-                        (e.target as HTMLElement).style.display = "none";
-                      }}
-                    />
-                  </>
-                )}
-              </Link>
+            {/* Sidebar Header: Hamburger Toggle + Logo */}
+            <div className={`px-2 py-2 mb-2 flex items-center ${isCollapsed ? "justify-center" : "gap-3 px-3"}`}>
+              {/* Hamburger Toggle Button on Sidebar */}
+              <button
+                type="button"
+                onClick={handleToggleSidebar}
+                aria-label="Toggle sidebar"
+                className="p-2 rounded-xl text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+
+              {/* Logo (shown only when expanded) */}
+              {!isCollapsed && (
+                <Link href="/" className="inline-flex items-center min-w-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo.png"
+                    alt="PlayTube"
+                    className="h-8 w-auto dark:hidden shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo-light.png"
+                    alt="PlayTube"
+                    className="h-8 w-auto hidden dark:block shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                </Link>
+              )}
             </div>
 
             {/* Scrollable Nav Items */}

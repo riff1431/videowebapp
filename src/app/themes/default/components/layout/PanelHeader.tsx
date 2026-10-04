@@ -104,19 +104,8 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
 
   return (
     <header className="w-full flex items-center justify-between gap-4 py-2 px-1 mb-6 border-b border-[var(--border)]/40 pb-4">
-      {/* 1. Left: Hamburger Toggle Trigger + Greeting / Title */}
+      {/* 1. Left: Greeting / Title */}
       <div className="flex items-center gap-3 min-w-0">
-        {onToggleSidebar && (
-          <button
-            type="button"
-            onClick={onToggleSidebar}
-            aria-label="Toggle sidebar"
-            className="p-2 rounded-xl text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer shrink-0"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-        )}
-
         {titleContent && (
           <h1 className="text-base sm:text-xl font-bold text-[var(--default-text)] tracking-tight truncate">
             {titleContent}

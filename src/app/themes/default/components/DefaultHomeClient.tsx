@@ -6,6 +6,7 @@ import { ShortCard } from "@/app/themes/default/components/media/ShortCard";
 import { SectionHeader } from "@/app/themes/default/components/patterns/SectionHeader";
 import { DataState } from "@/app/themes/default/components/patterns/DataState";
 import { useTranslation } from "@/providers/language-provider";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Video {
   id: number;
@@ -74,35 +75,105 @@ export function DefaultHomeClient({
     return chunks;
   }, [filteredVideos]);
 
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = React.useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 2);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
+  }, []);
+
+  React.useEffect(() => {
+    checkScroll();
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [checkScroll, categoriesList]);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const scrollAmount = 300;
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="space-y-8">
-      {/* 1. Category Filter Pills */}
+      {/* 1. Category Filter Pills with Conditional Prev/Next buttons */}
       {categoriesList.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-          <button
-            type="button"
-            onClick={() => setSelectedCategoryKey(null)}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === null
-              ? "bg-[var(--default-brand-red)] text-white shadow-xs"
-              : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-              }`}
-          >
-            {t("all", "All")}
-          </button>
+        <div className="relative group/chips flex items-center">
+          {/* Prev Button with soft gradient mask */}
+          {canScrollLeft && (
+            <div className="absolute left-0 top-0 bottom-0 z-10 flex items-center pr-4 bg-gradient-to-r from-[var(--default-panel)] via-[var(--default-panel)]/90 to-transparent">
+              <button
+                type="button"
+                onClick={() => handleScroll("left")}
+                aria-label="Previous categories"
+                className="w-8 h-8 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
-          {categoriesList.map((cat) => (
+          {/* Scrollable Chips Rail */}
+          <div
+            ref={scrollContainerRef}
+            className="flex-1 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none scroll-smooth"
+          >
             <button
-              key={cat.id}
               type="button"
-              onClick={() => setSelectedCategoryKey(cat.key)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === cat.key
-                ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
-                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-                }`}
+              onClick={() => setSelectedCategoryKey(null)}
+              className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${
+                selectedCategoryKey === null
+                  ? "bg-[var(--default-brand-red)] text-white shadow-xs"
+                  : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+              }`}
             >
-              {cat.name}
+              {t("all", "All")}
             </button>
-          ))}
+
+            {categoriesList.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategoryKey(cat.key)}
+                className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${
+                  selectedCategoryKey === cat.key
+                    ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
+                    : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Next Button with soft gradient mask */}
+          {canScrollRight && (
+            <div className="absolute right-0 top-0 bottom-0 z-10 flex items-center pl-4 bg-gradient-to-l from-[var(--default-panel)] via-[var(--default-panel)]/90 to-transparent">
+              <button
+                type="button"
+                onClick={() => handleScroll("right")}
+                aria-label="Next categories"
+                className="w-8 h-8 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
