@@ -3,7 +3,7 @@ import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { ThumbsUp } from "lucide-react";
+
 import { requireAuth } from "@/lib/auth/require-auth";
 
 export default async function LikedVideosPage() {
@@ -30,20 +30,7 @@ export default async function LikedVideosPage() {
     .limit(20);
 
   return (
-    <div className="max-w-full mx-auto space-y-6">
-      <div className="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
-        <div className="w-10 h-10 rounded-xl bg-sky-100 dark:bg-sky-950 text-[var(--primary)] flex items-center justify-center">
-          <ThumbsUp className="w-5 h-5" />
-        </div>
-        <div>
-          <h1 className="text-xl font-bold text-neutral-900 dark:text-white">
-            Liked Videos
-          </h1>
-          <p className="text-xs text-neutral-500">
-            Videos that received your thumbs up
-          </p>
-        </div>
-      </div>
+    <div className="w-full space-y-6">
 
       {likedVideos.length === 0 ? (
         <div className="py-20 text-center text-neutral-400 text-sm bg-white dark:bg-neutral-800 rounded-xl border border-[var(--border)]">

@@ -173,19 +173,9 @@ export function WalletClient({
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-6">
-      {/* Top Header Card matching PlayTube UI */}
+    <div className="w-full space-y-6">
+      {/* Balance and Actions Card */}
       <div className="bg-white dark:bg-[#1a1a1a] border border-neutral-200/80 dark:border-neutral-800 rounded-xl p-6 sm:p-8 shadow-xs">
-        <div className="flex items-center justify-between pb-5 mb-6 border-b border-neutral-200/80 dark:border-neutral-800">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
-              <Wallet className="w-4 h-4 stroke-[2.2]" />
-            </div>
-            <h1 className="text-xl font-bold text-neutral-800 dark:text-neutral-100">
-              Wallet
-            </h1>
-          </div>
-        </div>
 
         {/* Global Notification Banner */}
         {successBanner && (

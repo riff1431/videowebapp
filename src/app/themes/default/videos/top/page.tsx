@@ -67,16 +67,6 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
 
   return (
     <div className="w-full">
-      {/* Title Header with Cyan Circle Icon */}
-      <div className="flex items-center gap-2.5 pb-3 mb-6 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
-          <Video className="w-4 h-4 stroke-[2.2]" />
-        </div>
-        <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-          {t("top_videos", "Top videos")}
-        </h1>
-      </div>
-
       {/* Centered Floating Time Filter Bar (PlayTube Screenshot Parity) */}
       <div className="flex justify-center mb-10">
         <div className="bg-white dark:bg-[#1a1a1a] border border-neutral-200/90 dark:border-neutral-800 rounded-xl p-1.5 shadow-xs flex items-center gap-1.5">
@@ -90,8 +80,8 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
                 key={tab.type}
                 href={href}
                 className={`min-w-[68px] sm:min-w-[76px] py-2 px-3 rounded-lg flex flex-col items-center gap-1.5 transition-all text-center ${isActive
-                    ? "bg-[#dff2fc] dark:bg-[#04abf2]/20 text-[#04abf2] font-semibold"
-                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                  ? "bg-[#dff2fc] dark:bg-[#04abf2]/20 text-[#04abf2] font-semibold"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
                   }`}
               >
                 <Icon
@@ -116,7 +106,7 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {topVideos.map((video) => (
             <VideoCard
               key={video.id}

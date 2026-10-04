@@ -87,20 +87,7 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
     .limit(24);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header matching themes/youplay/layout/movies/content.html */}
-      <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-sky-100 dark:bg-sky-950 text-[var(--primary)] flex items-center justify-center">
-            <Film className="w-5 h-5 fill-current" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Movies & Cinema</h1>
-            <p className="text-xs text-neutral-500">Feature films, documentaries, and cinema releases</p>
-          </div>
-        </div>
-      </div>
-
+    <div className="space-y-6 w-full">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Left Filter Sidebar matching PlayTube vid_move_filtr */}
         <div className="md:col-span-1 space-y-4">

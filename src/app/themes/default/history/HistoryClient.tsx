@@ -84,18 +84,9 @@ export function HistoryClient({ initialVideos }: HistoryClientProps) {
 
   return (
     <div className="w-full">
-      {/* Title Header with Cyan Circle Icon & Clear History button */}
-      <div className="flex items-center justify-between pb-3 mb-6 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
-            <HistoryIcon className="w-4 h-4 stroke-[2.2]" />
-          </div>
-          <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-            History
-          </h1>
-        </div>
-
-        {videoList.length > 0 && (
+      {/* Action Bar (Clear History) */}
+      {videoList.length > 0 && (
+        <div className="flex justify-end pb-3 mb-6 border-b border-neutral-200/80 dark:border-neutral-800">
           <button
             type="button"
             onClick={() => {
@@ -108,8 +99,8 @@ export function HistoryClient({ initialVideos }: HistoryClientProps) {
             <Trash2 className="w-3.5 h-3.5" />
             <span>Clear History</span>
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Empty State matching PlayTube Reference Screenshot */}
       {videoList.length === 0 ? (
@@ -122,7 +113,7 @@ export function HistoryClient({ initialVideos }: HistoryClientProps) {
           </p>
         </div>
       ) : (
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {videoList.map((v) => (
             <div key={v.id} className="relative group">
               <VideoCard

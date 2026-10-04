@@ -4,7 +4,7 @@ import { videos, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { getServerTranslations } from "@/lib/translations/server";
-import { Video, VideoOff } from "lucide-react";
+import { VideoOff } from "lucide-react";
 
 export const revalidate = 30;
 
@@ -33,16 +33,6 @@ export default async function LatestVideosPage() {
 
   return (
     <div className="w-full">
-      {/* Title Header with Cyan Circle Icon */}
-      <div className="flex items-center gap-2.5 pb-3 mb-10 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
-          <Video className="w-4 h-4 stroke-[2.2]" />
-        </div>
-        <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-          {t("latest_videos", "Latest videos")}
-        </h1>
-      </div>
-
       {/* Empty State matching PlayTube Screenshot */}
       {latestVideos.length === 0 ? (
         <div className="min-h-[55vh] flex flex-col items-center justify-center text-center px-4">

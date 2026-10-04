@@ -101,7 +101,7 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       {/* Main Container Layout */}
-      <div className="flex-1 flex gap-4 lg:gap-6 w-full max-w-[1920px] mx-auto min-h-0">
+      <div className="flex-1 flex gap-4 lg:gap-6 w-full mx-auto min-h-0">
         {/* Desktop Left Sidebar: sits directly on the canvas outside the floating panel */}
         <aside
           className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${

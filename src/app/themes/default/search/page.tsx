@@ -60,13 +60,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     .limit(30);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      {/* PlayTube Search Header matching themes/youplay/layout/search/content.html */}
+    <div className="w-full space-y-6">
+      {/* Search Filter & Results Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-[var(--border)] gap-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-neutral-900 dark:text-white">
-            {query ? `Search: "${query}"` : "All Videos"}
-          </h1>
           <span className="text-xs text-neutral-500 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-full font-medium">
             {results.length} results
           </span>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Video, Film, Clapperboard, Disc, VideoOff, DollarSign } from "lucide-react";
+import { Video, Film, Clapperboard, Disc, VideoOff } from "lucide-react";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 
 type TabType = "videos" | "movies" | "rented_movies" | "rented_videos";
@@ -66,16 +66,6 @@ export function PaidVideosClient({
 
   return (
     <div className="w-full">
-      {/* Title Header with Cyan Circle Icon (PlayTube Parity) */}
-      <div className="flex items-center gap-2.5 pb-3 mb-8 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
-          <DollarSign className="w-4 h-4 stroke-[2.2]" />
-        </div>
-        <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-          Purchases
-        </h1>
-      </div>
-
       {/* Tabs Filter (Exact PlayTube Layout) */}
       <div className="flex justify-center mb-10">
         <div className="inline-flex items-center p-1.5 bg-white dark:bg-[#1a1a1a] border border-neutral-200/80 dark:border-neutral-800 rounded-2xl shadow-xs gap-1">

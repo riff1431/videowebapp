@@ -3,7 +3,7 @@ import Link from "next/link";
 import { db } from "@/db";
 import { articles, users, categories } from "@/db/schema";
 import { eq, desc, and, ilike, asc } from "drizzle-orm";
-import { Newspaper, Search, BookOpen } from "lucide-react";
+import { Search, BookOpen } from "lucide-react";
 
 interface ArticlesPageProps {
   searchParams: Promise<{
@@ -63,18 +63,9 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
     .limit(20);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-4 space-y-6">
-      {/* Top Header Bar */}
-      <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#04abf2] text-white flex items-center justify-center">
-            <Newspaper className="w-4 h-4" />
-          </div>
-          <h1 className="text-base font-bold text-neutral-800 dark:text-neutral-200">
-            Most recent articles
-          </h1>
-        </div>
-
+    <div className="w-full space-y-6">
+      {/* Top Action Bar */}
+      <div className="flex items-center justify-end pb-3 border-b border-[var(--border)]">
         <Link
           href="/create-article"
           className="px-4 py-1.5 bg-[#04abf2] hover:bg-[#039be5] text-white text-xs font-semibold rounded-md transition-colors"

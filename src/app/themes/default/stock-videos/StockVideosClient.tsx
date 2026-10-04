@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Video, VideoOff, Search, Minus, Plus } from "lucide-react";
+import { VideoOff, Search, Minus, Plus } from "lucide-react";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 
 export interface StockVideoItem {
@@ -113,16 +113,6 @@ export function StockVideosClient({ initialVideos }: StockVideosClientProps) {
 
   return (
     <div className="w-full">
-      {/* Title Header with Cyan Circle Icon */}
-      <div className="flex items-center gap-2.5 pb-3 mb-6 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
-          <Video className="w-4 h-4 stroke-[2.2]" />
-        </div>
-        <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-          Stock Videos
-        </h1>
-      </div>
-
       {/* Decorative Search & Filter Banner Card (1:1 Screenshot Parity) */}
       <div className="relative overflow-hidden bg-white dark:bg-[#1a1a1a] border border-neutral-200/80 dark:border-neutral-800 rounded-2xl p-5 sm:p-6 mb-10 shadow-xs">
         {/* Subtle Decorative Curves on Left and Right (matching screenshot waves) */}

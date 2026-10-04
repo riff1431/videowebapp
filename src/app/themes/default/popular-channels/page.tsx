@@ -118,7 +118,7 @@ export default async function PopularChannelsPage({ searchParams }: PopularChann
   }));
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
+    <div className="w-full space-y-6">
       {/* Hero Banner with exact purple background, flame-heart, and dropdowns */}
       <PopularChannelsHero initialType={sortMetric} initialTime={timeMetric} />
 
@@ -133,7 +133,7 @@ export default async function PopularChannelsPage({ searchParams }: PopularChann
           </p>
         </div>
       ) : (
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
             {channels.map((channel) => (
               <ChannelCard key={channel.id} channel={channel} />

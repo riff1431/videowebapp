@@ -3,7 +3,7 @@ import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { db } from "@/db";
 import { videos, users, subscriptions } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { List, VideoOff } from "lucide-react";
+import { VideoOff } from "lucide-react";
 import { requireAuth } from "@/lib/auth/require-auth";
 
 export const metadata = {
@@ -43,16 +43,6 @@ export default async function SubscriptionsPage() {
 
   return (
     <div className="w-full">
-      {/* Title Header with Cyan Circle List Icon matching PlayTube UI */}
-      <div className="flex items-center gap-2.5 pb-3 mb-6 border-b border-neutral-200/80 dark:border-neutral-800">
-        <div className="w-7 h-7 rounded-full bg-[#04abf2] flex items-center justify-center text-white shrink-0 shadow-xs">
-          <List className="w-4 h-4 stroke-[2.2]" />
-        </div>
-        <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
-          Subscriptions
-        </h1>
-      </div>
-
       {/* Empty State matching PlayTube Reference Screenshot */}
       {feedVideos.length === 0 ? (
         <div className="min-h-[55vh] flex flex-col items-center justify-center text-center px-4">
