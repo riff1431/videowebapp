@@ -52,3 +52,4 @@ temp/
 # Test
 playwright-report/
 test-results/
+playwright-report\index.html
