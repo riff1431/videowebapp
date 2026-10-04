@@ -12,6 +12,7 @@ import {
   Clapperboard,
   Star,
   HelpCircle,
+  SquarePlay,
 } from "lucide-react";
 import { ShortsIcon } from "@/components/common/ShortsIcon";
 import { useTranslation } from "@/providers/language-provider";
@@ -31,7 +32,7 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
   };
 
   const primaryLinks = [
-    { href: "/", label: t("home", "Home"), icon: Video },
+    { href: "/", label: t("home", "Home"), icon: SquarePlay },
     { href: "/shorts", label: t("shorts", "Shorts"), icon: ShortsIcon },
     ...(isLoggedIn
       ? [
