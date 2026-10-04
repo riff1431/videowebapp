@@ -51,6 +51,8 @@ import {
 } from "@/modules/settings/settings.actions";
 
 import { useTranslation } from "@/providers/language-provider";
+import { uploadToSupabaseStorage } from "@/lib/storage/supabase";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 interface CategoryItem {
   id: number;
@@ -143,8 +145,10 @@ export function SettingsClient({
   // Form states
   const [monetizationEnabled, setMonetizationEnabled] = useState(true);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
-  const [avatarPreview, setAvatarPreview] = useState(user.avatar || "/upload/photos/d-avatar.jpg");
-  const [coverPreview, setCoverPreview] = useState(user.cover || "/upload/photos/d-cover.jpg");
+  const [avatarPreview, setAvatarPreview] = useState(user.avatar ? getPublicImageUrl(user.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg" : "/upload/photos/d-avatar.jpg");
+  const [coverPreview, setCoverPreview] = useState(user.cover ? getPublicImageUrl(user.cover, "/upload/photos/d-cover.jpg") || "/upload/photos/d-cover.jpg" : "/upload/photos/d-cover.jpg");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
   const [selectedVerificationFile, setSelectedVerificationFile] = useState<string | null>(null);
 
   // Favourite Category multi-select popup states
@@ -890,6 +894,7 @@ export function SettingsClient({
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
+                          setCoverFile(file);
                           const url = URL.createObjectURL(file);
                           setCoverPreview(url);
                         }
@@ -916,6 +921,7 @@ export function SettingsClient({
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
+                              setAvatarFile(file);
                               const url = URL.createObjectURL(file);
                               setAvatarPreview(url);
                             }
@@ -939,9 +945,44 @@ export function SettingsClient({
                   disabled={loading}
                   onClick={async () => {
                     setLoading(true);
-                    const res = await updateAvatarCoverAction(avatarPreview, coverPreview);
+                    let finalAvatar = user.avatar || "";
+                    let finalCover = user.cover || "";
+
+                    // If a new avatar file was selected, upload it
+                    if (avatarFile) {
+                      const ext = avatarFile.name.split(".").pop() || "jpg";
+                      const path = `avatars/${user.id}_${Date.now()}.${ext}`;
+                      const uploadRes = await uploadToSupabaseStorage("playtube-uploads", path, avatarFile);
+                      if (uploadRes.url) {
+                        finalAvatar = uploadRes.url;
+                        setAvatarPreview(uploadRes.url);
+                        setAvatarFile(null);
+                      } else {
+                        showNotification(false, uploadRes.error || "Failed to upload avatar");
+                        setLoading(false);
+                        return;
+                      }
+                    }
+
+                    // If a new cover file was selected, upload it
+                    if (coverFile) {
+                      const ext = coverFile.name.split(".").pop() || "jpg";
+                      const path = `covers/${user.id}_${Date.now()}.${ext}`;
+                      const uploadRes = await uploadToSupabaseStorage("playtube-uploads", path, coverFile);
+                      if (uploadRes.url) {
+                        finalCover = uploadRes.url;
+                        setCoverPreview(uploadRes.url);
+                        setCoverFile(null);
+                      } else {
+                        showNotification(false, uploadRes.error || "Failed to upload cover photo");
+                        setLoading(false);
+                        return;
+                      }
+                    }
+
+                    const res = await updateAvatarCoverAction(finalAvatar, finalCover);
                     setLoading(false);
-                    showNotification(res.success, res.message || "Updated");
+                    showNotification(res.success, res.message || (res.success ? "Updated" : res.error || "Failed"));
                   }}
                   className="px-8 py-2.5 bg-[#04abf2] hover:bg-[#0396d5] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-xs flex items-center gap-2 cursor-pointer"
                 >
