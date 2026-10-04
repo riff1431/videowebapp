@@ -631,3 +631,177 @@ export async function deleteCommentAction(commentId: number) {
     return { success: false, error: err.message || "Failed to delete comment" };
   }
 }
+
+// ==========================================
+// 9. Load More Shorts Action (Infinite Feed)
+// ==========================================
+export async function loadMoreShortsAction({
+  offset = 0,
+  limit = 10,
+}: {
+  offset: number;
+  limit?: number;
+}) {
+  try {
+    const currentUserId = await getAuthUserId();
+
+    const rawShorts = await db
+      .select({
+        id: videos.id,
+        videoId: videos.videoId,
+        title: videos.title,
+        description: videos.description,
+        thumbnail: videos.thumbnail,
+        duration: videos.duration,
+        views: videos.views,
+        videoLocation: videos.videoLocation,
+        videoType: videos.videoType,
+        youtubeUrl: videos.youtubeUrl,
+        commentsEnabled: videos.commentsEnabled,
+        user: {
+          id: users.id,
+          username: users.username,
+          name: users.name,
+          avatar: users.avatar,
+          verified: users.verified,
+        },
+      })
+      .from(videos)
+      .innerJoin(users, eq(videos.userId, users.id))
+      .where(eq(videos.isShort, true))
+      .orderBy(desc(videos.createdAt))
+      .limit(limit)
+      .offset(offset);
+
+    if (rawShorts.length === 0) {
+      return { success: true, shorts: [], hasMore: false };
+    }
+
+    const videoIds = rawShorts.map((s) => s.id);
+    const authorIds = Array.from(new Set(rawShorts.map((s) => s.user.id)));
+
+    // Fetch likes/dislikes
+    const { inArray } = await import("drizzle-orm");
+    const likesRows = await db
+      .select({
+        videoId: likesDislikes.videoId,
+        type: likesDislikes.type,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(likesDislikes)
+      .where(inArray(likesDislikes.videoId, videoIds))
+      .groupBy(likesDislikes.videoId, likesDislikes.type);
+
+    const likesMap: Record<number, { likes: number; dislikes: number }> = {};
+    for (const row of likesRows) {
+      if (!likesMap[row.videoId]) likesMap[row.videoId] = { likes: 0, dislikes: 0 };
+      if (row.type === 1) likesMap[row.videoId].likes = row.count;
+      if (row.type === 2) likesMap[row.videoId].dislikes = row.count;
+    }
+
+    // Fetch comments count
+    const commentsRows = await db
+      .select({
+        videoId: comments.videoId,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(comments)
+      .where(inArray(comments.videoId, videoIds))
+      .groupBy(comments.videoId);
+
+    const commentsMap: Record<number, number> = {};
+    for (const row of commentsRows) {
+      commentsMap[row.videoId] = row.count;
+    }
+
+    // User votes if logged in
+    const userVoteMap: Record<number, 1 | 2> = {};
+    if (currentUserId) {
+      const userVotes = await db
+        .select({
+          videoId: likesDislikes.videoId,
+          type: likesDislikes.type,
+        })
+        .from(likesDislikes)
+        .where(
+          sql`${likesDislikes.userId} = ${currentUserId} and ${inArray(likesDislikes.videoId, videoIds)}`
+        );
+      for (const v of userVotes) {
+        userVoteMap[v.videoId] = v.type as 1 | 2;
+      }
+    }
+
+    // User subscriptions if logged in
+    const subscribedAuthorSet = new Set<number>();
+    if (currentUserId && authorIds.length > 0) {
+      const userSubs = await db
+        .select({ channelId: subscriptions.channelId })
+        .from(subscriptions)
+        .where(
+          sql`${subscriptions.subscriberId} = ${currentUserId} and ${inArray(subscriptions.channelId, authorIds)}`
+        );
+      for (const s of userSubs) {
+        subscribedAuthorSet.add(s.channelId);
+      }
+    }
+
+    const formattedShorts = rawShorts.map((s) => ({
+      ...s,
+      likesCount: likesMap[s.id]?.likes || 0,
+      dislikesCount: likesMap[s.id]?.dislikes || 0,
+      commentsCount: commentsMap[s.id] || 0,
+      initialVote: userVoteMap[s.id] || null,
+      isSubscribed: subscribedAuthorSet.has(s.user.id),
+    }));
+
+    return {
+      success: true,
+      shorts: formattedShorts,
+      hasMore: rawShorts.length === limit,
+    };
+  } catch (err: any) {
+    return { success: false, shorts: [], hasMore: false, error: err.message };
+  }
+}
+
+// ==========================================
+// 10. Record Short View Action
+// ==========================================
+export async function recordShortViewAction(videoId: string) {
+  try {
+    const { incrementVideoViews } = await import("@/services/video.service");
+    await incrementVideoViews(videoId);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+// ==========================================
+// 11. Fetch More Featured Videos Action (Infinite Scroll)
+// ==========================================
+export async function fetchMoreFeaturedVideosAction({
+  offset,
+  limit = 14,
+  categoryId,
+}: {
+  offset: number;
+  limit?: number;
+  categoryId?: string | null;
+}) {
+  try {
+    const { getFeaturedVideos } = await import("@/services/video.service");
+    const safeLimit = Math.min(Math.max(1, limit), 50);
+    const safeOffset = Math.max(0, offset);
+    const videosList = await getFeaturedVideos(safeLimit, safeOffset, categoryId);
+    return {
+      success: true,
+      videos: videosList,
+      hasMore: videosList.length === safeLimit,
+    };
+  } catch (err: any) {
+    return { success: false, videos: [], hasMore: false, error: err.message };
+  }
+}
+
+

@@ -2,7 +2,8 @@
 # Format: file_path:issue_type[:reason]
 
 # Legitimate Facebook sharing URL:
-src/app/(public)/articles/read/[id]/page.tsx:php_reference:facebook_sharing_url
+src/app/themes/youplay/articles/read/[id]/page.tsx:php_reference:facebook_sharing_url
+
 
 # Legitimate default documentation / help text in admin settings:
 src/components/admin/FfmpegClient.tsx:php_reference:legacy_cron_instructions

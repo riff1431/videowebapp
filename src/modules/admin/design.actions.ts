@@ -91,10 +91,12 @@ export async function saveCustomDesignAction(data: {
 // ==========================================
 
 export async function getSiteDesignSettingsAction() {
+  await assertAdmin();
   try {
     const configs = await db
       .select()
       .from(siteConfig)
+
       .where(
         inArray(siteConfig.name, [
           "favicon",
@@ -252,90 +254,121 @@ export async function uploadDesignAssetAction(formData: FormData) {
 
 
 // ==========================================
-// Themes Actions (Default, YouPlay)
+// Themes Actions (Multi-Theme Registry & Activation)
 // ==========================================
 
 export async function getThemesAction() {
   await assertAdmin();
   try {
-    const activeConfig = await db
-      .select()
-      .from(siteConfig)
-      .where(eq(siteConfig.name, "theme"))
-      .limit(1);
+    const { THEME_REGISTRY, getActiveThemeId, isRegisteredAndExistingTheme, getThemeManifest } = await import("@/lib/themes");
+    const activeTheme = await getActiveThemeId();
+    const manifest = getThemeManifest();
 
-    const activeTheme = activeConfig.length > 0 ? activeConfig[0].value : "default";
+    // List only registry themes whose folder exists
+    const validThemes = THEME_REGISTRY.filter((t) => isRegisteredAndExistingTheme(t.id));
+
+    // Calculate coverage report per theme
+    const REQUIRED_ROUTES = [
+      "/",
+      "/watch/[videoId]",
+      "/search",
+      "/channel/[username]",
+      "/login",
+      "/register",
+      "/forgot-password",
+      "/reset-password",
+      "/settings",
+      "/upload-video",
+    ];
+
+    const themesWithCoverage = validThemes.map((t) => {
+      const implemented = manifest[t.id] || [];
+      const hasHome = implemented.includes("/");
+      const hasWatch = implemented.some((r) => r.includes("/watch"));
+      const hasLogin = implemented.includes("/login");
+      const hasRegister = implemented.includes("/register");
+      const hasForgot = implemented.includes("/forgot-password");
+      const hasReset = implemented.includes("/reset-password");
+
+      const missingAuth = !hasLogin || !hasRegister || !hasForgot || !hasReset || !hasHome || !hasWatch;
+
+      return {
+        key: t.id,
+        id: t.id,
+        name: t.name,
+        version: t.version,
+        author: t.author,
+        authorUrl: t.authorUrl || "https://codecanyon.net/user/doughouzlight",
+        description: t.description,
+        preview: t.preview,
+        isActive: t.id === activeTheme,
+        missingAuth,
+        implementedCount: implemented.length,
+        requiredCoverage: {
+          total: REQUIRED_ROUTES.length,
+          implemented: REQUIRED_ROUTES.filter((req) =>
+            implemented.some((imp) => imp === req || imp.startsWith(req.split("[")[0]))
+          ).length,
+        },
+      };
+    });
 
     return {
       success: true,
-      activeTheme: activeTheme || "default",
-      themes: [
-        {
-          key: "default",
-          name: "Default",
-          version: "1.0",
-          author: "Deen Doughouz",
-          authorUrl: "https://codecanyon.net/user/doughouzlight",
-        },
-        {
-          key: "youplay",
-          name: "YouPlay",
-          version: "1.0",
-          author: "Deen Doughouz",
-          authorUrl: "https://codecanyon.net/user/doughouzlight",
-        },
-      ],
-      thirdPartyThemes: [
-        {
-          name: "Playtag - The Ultimate Theme",
-          logo: "https://s3.envato.com/files/460158656/logo.png",
-          url: "https://bit.ly/PlaytagTheme",
-        },
-        {
-          name: "Vidplay - The Elegant Theme",
-          logo: "https://s3.envato.com/files/268008739/logo.png",
-          url: "https://bit.ly/VPlayTheme",
-        },
-      ],
+      activeTheme,
+      themes: themesWithCoverage,
     };
   } catch (error: any) {
     console.error("getThemesAction error:", error);
     return {
       success: false,
-      activeTheme: "default",
+      activeTheme: "youplay",
       themes: [],
-      thirdPartyThemes: [],
     };
   }
 }
 
-export async function activateThemeAction(themeKey: string) {
+export async function activateThemeAction(themeId: string) {
   await assertAdmin();
   try {
+    const { isRegisteredAndExistingTheme, invalidateActiveThemeCache, FALLBACK_THEME_ID } = await import("@/lib/themes");
+
+    if (!isRegisteredAndExistingTheme(themeId)) {
+      return { success: false, message: `Theme '${themeId}' does not exist or is not registered.` };
+    }
+
+    // Set siteConfig.active_theme
     const existing = await db
       .select()
       .from(siteConfig)
-      .where(eq(siteConfig.name, "theme"))
+      .where(eq(siteConfig.name, "active_theme"))
       .limit(1);
 
     if (existing.length > 0) {
       await db
         .update(siteConfig)
-        .set({ value: themeKey })
-        .where(eq(siteConfig.name, "theme"));
+        .set({ value: themeId })
+        .where(eq(siteConfig.name, "active_theme"));
     } else {
       await db.insert(siteConfig).values({
-        name: "theme",
-        value: themeKey,
+        name: "active_theme",
+        value: themeId,
       });
     }
+
+    // Clean up deprecated "theme" row if present
+    await db.delete(siteConfig).where(eq(siteConfig.name, "theme"));
+
+    // Invalidate in-memory theme cache
+    invalidateActiveThemeCache();
 
     revalidatePath("/", "layout");
     revalidatePath("/admin/manage-themes");
 
-    return { success: true, message: `Theme ${themeKey} activated successfully!` };
+    return { success: true, message: `Theme '${themeId}' activated successfully!` };
   } catch (error: any) {
     console.error("activateThemeAction error:", error);
     return { success: false, message: error.message || "Failed to activate theme" };
   }
 }
+

@@ -1,6 +1,0 @@
-import React from "react";
-import { redirect } from "next/navigation";
-
-export default function SettingsRedirectPage() {
-  redirect("/settings/general");
-}

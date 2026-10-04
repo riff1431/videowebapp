@@ -5,7 +5,7 @@ import path from "path";
 describe("Phase 3: Internationalization (i18n) and Translation Binding", () => {
   it("verifies forgot-password and reset-password use useTranslation hook for UI strings", () => {
     const forgotPw = fs.readFileSync(
-      path.resolve(process.cwd(), "src/app/(auth)/forgot-password/page.tsx"),
+      path.resolve(process.cwd(), "src/app/themes/youplay/(auth)/forgot-password/page.tsx"),
       "utf8"
     );
     expect(forgotPw).toContain('useTranslation');
@@ -13,7 +13,7 @@ describe("Phase 3: Internationalization (i18n) and Translation Binding", () => {
     expect(forgotPw).toContain('t("request_new_password"');
 
     const resetPw = fs.readFileSync(
-      path.resolve(process.cwd(), "src/app/(auth)/reset-password/page.tsx"),
+      path.resolve(process.cwd(), "src/app/themes/youplay/(auth)/reset-password/page.tsx"),
       "utf8"
     );
     expect(resetPw).toContain('useTranslation');
@@ -23,7 +23,7 @@ describe("Phase 3: Internationalization (i18n) and Translation Binding", () => {
 
   it("verifies ads management client uses translation dictionary", () => {
     const adsClient = fs.readFileSync(
-      path.resolve(process.cwd(), "src/app/(public)/ads/AdsClient.tsx"),
+      path.resolve(process.cwd(), "src/app/themes/youplay/ads/AdsClient.tsx"),
       "utf8"
     );
     expect(adsClient).toContain('useTranslation');

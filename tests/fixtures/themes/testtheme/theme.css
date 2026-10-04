@@ -1,0 +1,23 @@
+/* Test fixture theme CSS */
+[data-theme="testtheme"] {
+  --brand: #ff5722;
+  --brand-hover: #f4511e;
+  --brand-rgb: 255, 87, 34;
+
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --text: #111111;
+  --muted: #555555;
+  --border: #dddddd;
+  --radius: 4px;
+}
+
+[data-theme="testtheme"].dark,
+.dark [data-theme="testtheme"],
+html.dark[data-theme="testtheme"] {
+  --bg: #0d0d0d;
+  --surface: #1a1a1a;
+  --text: #ffffff;
+  --muted: #888888;
+  --border: #222222;
+}

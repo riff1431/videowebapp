@@ -290,7 +290,7 @@ export function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           </button>
 
           {userMenuOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-[var(--card-bg)] text-[var(--foreground)] rounded-lg shadow-2xl border border-[var(--border)] py-1.5 z-50 text-xs">
+            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#1a1a1a] [data-theme='default']:bg-[var(--surface)] text-[var(--foreground)] rounded-lg shadow-2xl border border-[var(--border)] py-1.5 z-50 text-xs">
               {isLoggedIn ? (
                 <>
                   {/* Account Header Info */}

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { videos, users, categories } from "@/db/schema";
-import { eq, desc, sql, ilike } from "drizzle-orm";
+import { eq, desc, sql, ilike, and } from "drizzle-orm";
 
 export interface VideoQueryOptions {
   limit?: number;
@@ -9,9 +9,9 @@ export interface VideoQueryOptions {
   query?: string;
 }
 
-export async function getFeaturedVideos(limit = 12) {
+export async function getFeaturedVideos(limit = 12, offset = 0, categoryId?: string | null) {
   try {
-    return await db
+    let query = db
       .select({
         id: videos.id,
         videoId: videos.videoId,
@@ -32,11 +32,44 @@ export async function getFeaturedVideos(limit = 12) {
         },
       })
       .from(videos)
-      .innerJoin(users, eq(videos.userId, users.id))
+      .innerJoin(users, eq(videos.userId, users.id));
+
+    if (categoryId) {
+      return await query
+        .where(and(eq(videos.categoryId, categoryId), eq(videos.isShort, false)))
+        .orderBy(desc(videos.createdAt))
+        .limit(limit)
+        .offset(offset);
+    }
+
+    return await query
+      .where(eq(videos.isShort, false))
+      .orderBy(desc(videos.createdAt))
+      .limit(limit)
+      .offset(offset);
+  } catch (error) {
+    console.error("Failed to fetch featured videos:", error);
+    return [];
+  }
+}
+
+export async function getShortVideos(limit = 14) {
+  try {
+    return await db
+      .select({
+        id: videos.id,
+        videoId: videos.videoId,
+        title: videos.title,
+        thumbnail: videos.thumbnail,
+        views: videos.views,
+        createdAt: videos.createdAt,
+      })
+      .from(videos)
+      .where(eq(videos.isShort, true))
       .orderBy(desc(videos.createdAt))
       .limit(limit);
   } catch (error) {
-    console.error("Failed to fetch featured videos:", error);
+    console.error("Failed to fetch short videos:", error);
     return [];
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getSiteDesignSettingsAction } from "@/modules/admin/design.actions";
+import { getPublicDesignSettingsAction } from "@/modules/videos/design-public.actions";
 import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 type Theme = "light" | "dark";
@@ -49,7 +49,7 @@ export function ThemeProvider({
   useEffect(() => {
     async function loadSettings() {
       try {
-        const res = await getSiteDesignSettingsAction();
+        const res = await getPublicDesignSettingsAction();
         if (res.success && res.data) {
           setDesignSettings(res.data);
         }
@@ -59,6 +59,7 @@ export function ThemeProvider({
     }
     loadSettings();
   }, []);
+
 
   // Set data-theme on html element whenever theme setting changes
   useEffect(() => {

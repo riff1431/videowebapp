@@ -1,0 +1,52 @@
+/* YouPlay Theme Styling Scoped to [data-theme="youplay"] */
+[data-theme="youplay"] {
+  /* Brand Tokens */
+  --brand: #04abf2;
+  --brand-hover: #039be5;
+  --brand-rgb: 4, 171, 242;
+
+  --bg: #f9f9f9;
+  --surface: #ffffff;
+  --text: #222222;
+  --muted: #666666;
+  --border: #e5e7eb;
+  --radius: 8px;
+  --font-body: var(--font-body, "Lato", sans-serif);
+  --font-heading: var(--font-heading, "Roboto", sans-serif);
+
+  --primary: #04abf2;
+  --primary-hover: #039be5;
+  --primary-rgb: 4, 171, 242;
+  --accent-yellow: #fad657;
+  --accent-red: #f44336;
+
+  --background: #f9f9f9;
+  --foreground: #222222;
+  --header-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --card-bg: #ffffff;
+  --card-border: #e9e9e9;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --search-bg: #f1f2f4;
+  --search-border: #dcdfe4;
+}
+
+[data-theme="youplay"].dark,
+.dark [data-theme="youplay"],
+html.dark[data-theme="youplay"] {
+  --bg: #121212;
+  --surface: #212121;
+  --text: #f1f1f1;
+  --muted: #999999;
+  --border: #262626;
+
+  --background: #121212;
+  --foreground: #f1f1f1;
+  --header-bg: #181818;
+  --sidebar-bg: #121212;
+  --card-bg: #212121;
+  --card-border: #2a2a2a;
+  --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  --search-bg: #202020;
+  --search-border: #333333;
+}
