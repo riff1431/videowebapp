@@ -265,7 +265,7 @@ export function DefaultHomeClient({
                   <SectionHeader
                     title={t("recommended", "Recommended")}
                     viewMoreHref="/videos/latest"
-                    viewMoreLabel={t("view_more", "View More >")}
+                    viewMoreLabel={t("view_more", "View More")}
                   />
                 )}
 
@@ -282,7 +282,7 @@ export function DefaultHomeClient({
                   <SectionHeader
                     title={t("shorts", "Shorts")}
                     viewMoreHref="/shorts"
-                    viewMoreLabel={t("view_more", "View More >")}
+                    viewMoreLabel={t("view_more", "View More")}
                   />
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-9 gap-3 2xl:gap-4 overflow-x-auto pb-2 scrollbar-none">

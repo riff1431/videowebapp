@@ -1,11 +1,10 @@
 import React from "react";
-import Link from "next/link";
 import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { desc, eq, and, gte } from "drizzle-orm";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { getServerTranslations } from "@/lib/translations/server";
-import { Video, VideoOff } from "lucide-react";
+import { VideoOff } from "lucide-react";
 import { TopVideosFilter } from "./TopVideosFilter";
 
 export const revalidate = 30;
