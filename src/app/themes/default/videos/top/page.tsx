@@ -5,7 +5,8 @@ import { videos, users } from "@/db/schema";
 import { desc, eq, and, gte } from "drizzle-orm";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { getServerTranslations } from "@/lib/translations/server";
-import { Video, VideoOff, BarChart2, Calendar } from "lucide-react";
+import { Video, VideoOff } from "lucide-react";
+import { TopVideosFilter } from "./TopVideosFilter";
 
 export const revalidate = 30;
 
@@ -57,43 +58,10 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
     .orderBy(desc(videos.views), desc(videos.createdAt))
     .limit(24);
 
-  const filterTabs = [
-    { type: "all", label: t("all_time", "All Time"), icon: BarChart2 },
-    { type: "today", label: t("today", "Today"), icon: Calendar },
-    { type: "this_week", label: t("this_week", "This week"), icon: Calendar },
-    { type: "this_month", label: t("this_month", "This month"), icon: Calendar },
-    { type: "this_year", label: t("this_year", "This year"), icon: Calendar },
-  ];
-
   return (
-    <div className="w-full">
-      {/* Centered Floating Time Filter Bar (PlayTube Screenshot Parity) */}
-      <div className="flex justify-center mb-10">
-        <div className="bg-white dark:bg-[#1a1a1a] border border-neutral-200/90 dark:border-neutral-800 rounded-xl p-1.5 shadow-xs flex items-center gap-1.5">
-          {filterTabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = currentType === tab.type;
-            const href = tab.type === "all" ? "/videos/top" : `/videos/top?type=${tab.type}`;
-
-            return (
-              <Link
-                key={tab.type}
-                href={href}
-                className={`min-w-[68px] sm:min-w-[76px] py-2 px-3 rounded-lg flex flex-col items-center gap-1.5 transition-all text-center ${isActive
-                  ? "bg-[#dff2fc] dark:bg-[#04abf2]/20 text-[#04abf2] font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                  }`}
-              >
-                <Icon
-                  className={`w-4 h-4 ${isActive ? "text-[#04abf2] stroke-[2.5]" : "text-neutral-500 stroke-[1.75]"
-                    }`}
-                />
-                <span className="text-[11px] whitespace-nowrap leading-tight">{tab.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+    <div className="w-full space-y-6">
+      {/* Top Filter Rail: Time pills with prev/next buttons (matching Popular Channels filter) */}
+      <TopVideosFilter currentType={currentType} />
 
       {/* Empty State matching PlayTube Screenshot */}
       {topVideos.length === 0 ? (
@@ -106,7 +74,7 @@ export default async function TopVideosPage({ searchParams }: TopVideosPageProps
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 3xl:grid-cols-7 gap-4">
           {topVideos.map((video) => (
             <VideoCard
               key={video.id}

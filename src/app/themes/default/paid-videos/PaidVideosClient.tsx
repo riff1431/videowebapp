@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Video, Film, Clapperboard, Disc, VideoOff } from "lucide-react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { Video, Film, Clapperboard, Disc, VideoOff, ChevronLeft, ChevronRight } from "lucide-react";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 
 type TabType = "videos" | "movies" | "rented_movies" | "rented_videos";
@@ -39,6 +39,39 @@ export function PaidVideosClient({
   initialTab = "videos",
 }: PaidVideosClientProps) {
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 2);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
+  }, []);
+
+  useEffect(() => {
+    checkScroll();
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [checkScroll]);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const scrollAmount = 260;
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
 
   const tabs: { key: TabType; label: string; icon: React.ElementType }[] = [
     { key: "videos", label: "Videos", icon: Video },
@@ -65,28 +98,64 @@ export function PaidVideosClient({
   }
 
   return (
-    <div className="w-full">
-      {/* Tabs Filter (Exact PlayTube Layout) */}
-      <div className="flex justify-center mb-10">
-        <div className="inline-flex items-center p-1.5 bg-white dark:bg-[#1a1a1a] border border-neutral-200/80 dark:border-neutral-800 rounded-2xl shadow-xs gap-1">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.key;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`min-w-[84px] px-4 py-2.5 rounded-xl flex flex-col items-center gap-1.5 text-xs transition-all cursor-pointer ${isActive
-                  ? "bg-[#e6f6fd] dark:bg-[#04abf2]/15 text-[#04abf2] font-semibold shadow-2xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 font-medium"
+    <div className="w-full space-y-6">
+      {/* Top Filter Rail: Pills with prev/next buttons (matching Popular Channels filter) */}
+      <div className="relative group/chips flex items-center pb-3 border-b border-[var(--border)] mb-6">
+        {/* Prev Button with soft gradient mask */}
+        {canScrollLeft && (
+          <div className="absolute left-0 top-0 bottom-0 z-10 flex items-center pr-4 bg-gradient-to-r from-[var(--default-panel)] via-[var(--default-panel)]/90 to-transparent">
+            <button
+              type="button"
+              onClick={() => handleScroll("left")}
+              aria-label="Previous filters"
+              className="w-8 h-8 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Scrollable Chips Rail */}
+        <div
+          ref={scrollContainerRef}
+          className="flex-1 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none scroll-smooth"
+        >
+          <div className="flex items-center gap-1.5 shrink-0">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-[#04abf2] text-white shadow-xs"
+                      : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
                   }`}
-              >
-                <Icon className={`w-5 h-5 ${isActive ? "text-[#04abf2]" : "text-neutral-500"}`} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Next Button with soft gradient mask */}
+        {canScrollRight && (
+          <div className="absolute right-0 top-0 bottom-0 z-10 flex items-center pl-4 bg-gradient-to-l from-[var(--default-panel)] via-[var(--default-panel)]/90 to-transparent">
+            <button
+              type="button"
+              onClick={() => handleScroll("right")}
+              aria-label="Next filters"
+              className="w-8 h-8 rounded-full bg-white dark:bg-[#202020] text-[var(--default-text)] shadow-md hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Empty State or Video Grid */}
