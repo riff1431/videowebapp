@@ -15,6 +15,7 @@ import { eq, desc, and, count } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
+import { ShortCard } from "@/app/themes/default/components/media/ShortCard";
 import { getServerTranslations } from "@/lib/translations/server";
 import { getPublicImageUrl } from "@/lib/storage/image-url";
 import {
@@ -400,17 +401,18 @@ export default async function ChannelPage({
                 </p>
               </div>
             ) : (
-              <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                 {tabVideos.map((video) => (
-                  <VideoCard
+                  <ShortCard
                     key={video.id}
-                    videoId={video.videoId}
-                    title={video.title}
-                    thumbnail={video.thumbnail}
-                    duration={video.duration}
-                    views={video.views}
-                    createdAt={video.createdAt}
-                    user={video.user}
+                    short={{
+                      id: video.id,
+                      videoId: video.videoId,
+                      title: video.title,
+                      thumbnail: video.thumbnail,
+                      views: video.views,
+                      createdAt: video.createdAt,
+                    }}
                   />
                 ))}
               </div>
