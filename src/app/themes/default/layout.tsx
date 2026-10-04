@@ -1,29 +1,22 @@
 import React from "react";
 import "./theme.css";
 import { SiteShell } from "@/components/layout/SiteShell";
-import { Roboto, Lato } from "next/font/google";
+import { Outfit } from "next/font/google";
 
-const lato = Lato({
+const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["300", "400", "700", "900"],
-  variable: "--font-body",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-outfit",
   display: "swap",
 });
 
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-heading",
-  display: "swap",
-});
-
-export default function defaultThemeLayout({
+export default function DefaultThemeLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className={`${lato.variable} ${roboto.variable} font-sans`}>
+    <div className={`${outfit.variable} font-sans`}>
       <SiteShell themeId="default">{children}</SiteShell>
     </div>
   );
