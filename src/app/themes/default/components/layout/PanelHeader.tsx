@@ -24,8 +24,11 @@ import {
   Newspaper,
   Users,
   Wallet,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import { Avatar } from "@/app/themes/default/components/ui/avatar";
 import { NotificationBell } from "@/components/layout/NotificationBell";
 import { getPublicImageUrl } from "@/lib/storage/image-url";
@@ -46,6 +49,7 @@ export interface PanelHeaderProps {
 export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { theme, toggleTheme, canToggle } = useTheme();
   const { t, currentLang, languages, setLanguage } = useTranslation();
   const [keyword, setKeyword] = useState("");
   const [langOpen, setLangOpen] = useState(false);
@@ -217,6 +221,23 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
           )}
         </div>
 
+        {/* Dark/Light Mode Switcher */}
+        {canToggle && (
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            title={theme === "dark" ? t("light_mode", "Light Mode") : t("night_mode", "Dark Mode")}
+            aria-label="Toggle dark/light mode"
+          >
+            {theme === "dark" ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
+          </button>
+        )}
+
         {/* Notifications Bell */}
         {user ? (
           <div className="relative">
@@ -254,6 +275,28 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
 
                 {/* Menu items */}
                 <div className="py-1">
+                  {canToggle && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        toggleTheme();
+                        setUserMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer border-b border-[var(--border)]/40"
+                    >
+                      <div className="flex items-center gap-3">
+                        {theme === "dark" ? (
+                          <Sun className="w-4 h-4 text-amber-400" />
+                        ) : (
+                          <Moon className="w-4 h-4 text-[var(--default-muted)]" />
+                        )}
+                        <span>{theme === "dark" ? t("light_mode", "Light Mode") : t("night_mode", "Dark Mode")}</span>
+                      </div>
+                      <span className="text-[10px] uppercase font-semibold text-[var(--default-muted)]">
+                        {theme}
+                      </span>
+                    </button>
+                  )}
                   <Link
                     href={`/@${user.username}`}
                     onClick={() => setUserMenuOpen(false)}
