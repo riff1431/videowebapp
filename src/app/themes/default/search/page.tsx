@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { videos, users, categories } from "@/db/schema";
 import { ilike, or, eq, desc, and } from "drizzle-orm";
 import { Search as SearchIcon } from "lucide-react";
-import Link from "next/link";
+import { SearchCategoryFilters } from "./SearchCategoryFilters";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -70,29 +70,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-          <Link
-            href={`/search?keyword=${encodeURIComponent(query)}`}
-            className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 shadow-2xs ${!selectedCat
-                ? "bg-[var(--primary)] text-white"
-                : "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 border border-[var(--border)]"
-              }`}
-          >
-            All Categories
-          </Link>
-          {allCategories.map((c) => (
-            <Link
-              key={c.key}
-              href={`/search?keyword=${encodeURIComponent(query)}&cat=${c.key}`}
-              className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 shadow-2xs ${selectedCat === c.key
-                  ? "bg-[var(--primary)] text-white"
-                  : "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 border border-[var(--border)]"
-                }`}
-            >
-              {c.name}
-            </Link>
-          ))}
-        </div>
+        <SearchCategoryFilters
+          categories={allCategories}
+          selectedCat={selectedCat}
+          query={query}
+        />
       </div>
 
       {/* Results Grid */}

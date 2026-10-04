@@ -22,7 +22,7 @@ export function ShortCard({ short }: { short: ShortItem }) {
   return (
     <div className="short-card-item group rounded-[16px] p-2 transition-all cursor-pointer">
       <Link
-        href={`/watch/${short.videoId}`}
+        href={`/shorts?v=${short.videoId}`}
         className="block relative aspect-[9/16] w-full overflow-hidden rounded-[16px] bg-neutral-200 dark:bg-neutral-800"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -38,7 +38,7 @@ export function ShortCard({ short }: { short: ShortItem }) {
       </Link>
 
       <div className="mt-2.5 px-0.5">
-        <Link href={`/watch/${short.videoId}`}>
+        <Link href={`/shorts?v=${short.videoId}`}>
           <h3
             title={short.title}
             className="line-clamp-2 text-xs font-semibold text-[var(--default-text)] leading-snug group-hover:text-[var(--default-brand-red)] transition-colors"
