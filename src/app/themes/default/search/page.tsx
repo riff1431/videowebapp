@@ -1,5 +1,5 @@
 import React from "react";
-import { VideoCard } from "@/components/common/VideoCard";
+import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { db } from "@/db";
 import { videos, users, categories } from "@/db/schema";
 import { ilike, or, eq, desc, and } from "drizzle-orm";

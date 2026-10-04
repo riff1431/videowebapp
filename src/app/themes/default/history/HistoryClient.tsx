@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { VideoCard } from "@/components/common/VideoCard";
+import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { clearWatchHistoryAction, removeVideoFromHistoryAction } from "@/modules/videos/history.actions";
 import { History as HistoryIcon, VideoOff, Trash2, Loader2, X, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";

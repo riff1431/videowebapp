@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Video, VideoOff, Search, Minus, Plus } from "lucide-react";
-import { VideoCard } from "@/components/common/VideoCard";
+import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 
 export interface StockVideoItem {
   id: number;

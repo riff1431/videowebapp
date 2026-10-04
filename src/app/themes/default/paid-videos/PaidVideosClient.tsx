@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Video, Film, Clapperboard, Disc, VideoOff, DollarSign } from "lucide-react";
-import { VideoCard } from "@/components/common/VideoCard";
+import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 
 type TabType = "videos" | "movies" | "rented_movies" | "rented_videos";
 
