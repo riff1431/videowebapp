@@ -70,12 +70,14 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div
       data-theme="default"
-      className={`min-h-screen w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col transition-colors ${
-        isShortsRoute ? "p-0 sm:p-4 lg:p-6" : "p-2 sm:p-4 lg:p-6"
+      className={`w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col transition-colors ${
+        isShortsRoute
+          ? "h-screen max-h-screen overflow-hidden p-0 sm:p-4 lg:p-6"
+          : "min-h-screen p-2 sm:p-4 lg:p-6"
       }`}
     >
       {/* Main Container Layout */}
-      <div className="flex-1 flex gap-4 lg:gap-6 w-full mx-auto min-h-0">
+      <div className={`flex-1 flex gap-4 lg:gap-6 w-full mx-auto min-h-0 ${isShortsRoute ? "h-full overflow-hidden" : ""}`}>
         {/* Desktop Left Sidebar: sits directly on the canvas outside the floating panel */}
         <aside
           className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${
@@ -176,12 +178,12 @@ export function AppShell({ children }: AppShellProps) {
         <div
           className={`site-floating-panel flex-1 min-w-0 flex flex-col transition-shadow ${
             isShortsRoute
-              ? "rounded-none sm:rounded-[32px] p-0 sm:p-6 lg:p-8"
+              ? "rounded-none sm:rounded-[32px] p-0 h-full overflow-hidden"
               : "rounded-[32px] p-4 sm:p-6 lg:p-8"
           }`}
         >
           <PanelHeader user={user} onToggleSidebar={handleToggleSidebar} />
-          <main className="flex-1 min-w-0 flex flex-col">{children}</main>
+          <main className={`flex-1 min-w-0 flex flex-col ${isShortsRoute ? "h-full overflow-hidden" : ""}`}>{children}</main>
         </div>
       </div>
     </div>

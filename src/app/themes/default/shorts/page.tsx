@@ -151,7 +151,7 @@ export default async function ShortsPage({ searchParams }: ShortsPageProps) {
     : null;
 
   return (
-    <div className="w-full">
+    <div className="w-full flex-1 h-full min-h-0 flex flex-col">
       <ShortsFeed
         initialShorts={shortsData}
         initialIndex={initialIndex}

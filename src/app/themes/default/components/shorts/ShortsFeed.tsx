@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChevronUp, ChevronDown, Compass, Plus } from "lucide-react";
 import { ShortData } from "@/app/themes/default/shorts/ShortsFeedPlayer";
@@ -13,6 +14,7 @@ import { ShortsSkeleton, ShortsEmpty, ShortsError } from "./ShortsSkeleton";
 import { useShortsFeed } from "@/modules/shorts/client/useShortsFeed";
 import { useShortsKeyboard } from "@/modules/shorts/client/useShortsKeyboard";
 import { useTranslation } from "@/providers/language-provider";
+import { getPublicImageUrl } from "@/lib/storage/image-url";
 
 // Lazy-load comments panel with dynamic import
 const ShortCommentsPanel = dynamic(
@@ -109,8 +111,8 @@ export function ShortsFeed({
     enabled: true,
     onNext: goToNext,
     onPrev: goToPrev,
-    onTogglePlay: () => {},
-    onToggleMute: () => {},
+    onTogglePlay: () => { },
+    onToggleMute: () => { },
     onOpenComments: () => setCommentsOpen((prev) => !prev),
     onClosePanels: () => {
       setCommentsOpen(false);
@@ -130,6 +132,9 @@ export function ShortsFeed({
   }
 
   const current = shorts[activeIndex] || shorts[0];
+  const bgPosterUrl = current?.thumbnail
+    ? getPublicImageUrl(current.thumbnail, "/upload/photos/d-cover.jpg") || "/upload/photos/d-cover.jpg"
+    : "/upload/photos/d-cover.jpg";
 
   return (
     <div
@@ -137,16 +142,43 @@ export function ShortsFeed({
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="w-full flex-1 flex items-center justify-center min-h-0 sm:min-h-[calc(100vh-12rem)] py-0 sm:py-2 select-none relative"
+      className="w-full flex-1 h-full max-h-full flex items-center justify-center min-h-0 py-0 select-none relative overflow-hidden"
       aria-label="Shorts Feed"
     >
+      {/* Desktop Blurred Background Video/Poster (matches screenshot reference, hidden on mobile) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden hidden sm:block z-0" aria-hidden="true">
+        {current?.videoLocation && !(current as any)?.youtubeUrl && !current?.videoLocation.includes("youtube.com") ? (
+          <video
+            key={current.videoLocation}
+            src={current.videoLocation}
+            poster={bgPosterUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover scale-110 blur-2xl opacity-40 brightness-75 transition-opacity duration-700"
+          />
+        ) : (
+          <Image
+            key={bgPosterUrl}
+            src={bgPosterUrl}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover scale-110 blur-2xl opacity-40 brightness-75 transition-opacity duration-700"
+          />
+        )}
+        {/* Soft vignette overlay so center player pops */}
+        {/* <div className="absolute inset-0 bg-black/40 backdrop-blur-md" /> */}
+      </div>
+
       {/* Live Region for Screen Readers */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {current?.title ? `Now playing: ${current.title}` : ""}
       </div>
 
       {/* Desktop Top-Right Floating "+ Create" Button (visible on md+) */}
-      <div className="absolute top-0 right-2 sm:right-4 z-20 hidden md:block">
+      <div className="absolute top-2 right-2 sm:right-4 z-20 hidden md:block">
         <Link
           href={isLoggedIn ? "/upload-video?type=shorts" : `/login?next=${encodeURIComponent("/upload-video?type=shorts")}`}
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#0088cc]/90 hover:bg-[#0088cc] text-white text-xs font-semibold shadow-md backdrop-blur-md transition-all hover:scale-105 active:scale-95"
@@ -156,7 +188,7 @@ export function ShortsFeed({
         </Link>
       </div>
 
-      <div className="relative flex items-end justify-center gap-3 sm:gap-4 w-full max-w-full h-full">
+      <div className="relative flex items-center justify-center gap-3 sm:gap-4 w-full max-w-full h-full max-h-full z-10 py-0">
         {/* Render current active short with windowing (previous, current, next) */}
         {current && (
           <ShortItem
@@ -190,7 +222,7 @@ export function ShortsFeed({
         )}
 
         {/* Right-Side Desktop Up/Down Navigation Chevrons matching screenshot design */}
-        <div className="hidden lg:flex flex-col gap-3 mb-24 ml-2">
+        <div className="hidden lg:flex flex-col gap-3 ml-2 mr-2 shrink-0 self-center">
           <button
             type="button"
             onClick={goToPrev}

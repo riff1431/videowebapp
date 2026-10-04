@@ -107,11 +107,10 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
 
   return (
     <header
-      className={`w-full flex items-center justify-between gap-2 sm:gap-4 py-2 border-b border-[var(--border)]/40 ${
-        isShortsRoute
-          ? "px-3 sm:px-1 mb-0 sm:mb-6 pb-2.5 sm:pb-4"
-          : "px-1 mb-6 pb-4"
-      }`}
+      className={`w-full flex items-center justify-between gap-2 sm:gap-4 py-2 border-b border-[var(--border)]/40 ${isShortsRoute
+        ? "px-3 sm:px-7 lg:px-8 lg:py-6 mb-0 "
+        : "px-1 mb-6 pb-4"
+        }`}
     >
       {/* 1. Left: Mobile Hamburger + Logo (<lg) OR Desktop Greeting/Title (lg+) */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -241,9 +240,8 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
                     setLanguage(l.name);
                     setLangOpen(false);
                   }}
-                  className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer ${
-                    currentLang === l.name ? "font-bold text-[var(--default-brand-red)]" : "text-[var(--default-text)]"
-                  }`}
+                  className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer ${currentLang === l.name ? "font-bold text-[var(--default-brand-red)]" : "text-[var(--default-text)]"
+                    }`}
                 >
                   <span>{l.displayName || l.name}</span>
                   {currentLang === l.name && <Check className="w-3.5 h-3.5" />}
@@ -351,9 +349,8 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
                         setLanguage(l.name);
                         setMobileOverflowOpen(false);
                       }}
-                      className={`w-full text-left px-3.5 py-1.5 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer ${
-                        currentLang === l.name ? "font-bold text-[var(--default-brand-red)]" : "text-[var(--default-text)]"
-                      }`}
+                      className={`w-full text-left px-3.5 py-1.5 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer ${currentLang === l.name ? "font-bold text-[var(--default-brand-red)]" : "text-[var(--default-text)]"
+                        }`}
                     >
                       <span>{l.displayName || l.name}</span>
                       {currentLang === l.name && <Check className="w-3.5 h-3.5" />}
