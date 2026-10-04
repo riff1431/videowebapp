@@ -137,7 +137,7 @@ export function ShortsFeed({
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="w-full flex items-center justify-center min-h-[calc(100vh-12rem)] py-2 select-none relative"
+      className="w-full flex-1 flex items-center justify-center min-h-0 sm:min-h-[calc(100vh-12rem)] py-0 sm:py-2 select-none relative"
       aria-label="Shorts Feed"
     >
       {/* Live Region for Screen Readers */}
@@ -156,7 +156,7 @@ export function ShortsFeed({
         </Link>
       </div>
 
-      <div className="relative flex items-end gap-3 sm:gap-4 max-w-full">
+      <div className="relative flex items-end justify-center gap-3 sm:gap-4 w-full max-w-full h-full">
         {/* Render current active short with windowing (previous, current, next) */}
         {current && (
           <ShortItem

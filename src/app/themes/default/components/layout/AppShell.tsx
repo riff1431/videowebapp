@@ -65,17 +65,22 @@ export function AppShell({ children }: AppShellProps) {
 
 
 
+  const isShortsRoute = pathname === "/shorts";
+
   return (
     <div
       data-theme="default"
-      className="min-h-screen w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col p-2 sm:p-4 lg:p-6 transition-colors"
+      className={`min-h-screen w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col transition-colors ${
+        isShortsRoute ? "p-0 sm:p-4 lg:p-6" : "p-2 sm:p-4 lg:p-6"
+      }`}
     >
       {/* Main Container Layout */}
       <div className="flex-1 flex gap-4 lg:gap-6 w-full mx-auto min-h-0">
         {/* Desktop Left Sidebar: sits directly on the canvas outside the floating panel */}
         <aside
-          className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${isCollapsed ? "w-16" : "w-56"
-            }`}
+          className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${
+            isCollapsed ? "w-16" : "w-56"
+          }`}
         >
           <div className="sticky top-6 flex flex-col h-[calc(100vh-3rem)]">
             {/* Sidebar Header: Hamburger Toggle + Logo */}
@@ -168,9 +173,15 @@ export function AppShell({ children }: AppShellProps) {
         )}
 
         {/* The Signature Large Floating Panel with 32px rounded corners and soft shadow */}
-        <div className="site-floating-panel flex-1 min-w-0 rounded-[32px] p-4 sm:p-6 lg:p-8 flex flex-col transition-shadow">
+        <div
+          className={`site-floating-panel flex-1 min-w-0 flex flex-col transition-shadow ${
+            isShortsRoute
+              ? "rounded-none sm:rounded-[32px] p-0 sm:p-6 lg:p-8"
+              : "rounded-[32px] p-4 sm:p-6 lg:p-8"
+          }`}
+        >
           <PanelHeader user={user} onToggleSidebar={handleToggleSidebar} />
-          <main className="flex-1 min-w-0">{children}</main>
+          <main className="flex-1 min-w-0 flex flex-col">{children}</main>
         </div>
       </div>
     </div>

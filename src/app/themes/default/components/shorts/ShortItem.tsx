@@ -79,13 +79,13 @@ export function ShortItem({
 
   return (
     <div
-      className="relative flex items-end gap-3 sm:gap-4 max-w-full"
+      className="relative flex items-end justify-center gap-3 sm:gap-4 w-full sm:max-w-full h-full"
       role="listitem"
       aria-roledescription="short"
       aria-label={short.title}
     >
-      {/* 1. Main 9:16 Vertical Video Screen */}
-      <div className="relative w-[340px] sm:w-[380px] md:w-[410px] h-[610px] sm:h-[680px] bg-black rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-2xl flex items-center justify-center border-none group/player">
+      {/* 1. Main 9:16 Vertical Video Screen: full viewport width and height below header on mobile */}
+      <div className="relative w-full sm:w-[380px] md:w-[410px] h-[calc(100dvh-3.75rem)] sm:h-[680px] bg-black rounded-none sm:rounded-[28px] overflow-hidden shadow-2xl flex items-center justify-center border-none group/player">
         {isMounted ? (
           <ShortPlayer
             videoId={short.videoId}

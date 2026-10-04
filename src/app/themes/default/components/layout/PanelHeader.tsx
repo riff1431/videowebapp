@@ -103,9 +103,16 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
   };
 
   const titleContent = getHeaderTitle();
+  const isShortsRoute = pathname === "/shorts";
 
   return (
-    <header className="w-full flex items-center justify-between gap-2 sm:gap-4 py-2 px-1 mb-6 border-b border-[var(--border)]/40 pb-4">
+    <header
+      className={`w-full flex items-center justify-between gap-2 sm:gap-4 py-2 border-b border-[var(--border)]/40 ${
+        isShortsRoute
+          ? "px-3 sm:px-1 mb-0 sm:mb-6 pb-2.5 sm:pb-4"
+          : "px-1 mb-6 pb-4"
+      }`}
+    >
       {/* 1. Left: Mobile Hamburger + Logo (<lg) OR Desktop Greeting/Title (lg+) */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         {/* Mobile Hamburger Menu Toggle */}
