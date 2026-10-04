@@ -3,7 +3,7 @@ import Link from "next/link";
 import { db } from "@/db";
 import { videos, users } from "@/db/schema";
 import { desc, eq, and, gte } from "drizzle-orm";
-import { VideoCard } from "@/components/common/VideoCard";
+import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { getServerTranslations } from "@/lib/translations/server";
 import { Video, VideoOff, BarChart2, Calendar } from "lucide-react";
 

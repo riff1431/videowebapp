@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getVideoByVideoId, getFeaturedVideos } from "@/services/video.service";
-import { VideoCard } from "@/components/common/VideoCard";
+import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { VideoComments } from "@/components/common/VideoComments";
 import { VideoActionButtons } from "@/components/common/VideoActionButtons";
 import { CheckCircle2 } from "lucide-react";

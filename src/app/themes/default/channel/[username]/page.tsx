@@ -14,7 +14,7 @@ import {
 import { eq, desc, and, count } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
-import { VideoCard } from "@/components/common/VideoCard";
+import { VideoCard } from "@/app/themes/default/components/media/VideoCard";
 import { getServerTranslations } from "@/lib/translations/server";
 import { getPublicImageUrl } from "@/lib/storage/image-url";
 import {
