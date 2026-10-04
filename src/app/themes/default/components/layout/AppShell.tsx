@@ -27,7 +27,7 @@ export function AppShell({ children }: AppShellProps) {
           setUser(data.user);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       mounted = false;
     };
@@ -40,7 +40,7 @@ export function AppShell({ children }: AppShellProps) {
       if (saved !== null) {
         setIsCollapsed(saved === "true");
       }
-    } catch (e) {}
+    } catch (e) { }
   }, []);
 
   // Close mobile drawer on route change
@@ -56,11 +56,12 @@ export function AppShell({ children }: AppShellProps) {
         const next = !prev;
         try {
           localStorage.setItem("playtube_sidebar_collapsed", String(next));
-        } catch (e) {}
+        } catch (e) { }
         return next;
       });
     }
   };
+
 
 
 
@@ -69,44 +70,12 @@ export function AppShell({ children }: AppShellProps) {
       data-theme="default"
       className="min-h-screen w-full bg-[var(--default-canvas)] text-[var(--default-text)] flex flex-col p-2 sm:p-4 lg:p-6 transition-colors"
     >
-      {/* Top Mobile Bar */}
-      <div className="flex lg:hidden items-center justify-between p-2 mb-2">
-        <Link href="/" className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo.png"
-            alt="PlayTube"
-            className="h-7 w-auto dark:hidden"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-light.png"
-            alt="PlayTube"
-            className="h-7 w-auto hidden dark:block"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-        </Link>
-        <button
-          type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
-
       {/* Main Container Layout */}
       <div className="flex-1 flex gap-4 lg:gap-6 w-full mx-auto min-h-0">
         {/* Desktop Left Sidebar: sits directly on the canvas outside the floating panel */}
         <aside
-          className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${
-            isCollapsed ? "w-16" : "w-56"
-          }`}
+          className={`hidden lg:block shrink-0 transition-[width] duration-200 ease-in-out ${isCollapsed ? "w-16" : "w-56"
+            }`}
         >
           <div className="sticky top-6 flex flex-col h-[calc(100vh-3rem)]">
             {/* Sidebar Header: Hamburger Toggle + Logo */}
@@ -160,8 +129,40 @@ export function AppShell({ children }: AppShellProps) {
               className="fixed inset-0 bg-black/60 backdrop-blur-xs"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="relative w-64 max-w-[80%] h-full bg-[var(--default-canvas)] p-4 overflow-y-auto z-10 shadow-2xl">
-              <SidebarNav isLoggedIn={!!user} isCollapsed={false} />
+            <div className="relative w-72 max-w-[85%] h-full bg-[var(--default-canvas)] p-4 overflow-y-auto z-10 shadow-2xl flex flex-col">
+              <div className="flex items-center justify-between pb-3 mb-2 border-b border-[var(--border)]/40 shrink-0">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="inline-flex items-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo.png"
+                    alt="PlayTube"
+                    className="h-7 w-auto dark:hidden"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo-light.png"
+                    alt="PlayTube"
+                    className="h-7 w-auto hidden dark:block"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+                  aria-label="Close menu"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <SidebarNav isLoggedIn={!!user} isCollapsed={false} />
+              </div>
             </div>
           </div>
         )}

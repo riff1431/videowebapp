@@ -12,6 +12,7 @@ import {
   Flag,
   Clock,
   Sparkles,
+  Eye,
 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 import { reportVideoAction } from "@/modules/admin/reports.actions";
@@ -23,6 +24,7 @@ interface ShortActionRailProps {
   likesCount: number;
   dislikesCount: number;
   commentsCount: number;
+  viewsCount?: number | null;
   currentVote: 1 | 2 | null;
   commentsEnabled?: boolean;
   onVote: (type: 1 | 2) => void;
@@ -39,6 +41,7 @@ export function ShortActionRail({
   likesCount,
   dislikesCount,
   commentsCount,
+  viewsCount = 0,
   currentVote,
   commentsEnabled = true,
   onVote,
@@ -158,7 +161,20 @@ export function ShortActionRail({
         </div>
       )}
 
-      {/* 4. Share Button */}
+      {/* 4. Views Counter (as seen in mobile/desktop screenshots) */}
+      <div className="flex flex-col items-center gap-1">
+        <div
+          aria-label="Views"
+          className={`${btnBaseClass} pointer-events-none select-none`}
+        >
+          <Eye className="w-5 h-5" />
+        </div>
+        <span className={labelClass}>
+          {viewsCount ? formatCount(Number(viewsCount)) : "0"}
+        </span>
+      </div>
+
+      {/* 5. Share Button */}
       <div className="flex flex-col items-center gap-1">
         <button
           type="button"
@@ -170,20 +186,6 @@ export function ShortActionRail({
         </button>
         <span className={labelClass}>
           {t("share", "Share")}
-        </span>
-      </div>
-
-      {/* 5. Create Button (Links to upload route, login required) */}
-      <div className="flex flex-col items-center gap-1">
-        <Link
-          href={isLoggedIn ? "/upload-video?type=shorts" : `/login?next=${encodeURIComponent("/upload-video?type=shorts")}`}
-          aria-label={t("create", "Create")}
-          className={btnBaseClass}
-        >
-          <Plus className="w-5 h-5" />
-        </Link>
-        <span className={labelClass}>
-          {t("create", "Create")}
         </span>
       </div>
 

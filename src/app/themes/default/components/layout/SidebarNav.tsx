@@ -32,6 +32,7 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
 
   const primaryLinks = [
     { href: "/", label: t("home", "Home"), icon: Video },
+    { href: "/shorts", label: t("shorts", "Shorts"), icon: ShortsIcon },
     ...(isLoggedIn
       ? [
         { href: "/history", label: t("history", "History"), icon: History },
@@ -48,7 +49,6 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
     { href: "/movies", label: t("movies", "Movies"), icon: Clapperboard },
     { href: "/stock-videos", label: t("stock_videos", "Stock Videos"), icon: Video },
     { href: "/popular-channels", label: t("popular_channels", "Popular Channels"), icon: Star },
-    { href: "/shorts", label: t("shorts", "Shorts"), icon: ShortsIcon },
   ];
 
   const allCollapsedLinks = [
@@ -71,8 +71,8 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
                 title={item.label}
                 data-active={active ? "true" : undefined}
                 className={`relative w-10 h-10 flex items-center justify-center rounded-2xl transition-all ${active
-                    ? "active-nav-pill"
-                    : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
+                  ? "active-nav-pill"
+                  : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
               >
                 <Icon className="w-5 h-5 shrink-0" />
@@ -104,8 +104,8 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
               href={item.href}
               data-active={active ? "true" : undefined}
               className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${active
-                  ? "active-nav-pill"
-                  : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
+                ? "active-nav-pill"
+                : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
                 }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
@@ -126,8 +126,8 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
               href={item.href}
               data-active={active ? "true" : undefined}
               className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${active
-                  ? "active-nav-pill"
-                  : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
+                ? "active-nav-pill"
+                : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
                 }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
@@ -146,8 +146,8 @@ export function SidebarNav({ isLoggedIn = false, isCollapsed = false }: SidebarN
           href="/contact-us"
           data-active={isCurrent("/contact-us") ? "true" : undefined}
           className={`relative flex items-center gap-3 px-4 py-2.5 rounded-full transition-all ${isCurrent("/contact-us")
-              ? "active-nav-pill"
-              : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
+            ? "active-nav-pill"
+            : "text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/5"
             }`}
         >
           <HelpCircle className="w-4 h-4 shrink-0" />

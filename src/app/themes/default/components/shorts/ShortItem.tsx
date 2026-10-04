@@ -141,6 +141,7 @@ export function ShortItem({
             likesCount={likes}
             dislikesCount={dislikes}
             commentsCount={short.commentsCount}
+            viewsCount={short.views ?? 0}
             currentVote={vote}
             commentsEnabled={(short as any).commentsEnabled ?? true}
             onVote={handleVote}
@@ -161,6 +162,7 @@ export function ShortItem({
           likesCount={likes}
           dislikesCount={dislikes}
           commentsCount={short.commentsCount}
+          viewsCount={short.views ?? 0}
           currentVote={vote}
           commentsEnabled={(short as any).commentsEnabled ?? true}
           onVote={handleVote}

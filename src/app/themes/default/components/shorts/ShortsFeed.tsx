@@ -2,8 +2,9 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronUp, ChevronDown, Compass } from "lucide-react";
+import { ChevronUp, ChevronDown, Compass, Plus } from "lucide-react";
 import { ShortData } from "@/app/themes/default/shorts/ShortsFeedPlayer";
 import { ShortItem } from "./ShortItem";
 import { ShortShareDialog } from "./ShortShareDialog";
@@ -144,6 +145,17 @@ export function ShortsFeed({
         {current?.title ? `Now playing: ${current.title}` : ""}
       </div>
 
+      {/* Desktop Top-Right Floating "+ Create" Button (visible on md+) */}
+      <div className="absolute top-0 right-2 sm:right-4 z-20 hidden md:block">
+        <Link
+          href={isLoggedIn ? "/upload-video?type=shorts" : `/login?next=${encodeURIComponent("/upload-video?type=shorts")}`}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#0088cc]/90 hover:bg-[#0088cc] text-white text-xs font-semibold shadow-md backdrop-blur-md transition-all hover:scale-105 active:scale-95"
+        >
+          <Plus className="w-4 h-4" />
+          <span>{t("create", "Create")}</span>
+        </Link>
+      </div>
+
       <div className="relative flex items-end gap-3 sm:gap-4 max-w-full">
         {/* Render current active short with windowing (previous, current, next) */}
         {current && (
@@ -177,14 +189,14 @@ export function ShortsFeed({
           />
         )}
 
-        {/* Right-Side Desktop Up/Down Navigation Chevrons */}
+        {/* Right-Side Desktop Up/Down Navigation Chevrons matching screenshot design */}
         <div className="hidden lg:flex flex-col gap-3 mb-24 ml-2">
           <button
             type="button"
             onClick={goToPrev}
             disabled={activeIndex === 0}
             aria-label="Previous short"
-            className="w-12 h-12 rounded-full flex items-center justify-center bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 shadow-lg transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+            className="w-11 h-11 rounded-full flex items-center justify-center bg-[#0088cc]/90 text-white hover:bg-[#0088cc] shadow-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110 active:scale-95"
           >
             <ChevronUp className="w-6 h-6 stroke-[2.5]" />
           </button>
@@ -194,7 +206,7 @@ export function ShortsFeed({
             onClick={goToNext}
             disabled={activeIndex === shorts.length - 1 && !hasMore}
             aria-label="Next short"
-            className="w-12 h-12 rounded-full flex items-center justify-center bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2c2c2c] border border-black/5 dark:border-white/10 shadow-lg transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+            className="w-11 h-11 rounded-full flex items-center justify-center bg-[#0088cc]/90 text-white hover:bg-[#0088cc] shadow-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110 active:scale-95"
           >
             <ChevronDown className="w-6 h-6 stroke-[2.5]" />
           </button>

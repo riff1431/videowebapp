@@ -26,6 +26,7 @@ import {
   Wallet,
   Moon,
   Sun,
+  MoreVertical,
 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 import { useTheme } from "@/components/theme/ThemeProvider";
@@ -55,6 +56,7 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
   const [langOpen, setLangOpen] = useState(false);
   const [createMenuOpen, setCreateMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileOverflowOpen, setMobileOverflowOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,11 +105,44 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
   const titleContent = getHeaderTitle();
 
   return (
-    <header className="w-full flex items-center justify-between gap-4 py-2 px-1 mb-6 border-b border-[var(--border)]/40 pb-4">
-      {/* 1. Left: Greeting / Title */}
-      <div className="flex items-center gap-3 min-w-0">
+    <header className="w-full flex items-center justify-between gap-2 sm:gap-4 py-2 px-1 mb-6 border-b border-[var(--border)]/40 pb-4">
+      {/* 1. Left: Mobile Hamburger + Logo (<lg) OR Desktop Greeting/Title (lg+) */}
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        {/* Mobile Hamburger Menu Toggle */}
+        <button
+          type="button"
+          onClick={onToggleSidebar}
+          aria-label="Toggle navigation menu"
+          className="lg:hidden p-2 -ml-1 rounded-xl text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Mobile Logo (<lg) */}
+        <Link href="/" className="lg:hidden inline-flex items-center shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="PlayTube"
+            className="h-6 sm:h-7 w-auto dark:hidden"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-light.png"
+            alt="PlayTube"
+            className="h-6 sm:h-7 w-auto hidden dark:block"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+        </Link>
+
+        {/* Desktop Title / Greeting (Hidden on mobile) */}
         {titleContent && (
-          <h1 className="text-base sm:text-xl font-bold text-[var(--default-text)] tracking-tight truncate">
+          <h1 className="hidden lg:block text-base sm:text-xl font-bold text-[var(--default-text)] tracking-tight truncate">
             {titleContent}
           </h1>
         )}
@@ -128,9 +163,9 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
       </form>
 
       {/* 3. Header Action Icons */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        {/* Create / Upload Shortcut Dropdown */}
-        <div className="relative">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* Desktop Create / Upload Shortcut Dropdown (hidden on mobile, inside 3-dot overflow) */}
+        <div className="relative hidden md:block">
           {user ? (
             <button
               type="button"
@@ -180,8 +215,8 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
           )}
         </div>
 
-        {/* Language Selector */}
-        <div className="relative">
+        {/* Desktop Language Selector (hidden on mobile) */}
+        <div className="relative hidden md:block">
           <button
             type="button"
             onClick={() => setLangOpen(!langOpen)}
@@ -199,8 +234,9 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
                     setLanguage(l.name);
                     setLangOpen(false);
                   }}
-                  className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer ${currentLang === l.name ? "font-bold text-[var(--default-brand-red)]" : "text-[var(--default-text)]"
-                    }`}
+                  className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer ${
+                    currentLang === l.name ? "font-bold text-[var(--default-brand-red)]" : "text-[var(--default-text)]"
+                  }`}
                 >
                   <span>{l.displayName || l.name}</span>
                   {currentLang === l.name && <Check className="w-3.5 h-3.5" />}
@@ -210,12 +246,12 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
           )}
         </div>
 
-        {/* Dark/Light Mode Switcher */}
+        {/* Desktop Dark/Light Mode Switcher (hidden on mobile) */}
         {canToggle && (
           <button
             type="button"
             onClick={toggleTheme}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            className="hidden md:flex w-9 h-9 rounded-full items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
             title={theme === "dark" ? t("light_mode", "Light Mode") : t("night_mode", "Dark Mode")}
             aria-label="Toggle dark/light mode"
           >
@@ -226,6 +262,101 @@ export function PanelHeader({ user, onToggleSidebar }: PanelHeaderProps) {
             )}
           </button>
         )}
+
+        {/* Mobile 3-Dot Overflow Menu (md:hidden) */}
+        <div className="relative md:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileOverflowOpen(!mobileOverflowOpen)}
+            aria-label="More options"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--default-muted)] hover:text-[var(--default-text)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <MoreVertical className="w-4 h-4" />
+          </button>
+
+          {mobileOverflowOpen && (
+            <div className="absolute right-0 mt-2 w-52 bg-[var(--default-panel)] border border-[var(--border)] rounded-2xl shadow-xl py-2 z-50 text-xs animate-in fade-in">
+              {/* Upload actions if logged in */}
+              {user && (
+                <div className="border-b border-[var(--border)]/40 pb-1.5 mb-1.5">
+                  <Link
+                    href="/upload-video"
+                    onClick={() => setMobileOverflowOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <Video className="w-4 h-4 text-[var(--default-brand-red)]" />
+                    <span>{t("upload_video", "Upload Video")}</span>
+                  </Link>
+                  <Link
+                    href="/import-video"
+                    onClick={() => setMobileOverflowOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <Layers className="w-4 h-4 text-emerald-500" />
+                    <span>{t("import", "Import Video")}</span>
+                  </Link>
+                  <Link
+                    href="/shorts"
+                    onClick={() => setMobileOverflowOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <Sparkles className="w-4 h-4 text-purple-500" />
+                    <span>{t("shorts", "Shorts")}</span>
+                  </Link>
+                  <Link
+                    href="/create-article"
+                    onClick={() => setMobileOverflowOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <Newspaper className="w-4 h-4 text-amber-500" />
+                    <span>{t("create_article", "Create Article")}</span>
+                  </Link>
+                </div>
+              )}
+
+              {/* Theme Toggle Button */}
+              {canToggle && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    toggleTheme();
+                    setMobileOverflowOpen(false);
+                  }}
+                  className="w-full flex items-center justify-between px-3.5 py-2 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                >
+                  <span className="flex items-center gap-2.5">
+                    {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                    <span>{theme === "dark" ? t("light_mode", "Light Mode") : t("night_mode", "Dark Mode")}</span>
+                  </span>
+                </button>
+              )}
+
+              {/* Language Selector in Overflow Menu */}
+              <div className="border-t border-[var(--border)]/40 pt-1.5 mt-1.5">
+                <p className="px-3.5 py-1 text-[10px] font-bold text-[var(--default-muted)] uppercase tracking-wider">
+                  {t("language", "Language")}
+                </p>
+                <div className="max-h-40 overflow-y-auto">
+                  {languages.map((l) => (
+                    <button
+                      key={l.name}
+                      onClick={() => {
+                        setLanguage(l.name);
+                        setMobileOverflowOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-1.5 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer ${
+                        currentLang === l.name ? "font-bold text-[var(--default-brand-red)]" : "text-[var(--default-text)]"
+                      }`}
+                    >
+                      <span>{l.displayName || l.name}</span>
+                      {currentLang === l.name && <Check className="w-3.5 h-3.5" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Notifications Bell */}
         {user ? (
