@@ -79,11 +79,10 @@ export function DefaultHomeClient({
           <button
             type="button"
             onClick={() => setSelectedCategoryKey(null)}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${
-              selectedCategoryKey === null
-                ? "bg-[var(--default-brand-red)] text-white shadow-xs"
-                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-            }`}
+            className={`px-4 py-1.5 text-xs font-semibold rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === null
+              ? "bg-[var(--default-brand-red)] text-white shadow-xs"
+              : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+              }`}
           >
             {t("all", "All")}
           </button>
@@ -93,11 +92,10 @@ export function DefaultHomeClient({
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategoryKey(cat.key)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${
-                selectedCategoryKey === cat.key
-                  ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
-                  : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
-              }`}
+              className={`px-4 py-1.5 text-xs font-medium rounded-full shrink-0 transition-all cursor-pointer ${selectedCategoryKey === cat.key
+                ? "bg-[var(--default-brand-red)] text-white font-semibold shadow-xs"
+                : "bg-black/5 dark:bg-white/5 text-[var(--default-muted)] hover:text-[var(--default-text)]"
+                }`}
             >
               {cat.name}
             </button>
@@ -109,7 +107,7 @@ export function DefaultHomeClient({
       <section>
         <SectionHeader
           title={t("recommended", "Recommended")}
-          icon={<Sparkles className="w-4 h-4" />}
+          // icon={<Sparkles className="w-4 h-4" />}
           viewMoreHref="/videos/latest"
           viewMoreLabel={t("view_more", "View More >")}
         />
@@ -135,7 +133,7 @@ export function DefaultHomeClient({
         <section className="pt-4 border-t border-[var(--border)]/40">
           <SectionHeader
             title={t("shorts", "Shorts")}
-            icon={<Flame className="w-4 h-4" />}
+            // icon={<Flame className="w-4 h-4" />}
             viewMoreHref="/shorts"
             viewMoreLabel={t("view_more", "View More >")}
           />

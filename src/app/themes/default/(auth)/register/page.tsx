@@ -2,11 +2,12 @@
 
 import React from "react";
 import Link from "next/link";
-import { AlertCircle, Ticket } from "lucide-react";
+import { AlertCircle, Ticket, Loader2 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { getPublicImageUrl } from "@/lib/storage/image-url";
 import { useRegister } from "@/modules/auth/hooks";
+import { Button } from "@/app/themes/default/components/ui/button";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -37,13 +38,13 @@ export default function RegisterPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-140px)] py-10 px-4">
-      <div className="w-full max-w-md bg-[var(--card-bg)] text-[var(--foreground)] rounded-xl shadow-lg border border-[var(--border)] p-8">
-        {/* PlayTube Logo */}
+      <div className="w-full max-w-[440px] bg-[var(--default-panel)] text-[var(--default-text)] rounded-[32px] shadow-xl border border-[var(--border)]/50 p-8 sm:p-10 transition-all">
+        {/* Logo */}
         <div className="flex flex-col items-center mb-6">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={logoSrc}
-            alt="PlayTube"
+            alt="Logo"
             className="h-9 mb-4 dark:hidden"
             onError={(e) => {
               (e.target as HTMLElement).style.display = "none";
@@ -52,33 +53,30 @@ export default function RegisterPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={lightLogoSrc}
-            alt="PlayTube"
+            alt="Logo"
             className="h-9 mb-4 hidden dark:block"
             onError={(e) => {
               (e.target as HTMLElement).style.display = "none";
             }}
           />
-          <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            {t("register", "Sign Up")}
-          </h2>
-          {regStatus.inviteOnly && (
-            <div className="mt-2 text-xs text-amber-600 dark:text-amber-400 font-medium flex items-center gap-1.5">
-              <Ticket className="w-3.5 h-3.5" />
-              <span>{t("invite_only_note", "Registration is currently by invitation only.")}</span>
-            </div>
-          )}
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--default-text)]">
+            {t("register", "Create Account")}
+          </h1>
+          <p className="text-xs text-[var(--default-muted)] mt-1">
+            {t("sign_up_desc", "Sign up to start sharing and discovering videos")}
+          </p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-2xl text-[var(--default-brand-red)] text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+            <label className="block text-xs font-semibold text-[var(--default-text)] mb-1">
               {t("username", "Username")}
             </label>
             <input
@@ -86,27 +84,27 @@ export default function RegisterPage() {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder={t("username", "Username")}
-              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              placeholder={t("enter_username", "Choose a username")}
+              className="w-full h-11 px-4 text-xs bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-              {t("email_address", "E-mail address")}
+            <label className="block text-xs font-semibold text-[var(--default-text)] mb-1">
+              {t("email", "Email")}
             </label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("email_address", "E-mail address")}
-              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              placeholder={t("enter_email", "name@example.com")}
+              className="w-full h-11 px-4 text-xs bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+            <label className="block text-xs font-semibold text-[var(--default-text)] mb-1">
               {t("password", "Password")}
             </label>
             <input
@@ -114,13 +112,13 @@ export default function RegisterPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t("password", "Password")}
-              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              placeholder={t("enter_password", "At least 6 characters")}
+              className="w-full h-11 px-4 text-xs bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+            <label className="block text-xs font-semibold text-[var(--default-text)] mb-1">
               {t("confirm_password", "Confirm Password")}
             </label>
             <input
@@ -128,31 +126,30 @@ export default function RegisterPage() {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder={t("confirm_password", "Confirm password")}
-              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              placeholder={t("confirm_password", "Re-type your password")}
+              className="w-full h-11 px-4 text-xs bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+            <label className="block text-xs font-semibold text-[var(--default-text)] mb-1">
               {t("gender", "Gender")}
             </label>
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+              className="w-full h-11 px-4 text-xs bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full text-[var(--default-text)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
             >
               <option value="male">{t("male", "Male")}</option>
               <option value="female">{t("female", "Female")}</option>
             </select>
           </div>
 
-          {/* Invitation Code input (Required if inviteOnly, optional otherwise) */}
           {(regStatus.inviteOnly || inviteCode) && (
             <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+              <label className="block text-xs font-semibold text-[var(--default-text)] mb-1">
                 {t("invitation_code", "Invitation Code")}
-                {regStatus.inviteOnly && <span className="text-red-500 ml-1">*</span>}
+                {regStatus.inviteOnly && <span className="text-[var(--default-brand-red)] ml-1">*</span>}
               </label>
               <input
                 type="text"
@@ -160,43 +157,50 @@ export default function RegisterPage() {
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 placeholder={t("enter_invitation_code", "Enter your invitation code")}
-                className="w-full h-10 px-3 text-xs bg-[var(--search-bg)] border border-[var(--search-border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-neutral-900 dark:text-white"
+                className="w-full h-11 px-4 text-xs bg-[var(--default-search-bg)] border border-[var(--default-search-border)] rounded-full text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
               />
             </div>
           )}
 
-          <div className="flex items-center gap-2 pt-1 text-xs text-neutral-600 dark:text-neutral-400">
+          <div className="flex items-center gap-2 pt-1 text-xs text-[var(--default-muted)]">
             <input
               type="checkbox"
               id="terms"
               checked={acceptTerms}
               onChange={(e) => setAcceptTerms(e.target.checked)}
-              className="rounded accent-[#04abf2]"
+              className="rounded accent-[var(--default-brand-red)]"
             />
             <label htmlFor="terms">
               {t("terms_agreement", "By creating your account, you agree to our")}{" "}
-              <Link href="/terms/terms" className="text-[#04abf2] hover:underline">
+              <Link href="/terms/terms" className="text-[var(--default-brand-red)] hover:underline">
                 {t("terms_of_use", "Terms of use")}
               </Link>{" "}
               &{" "}
-              <Link href="/terms/privacy" className="text-[#04abf2] hover:underline">
+              <Link href="/terms/privacy" className="text-[var(--default-brand-red)] hover:underline">
                 {t("privacy_policy", "Privacy policy")}
               </Link>
             </label>
           </div>
 
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full h-10 mt-2 bg-[#04abf2] hover:bg-[#039be5] text-white font-semibold text-xs rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
+            className="w-full h-11 rounded-full text-xs sm:text-sm font-semibold shadow-md flex items-center justify-center gap-2"
           >
-            {loading ? t("please_wait", "Creating account...") : t("register", "Sign Up")}
-          </button>
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>{t("please_wait", "Creating account...")}</span>
+              </>
+            ) : (
+              <span>{t("register", "Sign Up")}</span>
+            )}
+          </Button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-[var(--border)] text-center text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="mt-6 pt-6 border-t border-[var(--border)]/40 text-center text-xs text-[var(--default-muted)]">
           {t("already_have_account", "Already have an account?")}{" "}
-          <Link href="/login" className="font-semibold text-[#04abf2] hover:underline">
+          <Link href="/login" className="font-semibold text-[var(--default-brand-red)] hover:underline">
             {t("login", "Login")}
           </Link>
         </div>

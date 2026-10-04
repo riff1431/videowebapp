@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useTranslation } from "@/providers/language-provider";
 import { useLogin } from "@/modules/auth/hooks";
+import { Button } from "@/app/themes/default/components/ui/button";
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -22,28 +23,28 @@ function LoginForm() {
 
   return (
     <div className="w-full flex items-center justify-center p-4">
-      {/* PlayTube Standard Login Card */}
-      <div className="w-full max-w-[410px] bg-white dark:bg-[#1a1a1a] text-neutral-800 dark:text-neutral-100 rounded-xl shadow-lg border border-neutral-100 dark:border-neutral-800 p-8 sm:p-9">
-        <h1 className="text-xl font-bold text-neutral-800 dark:text-white mb-6 text-left">
+      {/* Default Theme Signature Login Card */}
+      <div className="w-full max-w-[420px] bg-[var(--default-panel)] text-[var(--default-text)] rounded-[32px] shadow-xl border border-[var(--border)]/50 p-8 sm:p-10 transition-all">
+        <h1 className="text-2xl font-bold text-[var(--default-text)] mb-6 text-left tracking-tight">
           {t("login", "Log In")}
         </h1>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-md text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-2xl text-[var(--default-brand-red)] text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
               type="text"
               required
               value={usernameOrEmail}
               onChange={(e) => setUsernameOrEmail(e.target.value)}
-              placeholder={t("username", "Username")}
-              className="w-full h-11 px-4 text-xs sm:text-sm bg-[#ececec] dark:bg-neutral-800/90 rounded-md border-0 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#04abf2] transition-all"
+              placeholder={t("username", "Username or email")}
+              className="w-full h-11 px-4 text-xs sm:text-sm bg-[var(--default-search-bg)] rounded-full border border-[var(--default-search-border)] text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
             />
           </div>
 
@@ -54,23 +55,23 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t("password", "Password")}
-              className="w-full h-11 px-4 text-xs sm:text-sm bg-[#ececec] dark:bg-neutral-800/90 rounded-md border-0 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#04abf2] transition-all"
+              className="w-full h-11 px-4 text-xs sm:text-sm bg-[var(--default-search-bg)] rounded-full border border-[var(--default-search-border)] text-[var(--default-text)] placeholder:text-[var(--default-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--default-brand-red)]/20 transition-all"
             />
           </div>
 
-          <div className="flex justify-end pt-0.5 pb-2">
+          <div className="flex justify-end pt-0.5">
             <Link
               href="/forgot-password"
-              className="text-xs text-neutral-500 dark:text-neutral-400 hover:text-[#04abf2] dark:hover:text-[#04abf2] transition-colors"
+              className="text-xs text-[var(--default-muted)] hover:text-[var(--default-brand-red)] transition-colors"
             >
               {t("forgot_your_password", "Forgot your password?")}
             </Link>
           </div>
 
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full h-10 bg-[#04abf2] hover:bg-[#0399d8] active:bg-[#028ec8] text-white text-xs sm:text-sm font-semibold rounded-md transition-colors cursor-pointer shadow-xs disabled:opacity-60 flex items-center justify-center gap-2"
+            className="w-full h-11 rounded-full text-xs sm:text-sm font-semibold shadow-md flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
@@ -80,18 +81,18 @@ function LoginForm() {
             ) : (
               <span>{t("login", "Log In")}</span>
             )}
-          </button>
+          </Button>
 
           {/* Remember this device pill */}
           <div className="pt-2 flex">
             <button
               type="button"
               onClick={() => setRememberDevice(!rememberDevice)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#e1f3fd] dark:bg-sky-950/60 border border-[#b8e4fb] dark:border-sky-800 text-[#0092d6] dark:text-sky-300 text-xs font-normal cursor-pointer select-none transition-colors"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/5 dark:bg-white/5 border border-[var(--border)]/40 text-[var(--default-muted)] text-xs font-normal cursor-pointer select-none transition-colors"
             >
-              <span className="w-3.5 h-3.5 rounded-full border-2 border-[#0092d6] flex items-center justify-center shrink-0">
+              <span className="w-3.5 h-3.5 rounded-full border-2 border-[var(--default-brand-red)] flex items-center justify-center shrink-0">
                 {rememberDevice && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0092d6]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--default-brand-red)]" />
                 )}
               </span>
               <span>{t("remember_device", "Remember this device")}</span>
@@ -99,13 +100,13 @@ function LoginForm() {
           </div>
         </form>
 
-        <div className="border-t border-neutral-100 dark:border-neutral-800/80 my-5" />
+        <div className="border-t border-[var(--border)]/40 my-6" />
 
-        <div className="text-xs text-neutral-600 dark:text-neutral-400">
+        <div className="text-xs text-[var(--default-muted)] text-center">
           {t("new_here", "New here?")}{" "}
           <Link
             href="/register"
-            className="font-semibold text-neutral-900 dark:text-white hover:text-[#04abf2] dark:hover:text-[#04abf2] transition-colors ml-1"
+            className="font-semibold text-[var(--default-brand-red)] hover:underline ml-1"
           >
             {t("register", "Register")}
           </Link>
@@ -120,7 +121,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="flex items-center justify-center min-h-[50vh]">
-          <Loader2 className="w-8 h-8 text-[#04abf2] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[var(--default-brand-red)] animate-spin" />
         </div>
       }
     >

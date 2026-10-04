@@ -215,7 +215,7 @@ export default async function ChannelPage({
 
   return (
 
-    <div className="-m-4 md:-m-6 bg-[#f4f5f7] dark:bg-[#0f0f0f] min-h-[calc(100vh-3.5rem)] pb-20 w-full">
+    <div className="-m-4 md:-m-6 bg-[var(--default-panel)] min-h-[calc(100vh-3.5rem)] pb-20 w-full">
       {/* 1. Cover Banner Image with placeholder */}
       <div className="w-full h-48 sm:h-60 md:h-68 lg:h-72 relative bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -226,8 +226,8 @@ export default async function ChannelPage({
         />
       </div>
 
-      {/* 2. Channel Header Bar with Overlapping Avatar (relative z-10 so avatar is never cropped by banner) */}
-      <div className="relative z-10 bg-white dark:bg-[#1a1a1a] border-b border-neutral-200/80 dark:border-neutral-800 px-6 sm:px-10">
+      {/* 2. Channel Header Bar with Overlapping Avatar */}
+      <div className="relative z-10 bg-[var(--default-panel)] border-b border-[var(--border)]/40 px-6 sm:px-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-3">
           {/* Avatar and Channel Info */}
           <div className="flex items-end gap-5">
