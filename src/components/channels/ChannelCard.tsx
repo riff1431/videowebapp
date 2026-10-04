@@ -63,14 +63,14 @@ export function ChannelCard({ channel }: { channel: ChannelItem }) {
   const displayName = channel.name || channel.username;
 
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] border border-neutral-200/80 dark:border-neutral-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col group relative">
+    <div className="video-card-item group rounded-[22px] p-2.5 transition-all cursor-pointer flex flex-col relative border border-transparent hover:border-black/5 dark:hover:border-white/10 hover:shadow-md">
       {/* Ranking Badge */}
-      <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-white flex items-center justify-center text-xs font-bold shadow-xs">
+      <div className="absolute top-4 left-4 z-10 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-white flex items-center justify-center text-xs font-bold shadow-xs">
         #{channel.rank}
       </div>
 
       {/* Cover Banner */}
-      <div className="h-24 bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 overflow-hidden relative">
+      <div className="h-28 rounded-[18px] bg-gradient-to-r from-neutral-200 to-neutral-300 dark:from-neutral-800 dark:to-neutral-700 overflow-hidden relative">
         <img
           src={getPublicImageUrl(channel.cover, "/upload/photos/d-cover.jpg") || "/upload/photos/d-cover.jpg"}
           alt={displayName}
@@ -80,55 +80,55 @@ export function ChannelCard({ channel }: { channel: ChannelItem }) {
       </div>
 
       {/* Profile info & Avatar */}
-      <div className="px-5 pb-5 pt-0 -mt-10 flex flex-col items-center text-center flex-1">
-        <Link href={`/channel/${channel.username}`} className="relative block group/avatar">
+      <div className="px-3 pb-3 pt-0 -mt-10 flex flex-col items-center text-center flex-1">
+        <Link href={`/@${channel.username}`} className="relative block group/avatar">
           <img
             src={getPublicImageUrl(channel.avatar, "/upload/photos/d-avatar.jpg") || "/upload/photos/d-avatar.jpg"}
             alt={displayName}
-            className="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-[#1a1a1a] shadow-sm group-hover/avatar:ring-2 group-hover/avatar:ring-[#04abf2] transition-all"
+            className="w-18 h-18 rounded-full object-cover border-4 border-[var(--default-panel)] shadow-sm group-hover/avatar:ring-2 group-hover/avatar:ring-[var(--default-brand-red)] transition-all"
           />
           {channel.verified && (
             <span
               title="Verified Channel"
-              className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#04abf2] text-white flex items-center justify-center border-2 border-white dark:border-[#1a1a1a] shadow-xs"
+              className="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center border-2 border-[var(--default-panel)] shadow-xs"
             >
-              <CheckCircle2 className="w-3.5 h-3.5 fill-white text-[#04abf2]" />
+              <CheckCircle2 className="w-3.5 h-3.5 fill-white text-blue-500" />
             </span>
           )}
         </Link>
 
         {/* Channel Names */}
-        <Link href={`/channel/${channel.username}`} className="mt-2.5 block max-w-full">
-          <h3 className="text-sm font-bold text-neutral-900 dark:text-neutral-100 group-hover:text-[#04abf2] transition-colors truncate">
+        <Link href={`/@${channel.username}`} className="mt-2.5 block max-w-full">
+          <h3 className="text-sm font-semibold text-[var(--default-text)] group-hover:text-[var(--default-brand-red)] transition-colors truncate">
             {displayName}
           </h3>
         </Link>
-        <p className="text-xs text-neutral-500 font-normal">@{channel.username}</p>
+        <p className="text-xs text-[var(--default-muted)] font-normal">@{channel.username}</p>
 
         {/* Stats Strip */}
-        <div className="mt-4 pt-3.5 border-t border-neutral-100 dark:border-neutral-800 w-full grid grid-cols-3 gap-1 text-center">
+        <div className="mt-4 pt-3 border-t border-[var(--border)]/50 w-full grid grid-cols-3 gap-1 text-center">
           <div className="flex flex-col items-center">
-            <span className="font-bold text-xs text-neutral-900 dark:text-neutral-100 flex items-center gap-1">
-              <Eye className="w-3 h-3 text-neutral-400" />
+            <span className="font-semibold text-xs text-[var(--default-text)] flex items-center gap-1">
+              <Eye className="w-3 h-3 text-[var(--default-muted)]" />
               {Number(channel.totalViews).toLocaleString()}
             </span>
-            <span className="text-[10px] text-neutral-500 uppercase tracking-wider mt-0.5">Views</span>
+            <span className="text-[10px] text-[var(--default-muted)] uppercase tracking-wider mt-0.5">Views</span>
           </div>
 
-          <div className="flex flex-col items-center border-x border-neutral-100 dark:border-neutral-800 px-1">
-            <span className="font-bold text-xs text-neutral-900 dark:text-neutral-100 flex items-center gap-1">
-              <Users className="w-3 h-3 text-neutral-400" />
+          <div className="flex flex-col items-center border-x border-[var(--border)]/50 px-1">
+            <span className="font-semibold text-xs text-[var(--default-text)] flex items-center gap-1">
+              <Users className="w-3 h-3 text-[var(--default-muted)]" />
               {Number(subCount).toLocaleString()}
             </span>
-            <span className="text-[10px] text-neutral-500 uppercase tracking-wider mt-0.5">Subs</span>
+            <span className="text-[10px] text-[var(--default-muted)] uppercase tracking-wider mt-0.5">Subs</span>
           </div>
 
           <div className="flex flex-col items-center">
-            <span className="font-bold text-xs text-neutral-900 dark:text-neutral-100 flex items-center gap-1">
-              <Video className="w-3 h-3 text-neutral-400" />
+            <span className="font-semibold text-xs text-[var(--default-text)] flex items-center gap-1">
+              <Video className="w-3 h-3 text-[var(--default-muted)]" />
               {Number(channel.videoCount).toLocaleString()}
             </span>
-            <span className="text-[10px] text-neutral-500 uppercase tracking-wider mt-0.5">Videos</span>
+            <span className="text-[10px] text-[var(--default-muted)] uppercase tracking-wider mt-0.5">Videos</span>
           </div>
         </div>
 
@@ -140,8 +140,8 @@ export function ChannelCard({ channel }: { channel: ChannelItem }) {
             disabled={loading}
             className={`py-2 px-2 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer ${
               subscribed
-                ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                : "bg-[#04abf2] hover:bg-[#0399d8] text-white"
+                ? "bg-black/5 dark:bg-white/10 text-[var(--default-text)] hover:bg-black/10 dark:hover:bg-white/15"
+                : "bg-[var(--default-brand-red)] hover:opacity-90 text-white"
             }`}
           >
             {subscribed ? (
@@ -158,8 +158,8 @@ export function ChannelCard({ channel }: { channel: ChannelItem }) {
           </button>
 
           <Link
-            href={`/channel/${channel.username}`}
-            className="py-2 px-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 text-xs font-semibold rounded-xl text-center transition-colors flex items-center justify-center shadow-xs"
+            href={`/@${channel.username}`}
+            className="py-2 px-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-[var(--default-text)] text-xs font-semibold rounded-xl text-center transition-colors flex items-center justify-center shadow-xs"
           >
             Visit
           </Link>

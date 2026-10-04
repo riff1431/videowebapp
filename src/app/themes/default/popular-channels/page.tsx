@@ -2,7 +2,7 @@ import React from "react";
 import { db } from "@/db";
 import { users, videos, subscriptions } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
-import { PopularChannelsHero } from "@/components/channels/PopularChannelsHero";
+import { PopularChannelsFilter } from "./PopularChannelsFilter";
 import { ChannelCard, ChannelItem } from "@/components/channels/ChannelCard";
 import { VideoOff } from "lucide-react";
 
@@ -119,8 +119,8 @@ export default async function PopularChannelsPage({ searchParams }: PopularChann
 
   return (
     <div className="w-full space-y-6">
-      {/* Hero Banner with exact purple background, flame-heart, and dropdowns */}
-      <PopularChannelsHero initialType={sortMetric} initialTime={timeMetric} />
+      {/* Top Filter Rail: Metric & Time pills with prev/next buttons */}
+      <PopularChannelsFilter currentType={sortMetric} currentTime={timeMetric} />
 
       {/* Main Content Area: Channels or Empty State (matching 2nd image 1:1) */}
       {channels.length === 0 ? (
