@@ -30,6 +30,7 @@ interface ShortActionRailProps {
   onOpenShare: () => void;
   onRequireLogin: () => void;
   isLoggedIn?: boolean;
+  isOverlay?: boolean;
 }
 
 export function ShortActionRail({
@@ -45,6 +46,7 @@ export function ShortActionRail({
   onOpenShare,
   onRequireLogin,
   isLoggedIn = false,
+  isOverlay = false,
 }: ShortActionRailProps) {
   const { t } = useTranslation();
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
@@ -57,6 +59,14 @@ export function ShortActionRail({
     if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
     return num.toString();
   };
+
+  const btnBaseClass = isOverlay
+    ? "w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-lg bg-black/40 hover:bg-black/60 text-white backdrop-blur-xs border border-white/20"
+    : "w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] border border-black/5 dark:border-white/10 shadow-md transition-all cursor-pointer";
+
+  const labelClass = isOverlay
+    ? "text-[11px] font-semibold text-white drop-shadow-md"
+    : "text-[11px] font-semibold text-[var(--default-text)]";
 
   const handleReport = async () => {
     setMoreMenuOpen(false);
@@ -99,15 +109,15 @@ export function ShortActionRail({
           type="button"
           onClick={() => onVote(1)}
           aria-label={t("like", "Like")}
-          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-md ${
+          className={`${btnBaseClass} ${
             currentVote === 1
-              ? "bg-[var(--default-brand-red)] text-white"
-              : "bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] border border-black/5 dark:border-white/10"
+              ? "bg-[var(--default-brand-red)]! text-white! border-transparent!"
+              : ""
           }`}
         >
           <ThumbsUp className={`w-5 h-5 ${currentVote === 1 ? "fill-white" : ""}`} />
         </button>
-        <span className="text-[11px] font-semibold text-[var(--default-text)]">
+        <span className={labelClass}>
           {likesCount > 0 ? formatCount(likesCount) : t("like", "Like")}
         </span>
       </div>
@@ -118,15 +128,15 @@ export function ShortActionRail({
           type="button"
           onClick={() => onVote(2)}
           aria-label={t("dislike", "Dislike")}
-          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-md ${
+          className={`${btnBaseClass} ${
             currentVote === 2
-              ? "bg-neutral-700 text-white"
-              : "bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] border border-black/5 dark:border-white/10"
+              ? "bg-neutral-700! text-white! border-transparent!"
+              : ""
           }`}
         >
           <ThumbsDown className={`w-5 h-5 ${currentVote === 2 ? "fill-white" : ""}`} />
         </button>
-        <span className="text-[11px] font-semibold text-[var(--default-text)]">
+        <span className={labelClass}>
           {dislikesCount > 0 ? formatCount(dislikesCount) : t("dislike", "Dislike")}
         </span>
       </div>
@@ -138,11 +148,11 @@ export function ShortActionRail({
             type="button"
             onClick={onOpenComments}
             aria-label={t("comments", "Comments")}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] border border-black/5 dark:border-white/10 shadow-md transition-all cursor-pointer"
+            className={btnBaseClass}
           >
             <MessageSquare className="w-5 h-5" />
           </button>
-          <span className="text-[11px] font-semibold text-[var(--default-text)]">
+          <span className={labelClass}>
             {commentsCount > 0 ? formatCount(commentsCount) : "0"}
           </span>
         </div>
@@ -154,11 +164,11 @@ export function ShortActionRail({
           type="button"
           onClick={onOpenShare}
           aria-label={t("share", "Share")}
-          className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] border border-black/5 dark:border-white/10 shadow-md transition-all cursor-pointer"
+          className={btnBaseClass}
         >
           <Share2 className="w-5 h-5" />
         </button>
-        <span className="text-[11px] font-semibold text-[var(--default-text)]">
+        <span className={labelClass}>
           {t("share", "Share")}
         </span>
       </div>
@@ -168,11 +178,11 @@ export function ShortActionRail({
         <Link
           href={isLoggedIn ? "/upload-video?type=shorts" : `/login?next=${encodeURIComponent("/upload-video?type=shorts")}`}
           aria-label={t("create", "Create")}
-          className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] border border-black/5 dark:border-white/10 shadow-md transition-all cursor-pointer"
+          className={btnBaseClass}
         >
           <Plus className="w-5 h-5" />
         </Link>
-        <span className="text-[11px] font-semibold text-[var(--default-text)]">
+        <span className={labelClass}>
           {t("create", "Create")}
         </span>
       </div>
@@ -183,7 +193,7 @@ export function ShortActionRail({
           type="button"
           onClick={() => setMoreMenuOpen(!moreMenuOpen)}
           aria-label="More options"
-          className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white dark:bg-[#202020] text-[var(--default-text)] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] border border-black/5 dark:border-white/10 shadow-md transition-all cursor-pointer"
+          className={btnBaseClass}
         >
           <MoreVertical className="w-5 h-5" />
         </button>

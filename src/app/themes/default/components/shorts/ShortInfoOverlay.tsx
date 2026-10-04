@@ -56,7 +56,7 @@ export function ShortInfoOverlay({
   };
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-20 p-4 sm:p-5 pt-16 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none flex flex-col justify-end text-white">
+    <div className="absolute inset-x-0 bottom-0 z-20 p-4 sm:p-5 pr-16 sm:pr-20 md:pr-5 pt-16 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none flex flex-col justify-end text-white">
       {/* Creator Row */}
       <div className="flex items-center gap-3 pointer-events-auto">
         <Link href={`/@${user.username}`} className="shrink-0 group/avatar">

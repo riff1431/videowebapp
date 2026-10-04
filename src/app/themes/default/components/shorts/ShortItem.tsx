@@ -132,10 +132,29 @@ export function ShortItem({
           duration={duration}
           onSeek={seekTo}
         />
+
+        {/* 2a. Mobile In-Video Action Rail (<md) */}
+        <div className="absolute right-2 sm:right-3 bottom-14 z-30 md:hidden pointer-events-auto">
+          <ShortActionRail
+            videoId={short.videoId}
+            videoDbId={short.id}
+            likesCount={likes}
+            dislikesCount={dislikes}
+            commentsCount={short.commentsCount}
+            currentVote={vote}
+            commentsEnabled={(short as any).commentsEnabled ?? true}
+            onVote={handleVote}
+            onOpenComments={onOpenComments}
+            onOpenShare={onOpenShare}
+            onRequireLogin={onRequireLogin}
+            isLoggedIn={isLoggedIn}
+            isOverlay={true}
+          />
+        </div>
       </div>
 
-      {/* 2. Right-Hand Floating Action Bar */}
-      <div className="shrink-0">
+      {/* 2b. Desktop Right-Hand Floating Action Bar (md+) */}
+      <div className="hidden md:block shrink-0">
         <ShortActionRail
           videoId={short.videoId}
           videoDbId={short.id}
