@@ -1,5 +1,5 @@
 import React from "react";
-import { getFeaturedVideos, getCategories } from "@/services/video.service";
+import { getFeaturedVideos, getCategories, getShortVideos } from "@/services/video.service";
 import { DefaultHomeClient } from "./components/DefaultHomeClient";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
@@ -7,8 +7,9 @@ import { headers } from "next/headers";
 export const revalidate = 60; // ISR cache
 
 export default async function HomePage() {
-  const [featuredVideos, categoriesList, session] = await Promise.all([
+  const [featuredVideos, shortVideos, categoriesList, session] = await Promise.all([
     getFeaturedVideos(28),
+    getShortVideos(18),
     getCategories(),
     auth.api.getSession({
       headers: await headers(),
@@ -18,6 +19,7 @@ export default async function HomePage() {
   return (
     <DefaultHomeClient
       featuredVideos={featuredVideos}
+      shortVideos={shortVideos}
       categoriesList={categoriesList}
       userName={session?.user?.name || (session?.user as any)?.username}
     />

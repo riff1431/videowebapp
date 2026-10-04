@@ -36,14 +36,25 @@ interface Category {
   sortOrder: number | null;
 }
 
+interface ShortVideo {
+  id: number;
+  videoId: string;
+  title: string;
+  thumbnail: string;
+  views: number | null;
+  createdAt: Date;
+}
+
 interface DefaultHomeClientProps {
   featuredVideos: Video[];
+  shortVideos?: ShortVideo[];
   categoriesList: Category[];
   userName?: string | null;
 }
 
 export function DefaultHomeClient({
   featuredVideos: initialVideos,
+  shortVideos = [],
   categoriesList,
   userName,
 }: DefaultHomeClientProps) {
@@ -112,17 +123,10 @@ export function DefaultHomeClient({
     return videoList.filter((v) => v.categoryId === selectedCategoryKey);
   }, [videoList, selectedCategoryKey]);
 
-  // Derive shorts
+  // Real vertical shorts from backend (isShort = true)
   const allShorts = useMemo(() => {
-    return videoList.map((v) => ({
-      id: v.id,
-      videoId: v.videoId,
-      title: v.title,
-      thumbnail: v.thumbnail,
-      views: v.views,
-      createdAt: v.createdAt,
-    }));
-  }, [videoList]);
+    return shortVideos;
+  }, [shortVideos]);
 
   // Split filtered videos into chunks of 14 (2 rows in 7-column 4K layout, or 2+ rows on 6-col)
   const videoChunks = useMemo(() => {
