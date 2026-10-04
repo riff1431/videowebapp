@@ -184,14 +184,21 @@ export async function proxy(request: NextRequest) {
   // 6. Resolve target active theme
   const activeId = previewThemeId || (await getActiveThemeId());
 
+  // Normalize vanity handle route (/@username -> /channel/username)
+  let normalizedPathname = pathname;
+  if (pathname.startsWith("/@")) {
+    const handle = pathname.slice(2);
+    normalizedPathname = `/channel/${handle}`;
+  }
+
   // 7. Check if active theme implements the route; fallback to FALLBACK_THEME_ID if missing
   let themeToUse = activeId;
-  if (!themeHasRoute(themeToUse, pathname)) {
+  if (!themeHasRoute(themeToUse, normalizedPathname)) {
     themeToUse = FALLBACK_THEME_ID;
   }
 
-  // 8. Build destination rewrite path: /themes/<themeToUse><pathname><search>
-  const targetPath = `/themes/${themeToUse}${pathname === "/" ? "" : pathname}`;
+  // 8. Build destination rewrite path: /themes/<themeToUse><normalizedPathname><search>
+  const targetPath = `/themes/${themeToUse}${normalizedPathname === "/" ? "" : normalizedPathname}`;
   const rewriteUrl = new URL(targetPath, request.url);
   rewriteUrl.search = request.nextUrl.search;
 
